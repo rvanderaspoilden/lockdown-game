@@ -182,7 +182,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 1348730329998287233, guid: 8eb984de5c911564990d27cfbd7315aa,
     type: 3}
-  playerSpawns: []
+  playerSpawns:
+  - {fileID: 1126500856}
+  - {fileID: 543058274}
+  - {fileID: 36722979}
+  - {fileID: 1726312852}
+  - {fileID: 1053245328}
+  skinMaterials:
+  - {fileID: 2100000, guid: f272ce62be4ec864ebc61d4f76aaf72d, type: 2}
+  - {fileID: 2100000, guid: 8af51bb917d050248824ca53d2882232, type: 2}
+  - {fileID: 2100000, guid: 632309c76598ef2439d70d47bb507f87, type: 2}
+  - {fileID: 2100000, guid: af9d542d86ca4fc4f842a8266577ae5e, type: 2}
+  - {fileID: 2100000, guid: 497bbddce010fea4da3dcb5c5210ad16, type: 2}
 --- !u!4 &84482150
 Transform:
   m_ObjectHideFlags: 0
@@ -362,6 +373,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1138508550065416658, guid: 8eb984de5c911564990d27cfbd7315aa,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.04799986
+      objectReference: {fileID: 0}
     - target: {fileID: 1348730329998287233, guid: 8eb984de5c911564990d27cfbd7315aa,
         type: 3}
       propertyPath: m_Name
@@ -431,6 +447,16 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5660754073589859638, guid: 8eb984de5c911564990d27cfbd7315aa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5660754073589869738, guid: 8eb984de5c911564990d27cfbd7315aa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8eb984de5c911564990d27cfbd7315aa, type: 3}

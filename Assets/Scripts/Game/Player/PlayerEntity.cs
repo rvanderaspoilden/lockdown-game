@@ -20,16 +20,24 @@ namespace Game.Player {
 
         [Header("Only for debug")]
         [SerializeField] private PhotonView photonView;
+        [SerializeField] private Animator animator;
 
         [SerializeField] private CharacterController characterController;
         [SerializeField] private Vector3 moveDirection = Vector3.zero;
 
         private void Awake() {
             this.photonView = GetComponent<PhotonView>();
+            this.animator = GetComponent<Animator>();
             this.characterController = GetComponent<CharacterController>();
         }
 
         private void Start() {
+            // Manage skin
+            int skinId = (int)this.photonView.Owner.CustomProperties["skinId"];
+            foreach (SkinnedMeshRenderer renderer in this.skinObject.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                renderer.material = GameManager.instance.GetSkinMaterialAt(skinId);
+            }
+            
             if (!this.photonView.IsMine) {
                 this.virtualCamera.enabled = false;
                 this.skinObject.SetActive(true);
@@ -51,6 +59,8 @@ namespace Game.Player {
         }
 
         private void ManageMovement() {
+            this.animator.SetBool("Jump_b", false); // todo
+            
             float moveDirectionY = this.moveDirection.y;
             
             this.moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -60,12 +70,18 @@ namespace Game.Player {
             if (this.characterController.isGrounded) {
                 if (Input.GetKeyDown(KeyCode.Space)) {
                     this.moveDirection.y = this.jumpSpeed;
+                    this.animator.SetBool("Jump_b", true);
                 }
             } else {
                 this.moveDirection.y = moveDirectionY;
             }
 
             this.moveDirection.y -= this.gravity * Time.deltaTime;
+            
+            Vector3 animMoveSpeed = new Vector3(this.moveDirection.x, 0, this.moveDirection.z);
+            this.animator.SetFloat("Speed_f", (animMoveSpeed.magnitude / this.moveSpeed));
+            
+            this.animator.SetBool("Grounded", this.characterController.isGrounded);
 
             this.characterController.Move(this.moveDirection * Time.deltaTime);
         }
