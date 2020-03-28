@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Photon.Pun;
 using Photon.Realtime;
@@ -6,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Lobby {
     public class Launcher : MonoBehaviourPunCallbacks {
@@ -20,6 +23,7 @@ namespace Lobby {
 
         [Header("UI fields for room")]
         [SerializeField] private GameObject roomPanel;
+
         [SerializeField] private TextMeshProUGUI roomIdText;
         [SerializeField] private GameObject scrollviewContent;
         [SerializeField] private LobbyPlayer lobbyPlayerPrefab;
@@ -34,7 +38,7 @@ namespace Lobby {
 
         private void Awake() {
             this.DisplayAuthentificationPanel();
-            
+
             this.lobbyPlayers = new Dictionary<int, LobbyPlayer>(this.maxPlayers);
         }
 
@@ -102,6 +106,33 @@ namespace Lobby {
         }
 
         public void StartGame() {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+
+            List<int> randomNumbers = RoomUtils.FillListAndShuffle(this.maxPlayers);
+
+            int counter = 0;
+            foreach (KeyValuePair<int, Player> entry in PhotonNetwork.CurrentRoom.Players) {
+                Hashtable playerProperties = new Hashtable();
+                playerProperties["spawnId"] = randomNumbers[counter];
+                playerProperties["skinId"] = randomNumbers[counter];
+                entry.Value.SetCustomProperties(playerProperties);
+                counter++;
+            }
+
+            StartCoroutine(this.LoadLevelForAll());
+        }
+
+        private IEnumerator LoadLevelForAll() {
+            Debug.Log("Start in 3s");
+            yield return new WaitForSeconds(1);
+            
+            Debug.Log("Start in 2s");
+            yield return new WaitForSeconds(1);
+            
+            Debug.Log("Start in 1s");
+            yield return new WaitForSeconds(1);
+            
             PhotonNetwork.LoadLevel("WarRoom");
         }
 
@@ -120,14 +151,14 @@ namespace Lobby {
             foreach (KeyValuePair<int, LobbyPlayer> keyValuePair in this.lobbyPlayers) {
                 Destroy(keyValuePair.Value.gameObject);
             }
-            
+
             this.lobbyPlayers.Clear();
 
             // Fill players in UI
             foreach (KeyValuePair<int, Player> entry in PhotonNetwork.CurrentRoom.Players) {
                 this.CreateLobbyPlayer(entry.Value);
             }
-            
+
             this.roomPanel.SetActive(true);
         }
 
@@ -138,6 +169,10 @@ namespace Lobby {
         }
 
         #region ConnectionCallbacks
+
+        public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps) {
+            Debug.Log("Properties changed");
+        }
 
         public override void OnConnectedToMaster() {
             Debug.Log("I'm now connect to master server");
@@ -166,19 +201,19 @@ namespace Lobby {
 
         public override void OnJoinedRoom() {
             Debug.Log("Room joined with id : " + PhotonNetwork.CurrentRoom.Name);
-            
+
             this.DisplayRoomPanel();
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer) {
             Debug.LogFormat("{0} joined room !", newPlayer.NickName);
-            
+
             this.CreateLobbyPlayer(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer) {
             Debug.LogFormat("{0} left room !", otherPlayer.NickName);
-            
+
             Destroy(this.lobbyPlayers[otherPlayer.ActorNumber].gameObject);
             this.lobbyPlayers.Remove(otherPlayer.ActorNumber);
         }
@@ -186,6 +221,7 @@ namespace Lobby {
         public override void OnLeftRoom() {
             Debug.Log("I left the room");
             this.DisplayAuthentificationPanel();
+            StopAllCoroutines();
         }
 
         public override void OnMasterClientSwitched(Player newMasterClient) {

@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Utils {
@@ -7,6 +8,19 @@ namespace Utils {
         
         public static string CreateRoomId() {
             return "#" + random.Next(1, 9999);
+        }
+        
+        public static List<int> FillListAndShuffle(int quantity)
+        {
+            List<int> spawnNumbers = new List<int>();
+
+            for (int i = 0; i < quantity; i++) {
+                spawnNumbers.Add(i);
+            }
+            
+            spawnNumbers.Sort((x, y) => random.Next(-1, 1));
+
+            return spawnNumbers;
         }
     }
 }
