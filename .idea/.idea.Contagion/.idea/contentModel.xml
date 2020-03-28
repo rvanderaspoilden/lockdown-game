@@ -357,6 +357,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Launcher.cs" t="Include" />
+          <e p="SimpleCameraController.cs" t="Include" />
           <e p="Utils" t="Include">
             <e p="RoomUtils.cs" t="Include" />
           </e>
