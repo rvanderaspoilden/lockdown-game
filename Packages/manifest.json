@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "com.hwaet.projectcloner": "https://github.com/hwaet/UnityProjectCloner.git",
+    "com.unity.cinemachine": "2.5.0",
     "com.unity.collab-proxy": "1.2.16",
     "com.unity.ext.nunit": "1.0.0",
     "com.unity.ide.rider": "1.1.4",
@@ -40,5 +42,11 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
+  },
+  "lock": {
+    "com.hwaet.projectcloner": {
+      "revision": "HEAD",
+      "hash": "2b7497d79e7513a524c99cb1917ad146b2a3a866"
+    }
   }
 }

@@ -356,7 +356,13 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="Launcher.cs" t="Include" />
+          <e p="Game" t="Include">
+            <e p="GameManager.cs" t="Include" />
+          </e>
+          <e p="Lobby" t="Include">
+            <e p="Launcher.cs" t="Include" />
+            <e p="LobbyPlayer.cs" t="Include" />
+          </e>
           <e p="SimpleCameraController.cs" t="Include" />
           <e p="Utils" t="Include">
             <e p="RoomUtils.cs" t="Include" />

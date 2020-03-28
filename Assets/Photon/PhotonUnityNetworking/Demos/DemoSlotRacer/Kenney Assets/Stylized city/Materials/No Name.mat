@@ -284,7 +284,11 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
+<<<<<<< refs/remotes/origin/feat/map
 --- !u!114 &359231772222735061
+=======
+--- !u!114 &6152271127714157668
+>>>>>>> :sparkles: lobby works
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
