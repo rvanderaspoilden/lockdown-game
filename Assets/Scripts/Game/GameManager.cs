@@ -7,9 +7,17 @@ using Random = UnityEngine.Random;
 
 namespace Game {
     public class GameManager : MonoBehaviourPun {
-        [SerializeField] private GameObject playerPrefab;
         
+        [Header("Fields to complete")]
+        [SerializeField] private GameObject playerPrefab;
+
+        [Header("Only for debug")]
+        public static new Camera camera;
+        
+        public static bool isDebugMode = false;
+
         private void Awake() {
+            camera = Camera.main;
             PhotonNetwork.AddCallbackTarget(this);
         }
 
