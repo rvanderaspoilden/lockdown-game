@@ -564,7 +564,7 @@ GameObject:
   - component: {fileID: 1043084762}
   - component: {fileID: 1043084761}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Aim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1206,6 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeText: {fileID: 1083450988}
+  aimImage: {fileID: 1043084761}
 --- !u!1 &1302225627
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,7 +36,7 @@ namespace Game.Player {
             }
 
             if (this.currentWeapon) {
-                this.currentWeapon.SetVisible(false);
+                this.UnHandleWeapon();
             }
         }
 
@@ -49,10 +49,8 @@ namespace Game.Player {
                 this.showWeapon = !this.showWeapon;
 
                 if (this.showWeapon) {
-                    this.currentWeapon.SetVisible(true);
                     this.HandleWeapon();
                 } else {
-                    this.currentWeapon.SetVisible(false);
                     this.UnHandleWeapon();
                 }
             }
@@ -75,16 +73,26 @@ namespace Game.Player {
                 if (Input.GetMouseButtonUp(0)) {
                     this.currentWeapon.StopUsingWeapon();
                     this.animator.SetBool("Shoot_b", false);
-                }  
+                }
             }
         }
 
         public void HandleWeapon() {
+            if (this.currentWeapon) {
+                this.currentWeapon.SetVisible(true);
+            }
+
             this.animator.SetInteger("WeaponType_int", this.currentWeapon.GetAnimationIntValue());
+            HUDManager.instance.SetAimVisibility(true);
         }
 
         public void UnHandleWeapon() {
+            if (this.currentWeapon) {
+                this.currentWeapon.SetVisible(false);
+            }
+
             this.animator.SetInteger("WeaponType_int", 0);
+            HUDManager.instance.SetAimVisibility(false);
         }
 
         public Transform GetHandPos() {
