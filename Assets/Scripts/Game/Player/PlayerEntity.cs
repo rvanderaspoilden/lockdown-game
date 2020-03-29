@@ -10,8 +10,8 @@ using Vector3 = UnityEngine.Vector3;
 namespace Game.Player {
     public class PlayerEntity : MonoBehaviour {
         [Header("Fields to complete")]
-        [SerializeField] private CinemachineVirtualCamera virtualCamera;
-
+        [SerializeField] private CinemachineVirtualCamera fpsCamera;
+        [SerializeField] private CinemachineFreeLook tpsCamera;
         [SerializeField] private new Camera camera;
         [SerializeField] private GameObject skinObject;
         [SerializeField] private float sensitivityX;
@@ -23,7 +23,7 @@ namespace Game.Player {
 
         [Header("Only for debug")]
         [SerializeField] private PhotonView photonView;
-
+        [SerializeField] private PlayerHands playerHands;
         [SerializeField] private Animator animator;
 
         [SerializeField] private CharacterController characterController;
@@ -34,6 +34,7 @@ namespace Game.Player {
             this.photonView = GetComponent<PhotonView>();
             this.animator = GetComponent<Animator>();
             this.camera = GetComponentInChildren<Camera>();
+            this.playerHands = GetComponent<PlayerHands>();
             this.characterController = GetComponent<CharacterController>();
         }
 
@@ -53,27 +54,27 @@ namespace Game.Player {
             }
 
             if (!this.photonView.IsMine) {
-                this.virtualCamera.enabled = false;
+                this.tpsCamera.enabled = false;
+                this.fpsCamera.enabled = false;
                 this.camera.gameObject.SetActive(false);
                 this.skinObject.SetActive(true);
             } else {
-                this.virtualCamera.enabled = true;
                 this.camera.gameObject.SetActive(true);
-                this.skinObject.SetActive(false);
+                this.Freeze();
             }
         }
 
         private void Update() {
-            if (!this.photonView.IsMine && !GameManager.isDebugMode) {
+            if (!this.photonView.IsMine) {
                 return;
             }
-
-            // Manage horizontal rotation
-            this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
 
             if (this.isFrozen) {
                 return;
             }
+            
+            // Manage horizontal rotation
+            this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
 
             this.ManageMovement();
         }
@@ -83,11 +84,22 @@ namespace Game.Player {
         }
 
         public void TakeDamage(float damage) {
+            photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+        }
+
+        [PunRPC]
+        public void RPC_TakeDamage(float damage) {
+            Debug.Log("RPC take damage");
+            if (!photonView.IsMine) {
+                return;
+            }
+            
             this.currentLife -= damage;
 
             if (this.currentLife <= 0) {
                 this.currentLife = 0;
                 this.animator.SetBool("Death_b", true);
+                this.playerHands.ResetAll();
                 this.Freeze();
             }
 
@@ -97,6 +109,15 @@ namespace Game.Player {
         }
 
         public void Heal(float value) {
+            photonView.RPC("RPC_Heal", RpcTarget.All, value);
+        }
+        
+        [PunRPC]
+        public void RPC_Heal(float value) {
+            if (!photonView.IsMine) {
+                return;
+            }
+
             this.currentLife += value;
 
             if (this.currentLife >= this.maxLife) {
@@ -115,11 +136,16 @@ namespace Game.Player {
 
         public void Freeze() {
             this.isFrozen = true;
+            this.skinObject.SetActive(true);
+            this.tpsCamera.enabled = true;
+            this.fpsCamera.enabled = false;
         }
 
         public void UnFreeze() {
             this.isFrozen = false;
-            Debug.Log("I'm unfrozen");
+            this.skinObject.SetActive(false);
+            this.tpsCamera.enabled = false;
+            this.fpsCamera.enabled = true;
         }
 
         private void ManageMovement() {

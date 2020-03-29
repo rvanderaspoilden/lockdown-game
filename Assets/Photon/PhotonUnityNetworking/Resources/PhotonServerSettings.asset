@@ -42,6 +42,8 @@ MonoBehaviour:
   - RPC_SetVisible
   - RPC_SetShootParticleState
   - RPC_UpdateLife
+  - RPC_Heal
+  - RPC_TakeDamage
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -30,6 +30,16 @@ namespace Game.Player {
             return this.currentWeapon != null;
         }
 
+        public void ResetAll() {
+            if (!photonView.IsMine) {
+                return;
+            }
+
+            if (this.currentWeapon) {
+                this.currentWeapon.SetVisible(false);
+            }
+        }
+
         private void Update() {
             if (!photonView.IsMine) {
                 return;

@@ -30,6 +30,9 @@ namespace Game {
         private void Awake() {
             instance = this;
             PhotonNetwork.AddCallbackTarget(this);
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         private void Start() {
@@ -61,11 +64,10 @@ namespace Game {
         [PunRPC]
         private void UnFreezePlayer() {
             GameManager.localPlayer.UnFreeze();
-            Debug.Log("I'm unfrozen");
         }
 
         private void InstantiateWeapons() {
-            foreach (Transform spawn in this.playerSpawns) {
+            foreach (Transform spawn in this.weaponSpawns) {
                 PhotonNetwork.Instantiate("Prefabs/Game/" + this.weaponPrefabs[Random.Range(0, this.weaponPrefabs.Length)].name, spawn.position, Quaternion.identity);
             }
         }

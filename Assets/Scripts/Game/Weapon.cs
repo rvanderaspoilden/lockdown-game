@@ -9,6 +9,7 @@ namespace Game {
     public class Weapon : MonoBehaviourPun {
         [Header("Settings")]
         [SerializeField] private float damage;
+
         [SerializeField] private float range = 5f;
         [SerializeField] private float fireRate = 0.1f;
         [SerializeField] private WeaponType weaponType;
@@ -18,6 +19,7 @@ namespace Game {
 
         [Header("Only for debug")]
         [SerializeField] private Collider collider;
+
         [SerializeField] private Animator animator;
         [SerializeField] private bool isFiring;
         [SerializeField] private float shootTimer;
@@ -46,18 +48,21 @@ namespace Game {
 
         private void Update() {
             if (this.isFiring) {
-                this.shootTimer += Time.deltaTime;
-
-                if (this.shootTimer >= this.fireRate) {
+                if (this.shootTimer == 0) {
                     RaycastHit hit;
 
                     Debug.DrawRay(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward) * range, Color.blue);
                     if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range)) {
                         if (hit.collider.CompareTag("Player")) {
-                            hit.collider.GetComponent<PlayerEntity>().TakeDamage(this.damage);
+                            Debug.Log("Touched player : " + hit.collider.name);
+                            hit.collider.GetComponentInParent<PlayerEntity>().TakeDamage(this.damage);
                         }
                     }
+                }
+                
+                this.shootTimer += Time.deltaTime;
 
+                if (this.shootTimer >= this.fireRate) {
                     this.shootTimer = 0f;
                 }
             }
@@ -92,7 +97,7 @@ namespace Game {
             if (photonView.IsMine) {
                 this.animator.SetBool("hasOwner", true);
             }
-            
+
             this.MoveWeapon(playerViewID);
         }
 
