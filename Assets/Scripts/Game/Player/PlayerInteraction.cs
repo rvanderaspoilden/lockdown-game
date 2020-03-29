@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Game.Player {
-    public class PlayerInteraction : MonoBehaviour {
+    public class PlayerInteraction : MonoBehaviourPun {
         [Header("Only for debug")]
         [SerializeField] private PlayerHands hands;
 
@@ -18,12 +19,20 @@ namespace Game.Player {
         }
 
         private void OnTriggerEnter(Collider other) {
+            if (!photonView.IsMine) {
+                return;
+            }
+
             if (other.CompareTag("Weapon") && !this.hands.HasWeapon()) {
                 this.hands.SetWeapon(other.GetComponent<Weapon>());
             }
         }
 
         private void OnTriggerStay(Collider other) {
+            if (!photonView.IsMine) {
+                return;
+            }
+
             if (other.CompareTag("CovidArea") && covidCoroutine == null) {
                 Debug.Log("Enter in covid area");
                 this.covidCoroutine = StartCoroutine(this.TakeDamageFromCovid());
@@ -31,6 +40,10 @@ namespace Game.Player {
         }
 
         private void OnTriggerExit(Collider other) {
+            if (!photonView.IsMine) {
+                return;
+            }
+
             if (other.CompareTag("CovidArea")) {
                 Debug.Log("Covid left");
                 StopCoroutine(this.covidCoroutine);

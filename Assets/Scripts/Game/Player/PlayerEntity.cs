@@ -5,12 +5,14 @@ using System.Numerics;
 using Cinemachine;
 using Photon.Pun;
 using UnityEngine;
+using Random = System.Random;
 using Vector3 = UnityEngine.Vector3;
 
 namespace Game.Player {
     public class PlayerEntity : MonoBehaviour {
         [Header("Fields to complete")]
         [SerializeField] private CinemachineVirtualCamera fpsCamera;
+
         [SerializeField] private CinemachineFreeLook tpsCamera;
         [SerializeField] private new Camera camera;
         [SerializeField] private GameObject skinObject;
@@ -22,10 +24,13 @@ namespace Game.Player {
         [SerializeField] private float maxLife = 100f;
         [SerializeField] private GameObject covidArea;
         [SerializeField] private float covidDamages = 5f;
+        [SerializeField] private bool patientZero;
 
         [Header("Only for debug")]
         [SerializeField] private PhotonView photonView;
+
         [SerializeField] private PlayerHands playerHands;
+        [SerializeField] private PlayerSound playerSound;
         [SerializeField] private Animator animator;
 
         [SerializeField] private bool isContaminated;
@@ -38,6 +43,7 @@ namespace Game.Player {
             this.photonView = GetComponent<PhotonView>();
             this.animator = GetComponent<Animator>();
             this.camera = GetComponentInChildren<Camera>();
+            this.playerSound = GetComponent<PlayerSound>();
             this.playerHands = GetComponent<PlayerHands>();
             this.characterController = GetComponent<CharacterController>();
         }
@@ -47,7 +53,7 @@ namespace Game.Player {
             this.currentLife = this.maxLife;
             this.isContaminated = false;
             this.covidArea.SetActive(false);
-            
+
             // Freeze player until warmup begin
             if (!GameManager.isDebugMode) {
                 this.Freeze();
@@ -78,7 +84,7 @@ namespace Game.Player {
             if (this.isFrozen) {
                 return;
             }
-            
+
             // Manage horizontal rotation
             this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
 
@@ -90,22 +96,28 @@ namespace Game.Player {
         }
 
         public void TakeDamage(float damage) {
-            photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+            if (this.isContaminated) {
+                photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+            }
         }
-        
+
         public void TakeDamageFromCovid() {
-            photonView.RPC("RPC_TakeDamage", RpcTarget.All, this.covidDamages);
+            if (!this.isContaminated) {
+                photonView.RPC("RPC_TakeDamage", RpcTarget.All, this.covidDamages);
+            }
         }
 
         [PunRPC]
         public void RPC_TakeDamage(float damage) {
-            Debug.Log("RPC take damage");
             if (!photonView.IsMine) {
                 return;
             }
             
+            Debug.Log("I took damages");
+
+
             this.currentLife -= damage;
-            
+
             if (this.currentLife <= 0) {
                 this.currentLife = 0;
                 this.animator.SetBool("Death_b", true);
@@ -121,7 +133,7 @@ namespace Game.Player {
         public void Heal(float value) {
             photonView.RPC("RPC_Heal", RpcTarget.All, value);
         }
-        
+
         [PunRPC]
         public void RPC_Heal(float value) {
             if (!photonView.IsMine) {
@@ -142,10 +154,23 @@ namespace Game.Player {
         [PunRPC]
         public void RPC_UpdateLife(float currentLife) {
             this.currentLife = currentLife;
+
+            if (this.currentLife == 0f) {
+                this.isContaminated = false;
+                StopAllCoroutines();
+                this.covidArea.SetActive(false);
+                return;
+            }
             
-            if (this.currentLife < 60f) {
+            if (this.currentLife < 30f && !this.isContaminated) {
                 this.isContaminated = true;
+                this.currentLife = this.maxLife;
                 this.covidArea.SetActive(true);
+
+                if (photonView.IsMine) {
+                    HUDManager.instance.RefreshLifeUI(this.currentLife);
+                    StartCoroutine(this.CaughRoutine());
+                }
             }
         }
 
@@ -161,6 +186,13 @@ namespace Game.Player {
             this.skinObject.SetActive(false);
             this.tpsCamera.enabled = false;
             this.fpsCamera.enabled = true;
+        }
+
+        private IEnumerator CaughRoutine() {
+            while (this.isContaminated) {
+                yield return new WaitForSeconds(UnityEngine.Random.Range(3, 5));
+                this.playerSound.Cough();
+            }
         }
 
         private void ManageMovement() {

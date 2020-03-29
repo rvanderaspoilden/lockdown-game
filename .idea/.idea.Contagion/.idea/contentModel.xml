@@ -194,6 +194,7 @@
               <e p="PlayerEntity.cs" t="Include" />
               <e p="PlayerHands.cs" t="Include" />
               <e p="PlayerInteraction.cs" t="Include" />
+              <e p="PlayerSound.cs" t="Include" />
             </e>
             <e p="Weapon.cs" t="Include" />
           </e>
