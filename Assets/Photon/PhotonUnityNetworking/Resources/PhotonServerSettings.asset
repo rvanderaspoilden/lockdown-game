@@ -41,6 +41,10 @@ MonoBehaviour:
   - RPC_WeaponOwnerChanged
   - UnFreezePlayer
   - RPC_Cough
+  - RPC_SetAsPatientZero
+  - FreezePlayer
+  - RPC_FreezePlayer
+  - RPC_UnFreezePlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

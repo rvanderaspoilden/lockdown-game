@@ -17,13 +17,11 @@ namespace Game.Player {
         }
 
         public void Cough() {
-            Debug.Log("Cough");
             photonView.RPC("RPC_Cough", RpcTarget.All);
         }
 
         [PunRPC]
         public void RPC_Cough() {
-            Debug.Log("RPC_Cough");
             this.audioSource.PlayOneShot(this.coughSound);
         }
     }

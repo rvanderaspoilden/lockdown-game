@@ -80,19 +80,17 @@ namespace Game.Player {
         public void HandleWeapon() {
             if (this.currentWeapon) {
                 this.currentWeapon.SetVisible(true);
+                this.animator.SetInteger("WeaponType_int", this.currentWeapon.GetAnimationIntValue());
+                HUDManager.instance.SetAimVisibility(true);
             }
-
-            this.animator.SetInteger("WeaponType_int", this.currentWeapon.GetAnimationIntValue());
-            HUDManager.instance.SetAimVisibility(true);
         }
 
         public void UnHandleWeapon() {
             if (this.currentWeapon) {
                 this.currentWeapon.SetVisible(false);
+                this.animator.SetInteger("WeaponType_int", 0);
+                HUDManager.instance.SetAimVisibility(false);
             }
-
-            this.animator.SetInteger("WeaponType_int", 0);
-            HUDManager.instance.SetAimVisibility(false);
         }
 
         public Transform GetHandPos() {

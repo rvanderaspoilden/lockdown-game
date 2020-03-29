@@ -40,6 +40,9 @@ namespace Lobby {
             this.DisplayAuthentificationPanel();
 
             this.lobbyPlayers = new Dictionary<int, LobbyPlayer>(this.maxPlayers);
+
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
         }
 
         // Start is called before the first frame update
@@ -50,7 +53,14 @@ namespace Lobby {
 
             // Photon connection
             PhotonNetwork.AutomaticallySyncScene = true;
-            this.Connect();
+
+            if (PhotonNetwork.IsConnected) {
+                if (PhotonNetwork.CurrentRoom != null) {
+                    this.DisplayRoomPanel();
+                }
+            } else {
+                this.Connect();
+            }
         }
 
         private void OnDestroy() {

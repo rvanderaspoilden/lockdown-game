@@ -33,7 +33,7 @@ namespace Game.Player {
         [SerializeField] private PlayerSound playerSound;
         [SerializeField] private Animator animator;
 
-        [SerializeField] private bool isContaminated;
+        [SerializeField] private bool contaminated;
 
         [SerializeField] private CharacterController characterController;
         [SerializeField] private Vector3 moveDirection = Vector3.zero;
@@ -51,14 +51,9 @@ namespace Game.Player {
         private void Start() {
             // Manage life and contamination
             this.currentLife = this.maxLife;
-            this.isContaminated = false;
+            this.contaminated = false;
             this.covidArea.SetActive(false);
-
-            // Freeze player until warmup begin
-            if (!GameManager.isDebugMode) {
-                this.Freeze();
-            }
-
+            
             // Manage skin
             int skinId = (int) this.photonView.Owner.CustomProperties["skinId"];
             foreach (SkinnedMeshRenderer renderer in this.skinObject.GetComponentsInChildren<SkinnedMeshRenderer>()) {
@@ -95,16 +90,41 @@ namespace Game.Player {
             return this.photonView;
         }
 
+        public bool IsPatientZero() {
+            return this.patientZero;
+        }
+
+        public void SetAsPatientZero() {
+            photonView.RPC("RPC_SetAsPatientZero", RpcTarget.All);
+        }
+
+        public bool IsDied() {
+            return this.currentLife == 0f;
+        }
+
+        [PunRPC]
+        public void RPC_SetAsPatientZero() {
+            if (photonView.IsMine) {
+                Debug.Log("I'm patient zero");
+            }
+            this.patientZero = true;
+            this.SetAsContaminated();
+        }
+
         public void TakeDamage(float damage) {
-            if (this.isContaminated) {
+            if (this.contaminated) {
                 photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
             }
         }
 
         public void TakeDamageFromCovid() {
-            if (!this.isContaminated) {
+            if (!this.contaminated) {
                 photonView.RPC("RPC_TakeDamage", RpcTarget.All, this.covidDamages);
             }
+        }
+
+        public bool IsContaminated() {
+            return this.contaminated;
         }
 
         [PunRPC]
@@ -156,21 +176,30 @@ namespace Game.Player {
             this.currentLife = currentLife;
 
             if (this.currentLife == 0f) {
-                this.isContaminated = false;
+                this.contaminated = false;
                 StopAllCoroutines();
                 this.covidArea.SetActive(false);
+                GameManager.instance.CheckContaminedNumber();
                 return;
             }
             
-            if (this.currentLife < 30f && !this.isContaminated) {
-                this.isContaminated = true;
-                this.currentLife = this.maxLife;
-                this.covidArea.SetActive(true);
+            if (this.currentLife < 30f && !this.contaminated) {
+                this.SetAsContaminated();
+            }
+        }
 
-                if (photonView.IsMine) {
-                    HUDManager.instance.RefreshLifeUI(this.currentLife);
-                    StartCoroutine(this.CaughRoutine());
-                }
+        public void SetAsContaminated() {
+            this.contaminated = true;
+            this.currentLife = this.maxLife;
+            this.covidArea.SetActive(true);
+
+            if (photonView.IsMine) {
+                HUDManager.instance.RefreshLifeUI(this.currentLife);
+                StartCoroutine(this.CoughRoutine());
+            }
+
+            if (PhotonNetwork.IsMasterClient) {
+                GameManager.instance.CheckContaminedNumber();
             }
         }
 
@@ -179,6 +208,7 @@ namespace Game.Player {
             this.skinObject.SetActive(true);
             this.tpsCamera.enabled = true;
             this.fpsCamera.enabled = false;
+            this.playerHands.UnHandleWeapon();
         }
 
         public void UnFreeze() {
@@ -186,11 +216,12 @@ namespace Game.Player {
             this.skinObject.SetActive(false);
             this.tpsCamera.enabled = false;
             this.fpsCamera.enabled = true;
+            this.playerHands.HandleWeapon();
         }
 
-        private IEnumerator CaughRoutine() {
-            while (this.isContaminated) {
-                yield return new WaitForSeconds(UnityEngine.Random.Range(3, 5));
+        private IEnumerator CoughRoutine() {
+            while (this.contaminated && !GameManager.gameEnded) {
+                yield return new WaitForSeconds(UnityEngine.Random.Range(3, 30));
                 this.playerSound.Cough();
             }
         }

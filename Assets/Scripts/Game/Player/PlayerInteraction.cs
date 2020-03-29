@@ -23,7 +23,7 @@ namespace Game.Player {
                 return;
             }
 
-            if (other.CompareTag("Weapon") && !this.hands.HasWeapon()) {
+            if (other.CompareTag("Weapon") && !this.playerEntity.IsContaminated() && !this.hands.HasWeapon()) {
                 this.hands.SetWeapon(other.GetComponent<Weapon>());
             }
         }
@@ -33,8 +33,7 @@ namespace Game.Player {
                 return;
             }
 
-            if (other.CompareTag("CovidArea") && covidCoroutine == null) {
-                Debug.Log("Enter in covid area");
+            if (other.CompareTag("CovidArea") && covidCoroutine == null && !this.playerEntity.IsContaminated()) {
                 this.covidCoroutine = StartCoroutine(this.TakeDamageFromCovid());
             }
         }
@@ -44,18 +43,16 @@ namespace Game.Player {
                 return;
             }
 
-            if (other.CompareTag("CovidArea")) {
-                Debug.Log("Covid left");
+            if (other.CompareTag("CovidArea") && this.covidCoroutine != null) {
                 StopCoroutine(this.covidCoroutine);
                 this.covidCoroutine = null;
             }
         }
 
         private IEnumerator TakeDamageFromCovid() {
-            while (true) {
+            while (!this.playerEntity.IsContaminated()) {
                 yield return new WaitForSeconds(3f);
                 this.playerEntity.TakeDamageFromCovid();
-                Debug.Log("Take damage from covid");
             }
         }
     }
