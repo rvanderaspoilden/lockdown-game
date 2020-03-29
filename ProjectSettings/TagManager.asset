@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerSpawn
   - Weapon
+  - CovidArea
   layers:
   - Default
   - TransparentFX

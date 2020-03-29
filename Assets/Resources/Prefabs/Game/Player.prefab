@@ -57,8 +57,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1142022891}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.3329997, z: 0.04799986}
+  m_LocalRotation: {x: 0.072373144, y: -0.015948277, z: 0.0011574106, w: 0.9972494}
+  m_LocalPosition: {x: 0.19723701, y: 2.4919953, z: -6.1650805}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8689866127264580155}
@@ -88,9 +88,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -254,6 +254,50 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1846516454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1846516455}
+  - component: {fileID: 1846516456}
+  m_Layer: 9
+  m_Name: covidArea
+  m_TagString: CovidArea
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1846516455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846516454}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.32, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1348730329998287234}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1846516456
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846516454}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.493518, y: 4.203602, z: 4.8464737}
+  m_Center: {x: 0.14470673, y: 1.5462086, z: 0.01826477}
 --- !u!1 &1138508550704861027
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +495,7 @@ Transform:
   - {fileID: 2322553108896374075}
   - {fileID: 5660754073589963030}
   - {fileID: 1142022895}
+  - {fileID: 1846516455}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -669,6 +714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hands: {fileID: 0}
+  playerEntity: {fileID: 0}
 --- !u!114 &1052932432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3710,7 +3756,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6300269738771519036}
-  m_LocalRotation: {x: 0.1900363, y: -0.015698692, z: 0.0030390983, w: 0.9816469}
+  m_LocalRotation: {x: 0.19003633, y: -0.015698662, z: 0.003039093, w: 0.9816469}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
