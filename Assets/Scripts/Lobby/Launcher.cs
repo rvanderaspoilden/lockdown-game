@@ -133,7 +133,7 @@ namespace Lobby {
             Debug.Log("Start in 1s");
             yield return new WaitForSeconds(1);
             
-            PhotonNetwork.LoadLevel("WarRoom");
+            PhotonNetwork.LoadLevel("Game");
         }
 
         private void DisplayAuthentificationPanel() {

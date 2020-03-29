@@ -20,11 +20,15 @@ namespace Game.Player {
         [SerializeField] private float jumpSpeed = 10;
         [SerializeField] private bool isFrozen = false;
         [SerializeField] private float maxLife = 100f;
+        [SerializeField] private GameObject covidArea;
+        [SerializeField] private float covidDamages = 5f;
 
         [Header("Only for debug")]
         [SerializeField] private PhotonView photonView;
         [SerializeField] private PlayerHands playerHands;
         [SerializeField] private Animator animator;
+
+        [SerializeField] private bool isContaminated;
 
         [SerializeField] private CharacterController characterController;
         [SerializeField] private Vector3 moveDirection = Vector3.zero;
@@ -39,8 +43,10 @@ namespace Game.Player {
         }
 
         private void Start() {
-            // Manage life
+            // Manage life and contamination
             this.currentLife = this.maxLife;
+            this.isContaminated = false;
+            this.covidArea.SetActive(false);
             
             // Freeze player until warmup begin
             if (!GameManager.isDebugMode) {
@@ -86,6 +92,10 @@ namespace Game.Player {
         public void TakeDamage(float damage) {
             photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
         }
+        
+        public void TakeDamageFromCovid() {
+            photonView.RPC("RPC_TakeDamage", RpcTarget.All, this.covidDamages);
+        }
 
         [PunRPC]
         public void RPC_TakeDamage(float damage) {
@@ -95,7 +105,7 @@ namespace Game.Player {
             }
             
             this.currentLife -= damage;
-
+            
             if (this.currentLife <= 0) {
                 this.currentLife = 0;
                 this.animator.SetBool("Death_b", true);
@@ -105,7 +115,7 @@ namespace Game.Player {
 
             HUDManager.instance.RefreshLifeUI(this.currentLife);
 
-            photonView.RPC("RPC_UpdateLife", RpcTarget.Others, this.currentLife);
+            photonView.RPC("RPC_UpdateLife", RpcTarget.All, this.currentLife);
         }
 
         public void Heal(float value) {
@@ -132,6 +142,11 @@ namespace Game.Player {
         [PunRPC]
         public void RPC_UpdateLife(float currentLife) {
             this.currentLife = currentLife;
+            
+            if (this.currentLife < 60f) {
+                this.isContaminated = true;
+                this.covidArea.SetActive(true);
+            }
         }
 
         public void Freeze() {

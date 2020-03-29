@@ -41,7 +41,7 @@ namespace Game.Player {
         private IEnumerator TakeDamageFromCovid() {
             while (true) {
                 yield return new WaitForSeconds(3f);
-                this.playerEntity.TakeDamage(10f);
+                this.playerEntity.TakeDamageFromCovid();
                 Debug.Log("Take damage from covid");
             }
         }
