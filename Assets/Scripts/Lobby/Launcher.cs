@@ -42,7 +42,7 @@ namespace Lobby {
             this.lobbyPlayers = new Dictionary<int, LobbyPlayer>(this.maxPlayers);
 
             Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         // Start is called before the first frame update

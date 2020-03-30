@@ -5,6 +5,7 @@ using System.Numerics;
 using Cinemachine;
 using Photon.Pun;
 using UnityEngine;
+using Utils;
 using Random = System.Random;
 using Vector3 = UnityEngine.Vector3;
 
@@ -53,18 +54,19 @@ namespace Game.Player {
             this.currentLife = this.maxLife;
             this.contaminated = false;
             this.covidArea.SetActive(false);
-            
+
             // Manage skin
             int skinId = (int) this.photonView.Owner.CustomProperties["skinId"];
             foreach (SkinnedMeshRenderer renderer in this.skinObject.GetComponentsInChildren<SkinnedMeshRenderer>()) {
                 renderer.material = GameManager.instance.GetSkinMaterialAt(skinId);
             }
+            
+            this.skinObject.SetActive(true);
 
             if (!this.photonView.IsMine) {
                 this.tpsCamera.enabled = false;
                 this.fpsCamera.enabled = false;
                 this.camera.gameObject.SetActive(false);
-                this.skinObject.SetActive(true);
             } else {
                 this.camera.gameObject.SetActive(true);
                 this.Freeze();
@@ -205,7 +207,8 @@ namespace Game.Player {
 
         public void Freeze() {
             this.isFrozen = true;
-            this.skinObject.SetActive(true);
+            RoomUtils.SetLayerRecursively(this.skinObject, LayerMask.NameToLayer("Player"));
+            Debug.Log(this.skinObject.layer);
             this.tpsCamera.enabled = true;
             this.fpsCamera.enabled = false;
             this.playerHands.UnHandleWeapon();
@@ -213,7 +216,8 @@ namespace Game.Player {
 
         public void UnFreeze() {
             this.isFrozen = false;
-            this.skinObject.SetActive(false);
+            RoomUtils.SetLayerRecursively(this.skinObject, LayerMask.NameToLayer("MinePlayerSkin"));
+            Debug.Log(this.skinObject.layer);
             this.tpsCamera.enabled = false;
             this.fpsCamera.enabled = true;
             this.playerHands.HandleWeapon();
