@@ -806,7 +806,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 497bbddce010fea4da3dcb5c5210ad16, type: 2}
   weaponPrefabs:
   - {fileID: 4011514285507303356, guid: d3ea1e143bf56524cb42ec0a6b2a7c1e, type: 3}
-  warmupDuration: 30
+  warmupDuration: 300
   escapeDuration: 300
 --- !u!114 &1970199634
 MonoBehaviour:

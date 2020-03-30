@@ -81,6 +81,10 @@ namespace Lobby {
             this.roomId = roomId;
         }
 
+        public void QuitGame() {
+            Application.Quit();
+        }
+
         public void CreateRoom() {
             if (PhotonNetwork.NickName == "") {
                 Debug.Log("Nickname need to be filled");
