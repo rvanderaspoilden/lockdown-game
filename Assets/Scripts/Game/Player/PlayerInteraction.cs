@@ -13,9 +13,28 @@ namespace Game.Player {
 
         private Coroutine covidCoroutine;
 
+        private RaycastHit forwardHit;
+
         private void Awake() {
             this.playerEntity = GetComponent<PlayerEntity>();
             this.hands = GetComponent<PlayerHands>();
+        }
+
+        private void Update() {
+            if (!photonView.IsMine) {
+                return;
+            }
+
+            // Manage interaction with environment
+            if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out forwardHit, 4, (1 << 12))) {
+                Interactable interactable = forwardHit.collider.GetComponentInParent<Interactable>();
+
+                Debug.Log(interactable.GetInformation());
+
+                if (Input.GetKeyDown(KeyCode.E)) {
+                    interactable.Interact();
+                }
+            }
         }
 
         private void OnTriggerEnter(Collider other) {

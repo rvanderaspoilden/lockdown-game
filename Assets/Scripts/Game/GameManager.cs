@@ -36,7 +36,7 @@ namespace Game {
                 Destroy(instance);
                 instance = this;
             }
-            
+
             PhotonNetwork.AddCallbackTarget(this);
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -67,7 +67,7 @@ namespace Game {
                 allPlayersReady = players.Length == PhotonNetwork.CurrentRoom.PlayerCount;
                 yield return new WaitForSeconds(1);
             } while (!allPlayersReady);
-            
+
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
 
             // Start warmup
@@ -78,16 +78,16 @@ namespace Game {
                 yield return new WaitForSeconds(1);
                 counter--;
             }
-            
+
             // Choose patient zero
             players[Random.Range(0, players.Length)].GetComponent<PlayerEntity>().SetAsPatientZero();
-            
+
             // Instantiate all weapons
             this.InstantiateWeapons();
-            
+
             // Start Escape Timer
             yield return new WaitForSeconds(this.escapeDuration);
-            
+
             // Time is up
             this.EndGame();
         }
@@ -114,9 +114,9 @@ namespace Game {
             photonView.RPC("RPC_FreezePlayer", RpcTarget.All);
 
             gameEnded = true;
-            
+
             StopAllCoroutines();
-            
+
             this.SaveScoring();
 
             StartCoroutine(this.BackToLobby());
@@ -133,12 +133,12 @@ namespace Game {
             foreach (GameObject player in players) {
                 PlayerEntity playerEntity = player.GetComponent<PlayerEntity>();
                 PlayerScore playerScore = player.GetComponent<PlayerScore>();
-                
+
                 float sum = 0;
-                
+
                 if (playerEntity.IsPatientZero()) {
                     sum += (playerScore.GetContaminedPlayer() * 2) + playerScore.GetContaminedAI();
-                } else if(playerEntity.IsContaminated()) {
+                } else if (playerEntity.IsContaminated()) {
                     sum -= 2;
                     sum += (playerScore.GetContaminedPlayer() * .5f);
 
@@ -168,7 +168,7 @@ namespace Game {
         private void RPC_UnFreezePlayer() {
             GameManager.localPlayer.UnFreeze();
         }
-        
+
         [PunRPC]
         private void RPC_FreezePlayer() {
             GameManager.localPlayer.Freeze();

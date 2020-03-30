@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
-
 #if NETFX_CORE
 using System.Diagnostics;
 using Windows.Foundation;
@@ -9,19 +8,16 @@ using Windows.Networking;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 #endif
-
 #if !NO_SOCKET && !NETFX_CORE
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
+
 #endif
 
 
-namespace Photon.Realtime
-{
-
-    public abstract class PhotonPing : IDisposable
-    {
+namespace Photon.Realtime {
+    public abstract class PhotonPing : IDisposable {
         public string DebugString = "";
         public bool Successful;
 
@@ -29,42 +25,37 @@ namespace Photon.Realtime
 
         protected internal int PingLength = 13;
 
-        protected internal byte[] PingBytes = new byte[] { 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x00 };
+        protected internal byte[] PingBytes = new byte[] {0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x00};
 
         protected internal byte PingId;
 
         private static readonly Random RandomIdProvider = new Random();
 
-        public virtual bool StartPing(string ip)
-        {
+        public virtual bool StartPing(string ip) {
             throw new NotImplementedException();
         }
 
-        public virtual bool Done()
-        {
+        public virtual bool Done() {
             throw new NotImplementedException();
         }
 
-        public virtual void Dispose()
-        {
+        public virtual void Dispose() {
             throw new NotImplementedException();
         }
 
 
-        protected internal void Init()
-        {
+        protected internal void Init() {
             this.GotResult = false;
             this.Successful = false;
-            this.PingId = (byte)(RandomIdProvider.Next(255));
+            this.PingId = (byte) (RandomIdProvider.Next(255));
         }
     }
 
 
-    #if !NETFX_CORE && !NO_SOCKET
+#if !NETFX_CORE && !NO_SOCKET
     /// <summary>Uses C# Socket class from System.Net.Sockets (as Unity usually does).</summary>
     /// <remarks>Incompatible with Windows 8 Store/Phone API.</remarks>
-    public class PingMono : PhotonPing
-    {
+    public class PingMono : PhotonPing {
         private Socket sock;
 
         /// <summary>
@@ -72,20 +63,14 @@ namespace Photon.Realtime
         /// </summary>
         /// <param name="ip">Address in IPv4 or IPv6 format. An address containing a '.' will be interpreted as IPv4.</param>
         /// <returns>True if the Photon Ping could be sent.</returns>
-        public override bool StartPing(string ip)
-        {
+        public override bool StartPing(string ip) {
             this.Init();
 
-            try
-            {
-                if (this.sock == null)
-                {
-                    if (ip.Contains("."))
-                    {
+            try {
+                if (this.sock == null) {
+                    if (ip.Contains(".")) {
                         this.sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                    }
-                    else
-                    {
+                    } else {
                         this.sock = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
                     }
 
@@ -96,10 +81,8 @@ namespace Photon.Realtime
 
                 this.PingBytes[this.PingBytes.Length - 1] = this.PingId;
                 this.sock.Send(this.PingBytes);
-                this.PingBytes[this.PingBytes.Length - 1] = (byte)(this.PingId+1);  // this buffer is re-used for the result/receive. invalidate the result now.
-            }
-            catch (Exception e)
-            {
+                this.PingBytes[this.PingBytes.Length - 1] = (byte) (this.PingId + 1); // this buffer is re-used for the result/receive. invalidate the result now.
+            } catch (Exception e) {
                 this.sock = null;
                 Console.WriteLine(e);
             }
@@ -107,23 +90,19 @@ namespace Photon.Realtime
             return false;
         }
 
-        public override bool Done()
-        {
-            if (this.GotResult || this.sock == null)
-            {
+        public override bool Done() {
+            if (this.GotResult || this.sock == null) {
                 return true;
             }
 
-            if (!this.sock.Poll(0, SelectMode.SelectRead))
-            {
+            if (!this.sock.Poll(0, SelectMode.SelectRead)) {
                 return false;
             }
 
             int read = this.sock.Receive(this.PingBytes, SocketFlags.None);
 
             bool replyMatch = this.PingBytes[this.PingBytes.Length - 1] == this.PingId && read == this.PingLength;
-            if (!replyMatch)
-            {
+            if (!replyMatch) {
                 this.DebugString += " ReplyMatch is false! ";
             }
 
@@ -133,24 +112,18 @@ namespace Photon.Realtime
             return true;
         }
 
-        public override void Dispose()
-        {
-            try
-            {
+        public override void Dispose() {
+            try {
                 this.sock.Close();
-            }
-            catch
-            {
-            }
+            } catch { }
 
             this.sock = null;
         }
-
     }
-    #endif
+#endif
 
 
-    #if NETFX_CORE
+#if NETFX_CORE
     /// <summary>Windows store API implementation of PhotonPing</summary>
     public class PingWindowsStore : PhotonPing
     {
@@ -233,10 +206,10 @@ namespace Photon.Realtime
             }
         }
     }
-    #endif
+#endif
 
 
-    #if NATIVE_SOCKETS
+#if NATIVE_SOCKETS
 	/// <summary>Abstract base class to provide proper resource management for the below native ping implementations</summary>
 	public abstract class PingNative : PhotonPing
 	{
@@ -396,5 +369,5 @@ namespace Photon.Realtime
         }
     }
     #endif
-    #endif
+#endif
 }

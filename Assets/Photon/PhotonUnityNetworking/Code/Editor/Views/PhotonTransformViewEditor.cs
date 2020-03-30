@@ -9,26 +9,22 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using UnityEditor;
     using UnityEngine;
 
 
     [CustomEditor(typeof(PhotonTransformView))]
-    public class PhotonTransformViewEditor : Editor
-    {
+    public class PhotonTransformViewEditor : Editor {
         private bool helpToggle = false;
 
-        public override void OnInspectorGUI()
-        {
-            if (Application.isPlaying)
-            {
+        public override void OnInspectorGUI() {
+            if (Application.isPlaying) {
                 EditorGUILayout.HelpBox("Editing is disabled in play mode.", MessageType.Info);
                 return;
             }
 
-            PhotonTransformView view = (PhotonTransformView)target;
+            PhotonTransformView view = (PhotonTransformView) target;
 
 
             EditorGUILayout.LabelField("Synchronize Options");
@@ -41,8 +37,7 @@ namespace Photon.Pun
 
 
             this.helpToggle = EditorGUILayout.Foldout(this.helpToggle, "Info");
-            if (this.helpToggle)
-            {
+            if (this.helpToggle) {
                 EditorGUI.indentLevel += 1;
                 EditorGUILayout.HelpBox("The Photon Transform View of PUN 2 is simple by design.\nReplace it with the Photon Transform View Classic if you want the old options.\nThe best solution is a custom IPunObservable implementation.", MessageType.Info, true);
                 EditorGUI.indentLevel -= 1;

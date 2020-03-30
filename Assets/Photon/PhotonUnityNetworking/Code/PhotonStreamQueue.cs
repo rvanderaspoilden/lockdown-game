@@ -9,8 +9,7 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using System.Collections.Generic;
     using UnityEngine;
 
@@ -21,8 +20,7 @@ namespace Photon.Pun
     /// On the receiving end you can call Deserialize() and then the stream will roll out
     /// the received object states in the same order and timeStep they were recorded in.
     /// </summary>
-    public class PhotonStreamQueue
-    {
+    public class PhotonStreamQueue {
         private int m_SampleRate;
         private int m_SampleCount;
         private int m_ObjectsPerSample = -1;
@@ -39,29 +37,22 @@ namespace Photon.Pun
         /// Initializes a new instance of the <see cref="PhotonStreamQueue"/> class.
         /// </summary>
         /// <param name="sampleRate">How many times per second should the object states be sampled</param>
-        public PhotonStreamQueue(int sampleRate)
-        {
+        public PhotonStreamQueue(int sampleRate) {
             this.m_SampleRate = sampleRate;
         }
 
-        private void BeginWritePackage()
-        {
+        private void BeginWritePackage() {
             //If not enough time has passed since the last sample, we don't want to write anything
-            if (Time.realtimeSinceStartup < this.m_LastSampleTime + 1f / this.m_SampleRate)
-            {
+            if (Time.realtimeSinceStartup < this.m_LastSampleTime + 1f / this.m_SampleRate) {
                 this.m_IsWriting = false;
                 return;
             }
 
-            if (this.m_SampleCount == 1)
-            {
+            if (this.m_SampleCount == 1) {
                 this.m_ObjectsPerSample = this.m_Objects.Count;
                 //Debug.Log( "Setting m_ObjectsPerSample to " + m_ObjectsPerSample );
-            }
-            else if (this.m_SampleCount > 1)
-            {
-                if (this.m_Objects.Count / this.m_SampleCount != this.m_ObjectsPerSample)
-                {
+            } else if (this.m_SampleCount > 1) {
+                if (this.m_Objects.Count / this.m_SampleCount != this.m_ObjectsPerSample) {
                     Debug.LogWarning("The number of objects sent via a PhotonStreamQueue has to be the same each frame");
                     Debug.LogWarning("Objects in List: " + this.m_Objects.Count + " / Sample Count: " + this.m_SampleCount + " = " + this.m_Objects.Count / this.m_SampleCount + " != " + this.m_ObjectsPerSample);
                 }
@@ -80,8 +71,7 @@ namespace Photon.Pun
         /// <summary>
         /// Resets the PhotonStreamQueue. You need to do this whenever the amount of objects you are observing changes
         /// </summary>
-        public void Reset()
-        {
+        public void Reset() {
             this.m_SampleCount = 0;
             this.m_ObjectsPerSample = -1;
 
@@ -95,17 +85,14 @@ namespace Photon.Pun
         /// Adds the next object to the queue. This works just like PhotonStream.SendNext
         /// </summary>
         /// <param name="obj">The object you want to add to the queue</param>
-        public void SendNext(object obj)
-        {
-            if (Time.frameCount != this.m_LastFrameCount)
-            {
+        public void SendNext(object obj) {
+            if (Time.frameCount != this.m_LastFrameCount) {
                 this.BeginWritePackage();
             }
 
             this.m_LastFrameCount = Time.frameCount;
 
-            if (this.m_IsWriting == false)
-            {
+            if (this.m_IsWriting == false) {
                 return;
             }
 
@@ -115,8 +102,7 @@ namespace Photon.Pun
         /// <summary>
         /// Determines whether the queue has stored any objects
         /// </summary>
-        public bool HasQueuedObjects()
-        {
+        public bool HasQueuedObjects() {
             return this.m_NextObjectIndex != -1;
         }
 
@@ -124,15 +110,12 @@ namespace Photon.Pun
         /// Receives the next object from the queue. This works just like PhotonStream.ReceiveNext
         /// </summary>
         /// <returns></returns>
-        public object ReceiveNext()
-        {
-            if (this.m_NextObjectIndex == -1)
-            {
+        public object ReceiveNext() {
+            if (this.m_NextObjectIndex == -1) {
                 return null;
             }
 
-            if (this.m_NextObjectIndex >= this.m_Objects.Count)
-            {
+            if (this.m_NextObjectIndex >= this.m_Objects.Count) {
                 this.m_NextObjectIndex -= this.m_ObjectsPerSample;
             }
 
@@ -143,20 +126,17 @@ namespace Photon.Pun
         /// Serializes the specified stream. Call this in your OnPhotonSerializeView method to send the whole recorded stream.
         /// </summary>
         /// <param name="stream">The PhotonStream you receive as a parameter in OnPhotonSerializeView</param>
-        public void Serialize(PhotonStream stream)
-        {
+        public void Serialize(PhotonStream stream) {
             // TODO: find a better solution for this:
             // the "if" is a workaround for packages which have only 1 sample/frame. in that case, SendNext didn't set the obj per sample.
-            if (this.m_Objects.Count > 0 && this.m_ObjectsPerSample < 0)
-            {
+            if (this.m_Objects.Count > 0 && this.m_ObjectsPerSample < 0) {
                 this.m_ObjectsPerSample = this.m_Objects.Count;
             }
 
             stream.SendNext(this.m_SampleCount);
             stream.SendNext(this.m_ObjectsPerSample);
 
-            for (int i = 0; i < this.m_Objects.Count; ++i)
-            {
+            for (int i = 0; i < this.m_Objects.Count; ++i) {
                 stream.SendNext(this.m_Objects[i]);
             }
 
@@ -170,24 +150,19 @@ namespace Photon.Pun
         /// Deserializes the specified stream. Call this in your OnPhotonSerializeView method to receive the whole recorded stream.
         /// </summary>
         /// <param name="stream">The PhotonStream you receive as a parameter in OnPhotonSerializeView</param>
-        public void Deserialize(PhotonStream stream)
-        {
+        public void Deserialize(PhotonStream stream) {
             this.m_Objects.Clear();
 
             this.m_SampleCount = (int) stream.ReceiveNext();
             this.m_ObjectsPerSample = (int) stream.ReceiveNext();
 
-            for (int i = 0; i < this.m_SampleCount * this.m_ObjectsPerSample; ++i)
-            {
+            for (int i = 0; i < this.m_SampleCount * this.m_ObjectsPerSample; ++i) {
                 this.m_Objects.Add(stream.ReceiveNext());
             }
 
-            if (this.m_Objects.Count > 0)
-            {
+            if (this.m_Objects.Count > 0) {
                 this.m_NextObjectIndex = 0;
-            }
-            else
-            {
+            } else {
                 this.m_NextObjectIndex = -1;
             }
 

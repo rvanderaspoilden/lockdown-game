@@ -8,7 +8,7 @@ namespace Game.Player {
     public class PlayerSound : MonoBehaviourPun {
         [Header("Settings")]
         [SerializeField] private AudioClip coughSound;
-        
+
         [Header("Only for debug")]
         [SerializeField] private AudioSource audioSource;
 
@@ -25,5 +25,4 @@ namespace Game.Player {
             this.audioSource.PlayOneShot(this.coughSound);
         }
     }
-   
 }

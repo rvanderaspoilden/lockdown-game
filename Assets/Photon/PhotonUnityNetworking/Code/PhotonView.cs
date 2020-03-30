@@ -9,18 +9,16 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using System;
     using UnityEngine;
     using UnityEngine.Serialization;
     using System.Collections.Generic;
     using Photon.Realtime;
-
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
 
+#endif
 
 
     /// <summary>
@@ -28,23 +26,21 @@ namespace Photon.Pun
     /// </summary>
     /// \ingroup publicApi
     [AddComponentMenu("Photon Networking/Photon View")]
-    public class PhotonView : MonoBehaviour
-    {
-        #if UNITY_EDITOR
+    public class PhotonView : MonoBehaviour {
+#if UNITY_EDITOR
         [ContextMenu("Open PUN Wizard")]
-        void OpenPunWizard()
-        {
+        void OpenPunWizard() {
             EditorApplication.ExecuteMenuItem("Window/Photon Unity Networking/PUN Wizard");
         }
-        #endif
+#endif
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         // Suppressing compiler warning "this variable is never used". Only used in the CustomEditor, only in Editor
-        #pragma warning disable 0414
+#pragma warning disable 0414
         [SerializeField]
         bool ObservedComponentsFoldoutOpen = true;
-        #pragma warning restore 0414
-        #endif
+#pragma warning restore 0414
+#endif
 
 
         [NonSerialized]
@@ -66,12 +62,9 @@ namespace Photon.Pun
 
         // NOTE: this is now an integer because unity won't serialize short (needed for instantiation). we SEND only a short though!
         // NOTE: prefabs have a prefixField of -1. this is replaced with any currentLevelPrefix that's used at runtime. instantiated GOs get their prefix set pre-instantiation (so those are not -1 anymore)
-        public int Prefix
-        {
-            get
-            {
-                if (this.prefixField == -1 && PhotonNetwork.NetworkingClient != null)
-                {
+        public int Prefix {
+            get {
+                if (this.prefixField == -1 && PhotonNetwork.NetworkingClient != null) {
                     this.prefixField = PhotonNetwork.currentLevelPrefix;
                 }
 
@@ -87,16 +80,14 @@ namespace Photon.Pun
         /// <summary>
         /// This is the InstantiationData that was passed when calling PhotonNetwork.Instantiate* (if that was used to spawn this prefab)
         /// </summary>
-        public object[] InstantiationData
-        {
-            get
-            {
-                if (!this.didAwake)
-                {
+        public object[] InstantiationData {
+            get {
+                if (!this.didAwake) {
                     // even though viewID and instantiationID are setup before the GO goes live, this data can't be set. as workaround: fetch it if needed
                     //this.instantiationDataField = PhotonNetwork.FetchInstantiationData(this.InstantiationId);
                     Debug.LogError("PhotonNetwork.FetchInstantiationData() was removed. Can only return this.instantiationDataField.");
                 }
+
                 return this.instantiationDataField;
             }
             set { this.instantiationDataField = value; }
@@ -108,6 +99,7 @@ namespace Photon.Pun
         /// For internal use only, don't use
         /// </summary>
         protected internal List<object> lastOnSerializeDataSent = null;
+
         protected internal List<object> syncValues;
 
         /// <summary>
@@ -137,11 +129,9 @@ namespace Photon.Pun
         /// The ID of the PhotonView. Identifies it in a networked game (per room).
         /// </summary>
         /// <remarks>See: [Network Instantiation](@ref instantiateManual)</remarks>
-        public int ViewID
-        {
+        public int ViewID {
             get { return this.viewIdField; }
-            set
-            {
+            set {
                 // if ID was 0 for an awakened PhotonView, the view should add itself into the NetworkingClient.photonViewList after setup
                 bool viewMustRegister = this.didAwake && this.viewIdField == 0 && value != 0;
                 //int oldValue = this.viewIdField;
@@ -149,14 +139,14 @@ namespace Photon.Pun
                 // TODO: decide if a viewID can be changed once it wasn't 0. most likely that is not a good idea
                 // check if this view is in NetworkingClient.photonViewList and UPDATE said list (so we don't keep the old viewID with a reference to this object)
                 // PhotonNetwork.NetworkingClient.RemovePhotonView(this, true);
-                
+
                 this.viewIdField = value;
                 this.ownerId = value / PhotonNetwork.MAX_VIEW_IDS;
 
-                if (viewMustRegister)
-                {
+                if (viewMustRegister) {
                     PhotonNetwork.RegisterPhotonView(this);
                 }
+
                 //Debug.Log("Set ViewID: " + value + " ->  owner: " + this.ownerId + " was: "+ oldValue);
             }
         }
@@ -170,8 +160,7 @@ namespace Photon.Pun
         /// creator leaves the game and the current Master Client can control them (whoever that is).
         /// The ownerId is 0 (player IDs are 1 and up).
         /// </remarks>
-        public bool IsSceneView
-        {
+        public bool IsSceneView {
             get { return this.CreatorActorNr == 0; }
         }
 
@@ -185,26 +174,21 @@ namespace Photon.Pun
         /// ownership by calling the PhotonView's RequestOwnership method.
         /// The current owner has to implement IPunCallbacks.OnOwnershipRequest to react to the ownership request.
         /// </remarks>
-        public Player Owner
-        {
-            get
-            {
+        public Player Owner {
+            get {
                 // TODO cache Owner
                 // using this.OwnerActorNr instead of this.ownerId so that it's the right value during awake.
                 return PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(this.OwnerActorNr);
             }
         }
 
-        public int OwnerActorNr
-        {
+        public int OwnerActorNr {
             get { return this.didAwake ? this.ownerId : this.ViewID / PhotonNetwork.MAX_VIEW_IDS; }
             protected internal set { this.ownerId = value; }
         }
 
-        public Player Controller
-        {
-            get
-            {
+        public Player Controller {
+            get {
                 // TODO cache Owner
                 if (PhotonNetwork.CurrentRoom == null) return PhotonNetwork.LocalPlayer;
                 if (!this.IsOwnerActive) return PhotonNetwork.MasterClient;
@@ -212,18 +196,15 @@ namespace Photon.Pun
             }
         }
 
-        public int ControllerActorNr
-        {
-            get { return this.IsOwnerActive ? this.OwnerActorNr : (PhotonNetwork.MasterClient != null ? PhotonNetwork.MasterClient.ActorNumber:-1) ; }
+        public int ControllerActorNr {
+            get { return this.IsOwnerActive ? this.OwnerActorNr : (PhotonNetwork.MasterClient != null ? PhotonNetwork.MasterClient.ActorNumber : -1); }
         }
 
-        public bool IsOwnerActive
-        {
+        public bool IsOwnerActive {
             get { return this.Owner != null && !this.Owner.IsInactive; }
         }
 
-        public int CreatorActorNr
-        {
+        public int CreatorActorNr {
             get { return this.viewIdField / PhotonNetwork.MAX_VIEW_IDS; }
         }
 
@@ -235,13 +216,11 @@ namespace Photon.Pun
         /// True in case the owner matches the local Player.
         /// True if this is a scene photonview on the Master client.
         /// </remarks>
-        public bool IsMine
-        {
-            get
-            {
+        public bool IsMine {
+            get {
                 // using this.OwnerActorNr instead of this.ownerId so that it's the right value during awake.
                 return (this.OwnerActorNr == PhotonNetwork.LocalPlayer.ActorNumber) || (PhotonNetwork.IsMasterClient && !this.IsOwnerActive);
-             }
+            }
         }
 
         protected internal bool didAwake;
@@ -256,12 +235,10 @@ namespace Photon.Pun
 
 
         /// <summary>Called by Unity on start of the application and does a setup the PhotonView.</summary>
-        protected internal void Awake()
-        {
-            if (this.ViewID != 0)
-            {
+        protected internal void Awake() {
+            if (this.ViewID != 0) {
                 this.ownerId = this.ViewID / PhotonNetwork.MAX_VIEW_IDS;
-                
+
                 // registration might be too late when some script (on this GO) searches this view BUT GetPhotonView() can search ALL in that case
                 PhotonNetwork.RegisterPhotonView(this);
             }
@@ -270,14 +247,11 @@ namespace Photon.Pun
         }
 
 
-        protected internal void OnDestroy()
-        {
-            if (!this.removedFromLocalViewList)
-            {
+        protected internal void OnDestroy() {
+            if (!this.removedFromLocalViewList) {
                 bool wasInList = PhotonNetwork.LocalCleanPhotonView(this);
-                
-                if (wasInList && this.InstantiationId > 0 && !PhotonHandler.AppQuits && PhotonNetwork.LogLevel >= PunLogLevel.Informational)
-                {
+
+                if (wasInList && this.InstantiationId > 0 && !PhotonHandler.AppQuits && PhotonNetwork.LogLevel >= PunLogLevel.Informational) {
                     Debug.Log("PUN-instantiated '" + this.gameObject.name + "' got destroyed by engine. This is OK when loading levels. Otherwise use: PhotonNetwork.Destroy().");
                 }
             }
@@ -292,8 +266,7 @@ namespace Photon.Pun
         ///
         /// The owner/controller of a PhotonView is also the client which sends position updates of the GameObject.
         /// </remarks>
-        public void RequestOwnership()
-        {
+        public void RequestOwnership() {
             PhotonNetwork.RequestOwnership(this.ViewID, this.ownerId);
         }
 
@@ -303,8 +276,7 @@ namespace Photon.Pun
         /// <remarks>
         /// The owner/controller of a PhotonView is also the client which sends position updates of the GameObject.
         /// </remarks>
-        public void TransferOwnership(Player newOwner)
-        {
+        public void TransferOwnership(Player newOwner) {
             this.TransferOwnership(newOwner.ActorNumber);
         }
 
@@ -314,58 +286,43 @@ namespace Photon.Pun
         /// <remarks>
         /// The owner/controller of a PhotonView is also the client which sends position updates of the GameObject.
         /// </remarks>
-        public void TransferOwnership(int newOwnerId)
-        {
+        public void TransferOwnership(int newOwnerId) {
             PhotonNetwork.TransferOwnership(this.ViewID, newOwnerId);
-            this.ownerId = newOwnerId;  // immediately switch ownership locally, to avoid more updates sent from this client.
+            this.ownerId = newOwnerId; // immediately switch ownership locally, to avoid more updates sent from this client.
         }
 
 
-        public void SerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (this.ObservedComponents != null && this.ObservedComponents.Count > 0)
-            {
-                for (int i = 0; i < this.ObservedComponents.Count; ++i)
-                {
+        public void SerializeView(PhotonStream stream, PhotonMessageInfo info) {
+            if (this.ObservedComponents != null && this.ObservedComponents.Count > 0) {
+                for (int i = 0; i < this.ObservedComponents.Count; ++i) {
                     SerializeComponent(this.ObservedComponents[i], stream, info);
                 }
             }
         }
 
-        public void DeserializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (this.ObservedComponents != null && this.ObservedComponents.Count > 0)
-            {
-                for (int i = 0; i < this.ObservedComponents.Count; ++i)
-                {
+        public void DeserializeView(PhotonStream stream, PhotonMessageInfo info) {
+            if (this.ObservedComponents != null && this.ObservedComponents.Count > 0) {
+                for (int i = 0; i < this.ObservedComponents.Count; ++i) {
                     DeserializeComponent(this.ObservedComponents[i], stream, info);
                 }
             }
         }
 
-        protected internal void DeserializeComponent(Component component, PhotonStream stream, PhotonMessageInfo info)
-        {
+        protected internal void DeserializeComponent(Component component, PhotonStream stream, PhotonMessageInfo info) {
             IPunObservable observable = component as IPunObservable;
-            if (observable != null)
-            {
+            if (observable != null) {
                 observable.OnPhotonSerializeView(stream, info);
-            }
-            else
-            {
+            } else {
                 Debug.LogError("Observed scripts have to implement IPunObservable. " + component + " does not. It is Type: " + component.GetType(), component.gameObject);
             }
         }
 
-        protected internal void SerializeComponent(Component component, PhotonStream stream, PhotonMessageInfo info)
-        {
+        protected internal void SerializeComponent(Component component, PhotonStream stream, PhotonMessageInfo info) {
             IPunObservable observable = component as IPunObservable;
-            if (observable != null)
-            {
+            if (observable != null) {
                 observable.OnPhotonSerializeView(stream, info);
-            }
-            else
-            {
-                Debug.LogError("Observed scripts have to implement IPunObservable. "+ component + " does not. It is Type: " + component.GetType(), component.gameObject);
+            } else {
+                Debug.LogError("Observed scripts have to implement IPunObservable. " + component + " does not. It is Type: " + component.GetType(), component.gameObject);
             }
         }
 
@@ -380,8 +337,7 @@ namespace Photon.Pun
         /// While PhotonNetwork.UseRpcMonoBehaviourCache is false, this method has no effect,
         /// because the list is refreshed when a RPC gets called.
         /// </remarks>
-        public void RefreshRpcMonoBehaviourCache()
-        {
+        public void RefreshRpcMonoBehaviourCache() {
             this.RpcMonoBehaviours = this.GetComponents<MonoBehaviour>();
         }
 
@@ -406,8 +362,7 @@ namespace Photon.Pun
         /// <param name="methodName">The name of a fitting method that was has the RPC attribute.</param>
         /// <param name="target">The group of targets and the way the RPC gets sent.</param>
         /// <param name="parameters">The parameters that the RPC method has (must fit this call!).</param>
-        public void RPC(string methodName, RpcTarget target, params object[] parameters)
-        {
+        public void RPC(string methodName, RpcTarget target, params object[] parameters) {
             PhotonNetwork.RPC(this, methodName, target, false, parameters);
         }
 
@@ -432,8 +387,7 @@ namespace Photon.Pun
         ///<param name="target">The group of targets and the way the RPC gets sent.</param>
         ///<param name="encrypt"> </param>
         ///<param name="parameters">The parameters that the RPC method has (must fit this call!).</param>
-        public void RpcSecure(string methodName, RpcTarget target, bool encrypt, params object[] parameters)
-        {
+        public void RpcSecure(string methodName, RpcTarget target, bool encrypt, params object[] parameters) {
             PhotonNetwork.RPC(this, methodName, target, encrypt, parameters);
         }
 
@@ -455,8 +409,7 @@ namespace Photon.Pun
         /// <param name="methodName">The name of a fitting method that was has the RPC attribute.</param>
         /// <param name="targetPlayer">The group of targets and the way the RPC gets sent.</param>
         /// <param name="parameters">The parameters that the RPC method has (must fit this call!).</param>
-        public void RPC(string methodName, Player targetPlayer, params object[] parameters)
-        {
+        public void RPC(string methodName, Player targetPlayer, params object[] parameters) {
             PhotonNetwork.RPC(this, methodName, targetPlayer, false, parameters);
         }
 
@@ -479,29 +432,24 @@ namespace Photon.Pun
         ///<param name="targetPlayer">The group of targets and the way the RPC gets sent.</param>
         ///<param name="encrypt"> </param>
         ///<param name="parameters">The parameters that the RPC method has (must fit this call!).</param>
-        public void RpcSecure(string methodName, Player targetPlayer, bool encrypt, params object[] parameters)
-        {
+        public void RpcSecure(string methodName, Player targetPlayer, bool encrypt, params object[] parameters) {
             PhotonNetwork.RPC(this, methodName, targetPlayer, encrypt, parameters);
         }
 
-        public static PhotonView Get(Component component)
-        {
+        public static PhotonView Get(Component component) {
             return component.GetComponent<PhotonView>();
         }
 
-        public static PhotonView Get(GameObject gameObj)
-        {
+        public static PhotonView Get(GameObject gameObj) {
             return gameObj.GetComponent<PhotonView>();
         }
 
-        public static PhotonView Find(int viewID)
-        {
+        public static PhotonView Find(int viewID) {
             return PhotonNetwork.GetPhotonView(viewID);
         }
 
-        public override string ToString()
-        {
-            return string.Format("View {0}{3} on {1} {2}", this.ViewID, (this.gameObject != null) ? this.gameObject.name : "GO==null", (this.IsSceneView) ? "(scene)" : string.Empty, this.Prefix > 0 ? "lvl"+this.Prefix : "");
+        public override string ToString() {
+            return string.Format("View {0}{3} on {1} {2}", this.ViewID, (this.gameObject != null) ? this.gameObject.name : "GO==null", (this.IsSceneView) ? "(scene)" : string.Empty, this.Prefix > 0 ? "lvl" + this.Prefix : "");
         }
     }
 }

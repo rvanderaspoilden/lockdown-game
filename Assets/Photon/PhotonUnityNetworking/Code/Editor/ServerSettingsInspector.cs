@@ -11,14 +11,11 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-
 using Photon.Pun;
-
 using ExitGames.Client.Photon;
 
 [CustomEditor(typeof(ServerSettings))]
-public class ServerSettingsInspector : Editor
-{
+public class ServerSettingsInspector : Editor {
     private string versionPhoton;
 
     private string[] regionsPrefsList;
@@ -34,16 +31,14 @@ public class ServerSettingsInspector : Editor
     public static bool SearchForSNSOnce;
     private static System.Reflection.MethodInfo drawSImpleSettingsMethod;
 
-    public void Awake()
-    {
+    public void Awake() {
         this.versionPhoton = System.Reflection.Assembly.GetAssembly(typeof(PhotonPeer)).GetName().Version.ToString();
     }
 
 
-    public override void OnInspectorGUI()
-    {
+    public override void OnInspectorGUI() {
         if (vertboxStyle == null)
-            vertboxStyle = new GUIStyle("HelpBox") { padding = new RectOffset(6, 6, 6, 6) };
+            vertboxStyle = new GUIStyle("HelpBox") {padding = new RectOffset(6, 6, 6, 6)};
 
         SerializedObject sObj = new SerializedObject(this.target);
         ServerSettings settings = this.target as ServerSettings;
@@ -53,16 +48,16 @@ public class ServerSettingsInspector : Editor
 
         #region Version Vertical Box
 
-        EditorGUILayout.BeginVertical(/*vertboxStyle*/);
+        EditorGUILayout.BeginVertical( /*vertboxStyle*/);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel(new GUIContent("Version:", "Version of PUN and Photon3Unity3d.dll."));
         GUILayout.FlexibleSpace();
         var helpicorect = EditorGUILayout.GetControlRect(GUILayout.MaxWidth(16));
         EditorGUIUtility.AddCursorRect(helpicorect, MouseCursor.Link);
-        if (GUI.Button(helpicorect, PhotonGUI.HelpIcon, GUIStyle.none))
-        {
+        if (GUI.Button(helpicorect, PhotonGUI.HelpIcon, GUIStyle.none)) {
             Application.OpenURL(PhotonEditor.UrlPunSettings);
         }
+
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.LabelField("Pun: " + PhotonNetwork.PunVersion + " Photon lib: " + this.versionPhoton);
         EditorGUILayout.EndVertical();
@@ -75,13 +70,11 @@ public class ServerSettingsInspector : Editor
         EditorGUI.indentLevel++;
 
 
-        if (showSettings != settings.ShowSettings)
-        {
+        if (showSettings != settings.ShowSettings) {
             showSettingsProp.boolValue = showSettings;
         }
 
-        if (showSettingsProp.boolValue)
-        {
+        if (showSettingsProp.boolValue) {
             SerializedProperty settingsSp = this.serializedObject.FindProperty("AppSettings");
 
             EditorGUI.indentLevel++;
@@ -89,12 +82,11 @@ public class ServerSettingsInspector : Editor
             //Realtime APP ID
             this.BuildAppIdField(settingsSp.FindPropertyRelative("AppIdRealtime"));
 
-            if (PhotonEditorUtils.HasChat)
-            {
+            if (PhotonEditorUtils.HasChat) {
                 this.BuildAppIdField(settingsSp.FindPropertyRelative("AppIdChat"));
             }
-            if (PhotonEditorUtils.HasVoice)
-            {
+
+            if (PhotonEditorUtils.HasVoice) {
                 this.BuildAppIdField(settingsSp.FindPropertyRelative("AppIdVoice"));
             }
 
@@ -120,20 +112,14 @@ public class ServerSettingsInspector : Editor
 
         EditorGUILayout.BeginVertical(vertboxStyle);
 
-        if (!string.IsNullOrEmpty(PhotonNetwork.BestRegionSummaryInPreferences))
-        {
+        if (!string.IsNullOrEmpty(PhotonNetwork.BestRegionSummaryInPreferences)) {
             this.regionsPrefsList = PhotonNetwork.BestRegionSummaryInPreferences.Split(';');
-            if (this.regionsPrefsList == null || this.regionsPrefsList.Length == 0 || string.IsNullOrEmpty(this.regionsPrefsList[0]))
-            {
+            if (this.regionsPrefsList == null || this.regionsPrefsList.Length == 0 || string.IsNullOrEmpty(this.regionsPrefsList[0])) {
                 this.prefLabel = notAvailableLabel;
-            }
-            else
-            {
+            } else {
                 this.prefLabel = string.Format("'{0}' ping:{1}ms ", this.regionsPrefsList[0], this.regionsPrefsList[1]);
             }
-        }
-        else
-        {
+        } else {
             this.prefLabel = notAvailableLabel;
         }
 
@@ -143,13 +129,11 @@ public class ServerSettingsInspector : Editor
 
         var resetrect = EditorGUILayout.GetControlRect(GUILayout.MinWidth(64));
         var editrect = EditorGUILayout.GetControlRect(GUILayout.MinWidth(64));
-        if (GUI.Button(resetrect, "Reset", EditorStyles.miniButton))
-        {
+        if (GUI.Button(resetrect, "Reset", EditorStyles.miniButton)) {
             ServerSettings.ResetBestRegionCodeInPreferences();
         }
 
-        if (GUI.Button(editrect, "Edit WhiteList", EditorStyles.miniButton))
-        {
+        if (GUI.Button(editrect, "Edit WhiteList", EditorStyles.miniButton)) {
             Application.OpenURL("https://dashboard.photonengine.com/en-US/App/RegionsWhitelistEdit/" + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime);
 
         }
@@ -165,11 +149,9 @@ public class ServerSettingsInspector : Editor
         this.showRpcs = this.showRpcs.Foldout(new GUIContent("RPCs", "RPC shortcut list."));
         EditorGUI.indentLevel++;
 
-        if (this.showRpcs)
-        {
+        if (this.showRpcs) {
             // first time check to get the rpc has proper
-            if (string.IsNullOrEmpty(this.rpcCrc))
-            {
+            if (string.IsNullOrEmpty(this.rpcCrc)) {
                 this.rpcCrc = this.RpcListHashCode().ToString("X");
             }
 
@@ -187,11 +169,11 @@ public class ServerSettingsInspector : Editor
 
             EditorGUIUtility.AddCursorRect(copyrect, MouseCursor.Link);
             EditorGUI.LabelField(copyrect, new GUIContent("", "Copy Hashcode to Clipboard"));
-            if (GUI.Button(copyrect, PhotonGUI.CopyIcon, GUIStyle.none))
-            {
+            if (GUI.Button(copyrect, PhotonGUI.CopyIcon, GUIStyle.none)) {
                 Debug.Log("RPC-List HashCode copied into your ClipBoard: " + this.rpcCrc + ". Make sure clients that send each other RPCs have the same RPC-List.");
                 EditorGUIUtility.systemCopyBuffer = this.rpcCrc;
             }
+
             EditorGUI.SelectableLabel(hashrect, this.rpcCrc);
 
             EditorGUILayout.EndHorizontal();
@@ -203,14 +185,12 @@ public class ServerSettingsInspector : Editor
             var refreshrect = EditorGUILayout.GetControlRect(GUILayout.MinWidth(64));
             var clearrect = EditorGUILayout.GetControlRect(GUILayout.MinWidth(64));
 
-            if (GUI.Button(refreshrect, "Refresh RPCs", EditorStyles.miniButton))
-            {
+            if (GUI.Button(refreshrect, "Refresh RPCs", EditorStyles.miniButton)) {
                 PhotonEditor.UpdateRpcList();
                 this.Repaint();
             }
 
-            if (GUI.Button(clearrect, "Clear RPCs", EditorStyles.miniButton))
-            {
+            if (GUI.Button(clearrect, "Clear RPCs", EditorStyles.miniButton)) {
                 PhotonEditor.ClearRpcList();
             }
 
@@ -228,8 +208,7 @@ public class ServerSettingsInspector : Editor
             EditorGUI.indentLevel--;
         }
 
-        if (EditorGUI.EndChangeCheck())
-        {
+        if (EditorGUI.EndChangeCheck()) {
             sObj.ApplyModifiedProperties();
             this.serializedObject.ApplyModifiedProperties();
 
@@ -241,8 +220,7 @@ public class ServerSettingsInspector : Editor
 
         /// Conditional Simple Sync Settings DrawGUI - Uses reflection to avoid having to hard connect the libraries
 
-        if (!SearchForSNSOnce)
-        {
+        if (!SearchForSNSOnce) {
             var simpleSettings = GetType("emotitron.Networking.SimpleSyncSettings");
             if (simpleSettings != null)
                 drawSImpleSettingsMethod = simpleSettings.GetMethod("DrawGuiStatic");
@@ -250,54 +228,51 @@ public class ServerSettingsInspector : Editor
             SearchForSNSOnce = true;
         }
 
-        if (drawSImpleSettingsMethod != null)
-        {
+        if (drawSImpleSettingsMethod != null) {
             EditorGUILayout.GetControlRect(false, 4);
-            drawSImpleSettingsMethod.Invoke(null, new object[5] { this, true, false, true, false });
+            drawSImpleSettingsMethod.Invoke(null, new object[5] {this, true, false, true, false});
         }
 
         #endregion
+
     }
 
-    private static Type GetType(string typeName)
-    {
+    private static Type GetType(string typeName) {
         var type = Type.GetType(typeName);
         if (type != null) return type;
-        foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-        {
+        foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) {
             type = a.GetType(typeName);
             if (type != null)
                 return type;
         }
+
         return null;
     }
 
-    private int RpcListHashCode()
-    {
+    private int RpcListHashCode() {
         // this is a hashcode generated to (more) easily compare this Editor's RPC List with some other
         int hashCode = PhotonNetwork.PhotonServerSettings.RpcList.Count + 1;
-        foreach (string s in PhotonNetwork.PhotonServerSettings.RpcList)
-        {
+        foreach (string s in PhotonNetwork.PhotonServerSettings.RpcList) {
             int h1 = s.GetHashCode();
             hashCode = ((h1 << 5) + h1) ^ hashCode;
         }
+
         return hashCode;
     }
 
-    private void BuildAppIdField(SerializedProperty property)
-    {
+    private void BuildAppIdField(SerializedProperty property) {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(property, GUILayout.MinWidth(32));
         string appId = property.stringValue;
         string url = "https://dashboard.photonengine.com/en-US/PublicCloud";
-        if (!string.IsNullOrEmpty(appId))
-        {
+        if (!string.IsNullOrEmpty(appId)) {
             url = string.Format("https://dashboard.photonengine.com/en-US/App/Manage/{0}", appId);
         }
-        if (GUILayout.Button("Dashboard", EditorStyles.miniButton, GUILayout.MinWidth(78), GUILayout.MaxWidth(78)))
-        {
+
+        if (GUILayout.Button("Dashboard", EditorStyles.miniButton, GUILayout.MinWidth(78), GUILayout.MaxWidth(78))) {
             Application.OpenURL(url);
         }
+
         EditorGUILayout.EndHorizontal();
     }
 }

@@ -14,19 +14,18 @@
 #endif
 
 #if SUPPORTED_UNITY
-namespace Photon.Realtime
-{
+namespace Photon.Realtime {
     using System;
     using System.Net.Sockets;
     using ExitGames.Client.Photon;
 
-    #if UNITY_WEBGL
+#if UNITY_WEBGL
     // import WWW class
     using UnityEngine;
-    #endif
+#endif
 
 
-    #if UNITY_WEBGL
+#if UNITY_WEBGL
     public class PingHttp : PhotonPing
     {
         private WWW webRequest;
@@ -56,6 +55,6 @@ namespace Photon.Realtime
             this.webRequest.Dispose();
         }
     }
-    #endif
+#endif
 }
 #endif

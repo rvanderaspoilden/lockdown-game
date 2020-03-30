@@ -12,19 +12,15 @@ using UnityEngine;
 using System.Collections;
 using System.Diagnostics;
 
-namespace Photon.Pun.UtilityScripts
-{
+namespace Photon.Pun.UtilityScripts {
     /// <summary>
     /// This component will quit the application when escape key is pressed
     /// </summary>
-    public class OnEscapeQuit : MonoBehaviour
-    {
+    public class OnEscapeQuit : MonoBehaviour {
         [Conditional("UNITY_ANDROID"), Conditional("UNITY_IOS")]
-        public void Update()
-        {
+        public void Update() {
             // "back" button of phone equals "Escape". quit app if that's pressed
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
+            if (Input.GetKeyDown(KeyCode.Escape)) {
                 Application.Quit();
             }
         }

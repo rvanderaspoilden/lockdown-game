@@ -9,29 +9,24 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using UnityEditor;
     using UnityEngine;
 
 
-    [CustomEditor(typeof (PhotonRigidbody2DView))]
-    public class PhotonRigidbody2DViewEditor : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            if (Application.isPlaying)
-            {
+    [CustomEditor(typeof(PhotonRigidbody2DView))]
+    public class PhotonRigidbody2DViewEditor : Editor {
+        public override void OnInspectorGUI() {
+            if (Application.isPlaying) {
                 EditorGUILayout.HelpBox("Editing is disabled in play mode.", MessageType.Info);
                 return;
             }
 
-            PhotonRigidbody2DView view = (PhotonRigidbody2DView)target;
+            PhotonRigidbody2DView view = (PhotonRigidbody2DView) target;
 
             view.m_TeleportEnabled = PhotonGUI.ContainerHeaderToggle("Enable teleport for large distances", view.m_TeleportEnabled);
 
-            if (view.m_TeleportEnabled)
-            {
+            if (view.m_TeleportEnabled) {
                 Rect rect = PhotonGUI.ContainerBody(20.0f);
                 view.m_TeleportIfDistanceGreaterThan = EditorGUI.FloatField(rect, "Teleport if distance greater than", view.m_TeleportIfDistanceGreaterThan);
             }
@@ -39,8 +34,7 @@ namespace Photon.Pun
             view.m_SynchronizeVelocity = PhotonGUI.ContainerHeaderToggle("Synchronize Velocity", view.m_SynchronizeVelocity);
             view.m_SynchronizeAngularVelocity = PhotonGUI.ContainerHeaderToggle("Synchronize Angular Velocity", view.m_SynchronizeAngularVelocity);
 
-            if (GUI.changed)
-            {
+            if (GUI.changed) {
                 EditorUtility.SetDirty(view);
             }
         }

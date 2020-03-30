@@ -11,31 +11,26 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Photon.Pun.UtilityScripts
-{
+namespace Photon.Pun.UtilityScripts {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(CullArea))]
-    public class CullAreaEditor : Editor
-    {
+    public class CullAreaEditor : Editor {
         private bool alignEditorCamera, showHelpEntries;
 
         private CullArea cullArea;
 
-        private enum UP_AXIS_OPTIONS
-        {
+        private enum UP_AXIS_OPTIONS {
             SideScrollerMode = 0,
             TopDownOr3DMode = 1
         }
 
         private UP_AXIS_OPTIONS upAxisOptions;
 
-        public void OnEnable()
-        {
-            cullArea = (CullArea)target;
+        public void OnEnable() {
+            cullArea = (CullArea) target;
 
             // Destroying the newly created cull area if there is already one existing
-            if (FindObjectsOfType<CullArea>().Length > 1)
-            {
+            if (FindObjectsOfType<CullArea>().Length > 1) {
                 Debug.LogWarning("Destroying newly created cull area because there is already one existing in the scene.");
 
                 DestroyImmediate(cullArea);
@@ -44,22 +39,17 @@ namespace Photon.Pun.UtilityScripts
             }
 
             // Prevents the dropdown from resetting
-            if (cullArea != null)
-            {
+            if (cullArea != null) {
                 upAxisOptions = cullArea.YIsUpAxis ? UP_AXIS_OPTIONS.SideScrollerMode : UP_AXIS_OPTIONS.TopDownOr3DMode;
             }
         }
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             EditorGUILayout.BeginVertical();
 
-            if (Application.isEditor && !Application.isPlaying)
-            {
+            if (Application.isEditor && !Application.isPlaying) {
                 OnInspectorGUIEditMode();
-            }
-            else
-            {
+            } else {
                 OnInspectorGUIPlayMode();
             }
 
@@ -69,8 +59,7 @@ namespace Photon.Pun.UtilityScripts
         /// <summary>
         ///     Represents the inspector GUI when edit mode is active.
         /// </summary>
-        private void OnInspectorGUIEditMode()
-        {
+        private void OnInspectorGUIEditMode() {
             EditorGUI.BeginChangeCheck();
 
             #region DEFINE_UP_AXIS
@@ -78,7 +67,7 @@ namespace Photon.Pun.UtilityScripts
             {
                 EditorGUILayout.BeginVertical();
                 EditorGUILayout.LabelField("Select game type", EditorStyles.boldLabel);
-                upAxisOptions = (UP_AXIS_OPTIONS)EditorGUILayout.EnumPopup("Game type", upAxisOptions);
+                upAxisOptions = (UP_AXIS_OPTIONS) EditorGUILayout.EnumPopup("Game type", upAxisOptions);
                 cullArea.YIsUpAxis = (upAxisOptions == UP_AXIS_OPTIONS.SideScrollerMode);
                 EditorGUILayout.EndVertical();
             }
@@ -97,12 +86,9 @@ namespace Photon.Pun.UtilityScripts
 
                 EditorGUILayout.Space();
 
-                if (cullArea.NumberOfSubdivisions != 0)
-                {
-                    for (int index = 0; index < cullArea.Subdivisions.Length; ++index)
-                    {
-                        if ((index + 1) <= cullArea.NumberOfSubdivisions)
-                        {
+                if (cullArea.NumberOfSubdivisions != 0) {
+                    for (int index = 0; index < cullArea.Subdivisions.Length; ++index) {
+                        if ((index + 1) <= cullArea.NumberOfSubdivisions) {
                             string countMessage = (index + 1) + ". Subdivision: row / column count";
 
                             EditorGUILayout.BeginVertical();
@@ -110,9 +96,7 @@ namespace Photon.Pun.UtilityScripts
                             EditorGUILayout.EndVertical();
 
                             EditorGUILayout.Space();
-                        }
-                        else
-                        {
+                        } else {
                             cullArea.Subdivisions[index] = new UnityEngine.Vector2(1, 1);
                         }
                     }
@@ -131,10 +115,8 @@ namespace Photon.Pun.UtilityScripts
                 EditorGUILayout.LabelField("View and camera options", EditorStyles.boldLabel);
                 alignEditorCamera = EditorGUILayout.Toggle("Automatically align editor view with grid", alignEditorCamera);
 
-                if (Camera.main != null)
-                {
-                    if (GUILayout.Button("Align main camera with grid"))
-                    {
+                if (Camera.main != null) {
+                    if (GUILayout.Button("Align main camera with grid")) {
                         Undo.RecordObject(Camera.main.transform, "Align main camera with grid.");
 
                         float yCoord = cullArea.YIsUpAxis ? cullArea.Center.y : Mathf.Max(cullArea.Size.x, cullArea.Size.y);
@@ -152,8 +134,7 @@ namespace Photon.Pun.UtilityScripts
 
             #endregion
 
-            if (EditorGUI.EndChangeCheck())
-            {
+            if (EditorGUI.EndChangeCheck()) {
                 cullArea.RecreateCellHierarchy = true;
 
                 AlignEditorView();
@@ -164,18 +145,17 @@ namespace Photon.Pun.UtilityScripts
             EditorGUILayout.Space();
 
             showHelpEntries = EditorGUILayout.Foldout(showHelpEntries, "Need help with this component?");
-            if (showHelpEntries)
-            {
+            if (showHelpEntries) {
                 EditorGUILayout.HelpBox("To find help you can either follow the tutorial or have a look at the forums by clicking on the buttons below.", MessageType.Info);
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Open the tutorial"))
-                {
+                if (GUILayout.Button("Open the tutorial")) {
                     Application.OpenURL("https://doc.photonengine.com/en-us/pun/v2/demos-and-tutorials/package-demos/culling-demo");
                 }
-                if (GUILayout.Button("Take me to the forums"))
-                {
+
+                if (GUILayout.Button("Take me to the forums")) {
                     Application.OpenURL("https://forum.photonengine.com/categories/unity-networking-plugin-pun");
                 }
+
                 EditorGUILayout.EndHorizontal();
             }
         }
@@ -183,23 +163,19 @@ namespace Photon.Pun.UtilityScripts
         /// <summary>
         ///     Represents the inspector GUI when play mode is active.
         /// </summary>
-        private void OnInspectorGUIPlayMode()
-        {
+        private void OnInspectorGUIPlayMode() {
             EditorGUILayout.LabelField("No changes allowed when game is running. Please exit play mode first.", EditorStyles.boldLabel);
         }
 
-        public void OnSceneGUI()
-        {
+        public void OnSceneGUI() {
             Handles.BeginGUI();
             GUILayout.BeginArea(new Rect(Screen.width - 110, Screen.height - 90, 100, 60));
 
-            if (GUILayout.Button("Reset position"))
-            {
+            if (GUILayout.Button("Reset position")) {
                 cullArea.transform.position = Vector3.zero;
             }
 
-            if (GUILayout.Button("Reset scaling"))
-            {
+            if (GUILayout.Button("Reset scaling")) {
                 cullArea.transform.localScale = new Vector3(25.0f, 25.0f, 25.0f);
             }
 
@@ -207,8 +183,7 @@ namespace Photon.Pun.UtilityScripts
             Handles.EndGUI();
 
             // Checking for changes of the transform
-            if (cullArea.transform.hasChanged)
-            {
+            if (cullArea.transform.hasChanged) {
                 // Resetting position
                 float posX = cullArea.transform.position.x;
                 float posY = cullArea.YIsUpAxis ? cullArea.transform.position.y : 0.0f;
@@ -217,8 +192,7 @@ namespace Photon.Pun.UtilityScripts
                 cullArea.transform.position = new Vector3(posX, posY, posZ);
 
                 // Resetting scaling
-                if (cullArea.Size.x < 1.0f || cullArea.Size.y < 1.0f)
-                {
+                if (cullArea.Size.x < 1.0f || cullArea.Size.y < 1.0f) {
                     float scaleX = (cullArea.transform.localScale.x < 1.0f) ? 1.0f : cullArea.transform.localScale.x;
                     float scaleY = (cullArea.transform.localScale.y < 1.0f) ? 1.0f : cullArea.transform.localScale.y;
                     float scaleZ = (cullArea.transform.localScale.z < 1.0f) ? 1.0f : cullArea.transform.localScale.z;
@@ -237,10 +211,8 @@ namespace Photon.Pun.UtilityScripts
         /// <summary>
         ///     Aligns the editor view with the created grid.
         /// </summary>
-        private void AlignEditorView()
-        {
-            if (!alignEditorCamera)
-            {
+        private void AlignEditorView() {
+            if (!alignEditorCamera) {
                 return;
             }
 
@@ -254,8 +226,7 @@ namespace Photon.Pun.UtilityScripts
             tmpGo.transform.position = new Vector3(cullArea.Center.x, yCoord, zCoord);
             tmpGo.transform.LookAt(cullArea.transform.position);
 
-            if (SceneView.lastActiveSceneView != null)
-            {
+            if (SceneView.lastActiveSceneView != null) {
                 SceneView.lastActiveSceneView.AlignViewToObject(tmpGo.transform);
             }
 

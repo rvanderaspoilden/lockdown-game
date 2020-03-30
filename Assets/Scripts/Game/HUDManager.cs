@@ -9,13 +9,14 @@ namespace Game {
     public class HUDManager : MonoBehaviour {
         [Header("Settings")]
         [SerializeField] private TextMeshProUGUI lifeText;
+
         [SerializeField] private Image aimImage;
 
         public static HUDManager instance;
 
         private void Awake() {
             instance = this;
-            
+
             this.SetAimVisibility(false);
         }
 

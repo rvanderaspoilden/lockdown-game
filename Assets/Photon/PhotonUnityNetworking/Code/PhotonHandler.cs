@@ -9,33 +9,27 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using ExitGames.Client.Photon;
     using Photon.Realtime;
     using UnityEngine;
-
-    #if UNITY_5_5_OR_NEWER
+#if UNITY_5_5_OR_NEWER
     using UnityEngine.Profiling;
-    #endif
+
+#endif
 
 
     /// <summary>
     /// Internal MonoBehaviour that allows Photon to run an Update loop.
     /// </summary>
-    public class PhotonHandler : ConnectionHandler, IInRoomCallbacks, IMatchmakingCallbacks
-    {
-
+    public class PhotonHandler : ConnectionHandler, IInRoomCallbacks, IMatchmakingCallbacks {
         private static PhotonHandler instance;
-        internal static PhotonHandler Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
+
+        internal static PhotonHandler Instance {
+            get {
+                if (instance == null) {
                     instance = FindObjectOfType<PhotonHandler>();
-                    if (instance == null)
-                    {
+                    if (instance == null) {
                         GameObject obj = new GameObject();
                         obj.name = "PhotonMono";
                         instance = obj.AddComponent<PhotonHandler>();
@@ -70,43 +64,35 @@ namespace Photon.Pun
         private SupportLogger supportLoggerComponent;
 
 
-        protected override void Awake()
-        {
-            if (instance == null || ReferenceEquals(this, instance))
-            {
+        protected override void Awake() {
+            if (instance == null || ReferenceEquals(this, instance)) {
                 instance = this;
                 base.Awake();
-            }
-            else
-            {
+            } else {
                 Destroy(this);
             }
         }
 
-        protected virtual void OnEnable()
-        {
-            if (Instance != this)
-            {
+        protected virtual void OnEnable() {
+            if (Instance != this) {
                 Debug.LogError("PhotonHandler is a singleton but there are multiple instances. this != Instance.");
                 return;
             }
 
             this.Client = PhotonNetwork.NetworkingClient;
 
-            if (PhotonNetwork.PhotonServerSettings.EnableSupportLogger)
-            {
+            if (PhotonNetwork.PhotonServerSettings.EnableSupportLogger) {
                 SupportLogger supportLogger = this.gameObject.GetComponent<SupportLogger>();
-                if (supportLogger == null)
-                {
+                if (supportLogger == null) {
                     supportLogger = this.gameObject.AddComponent<SupportLogger>();
                 }
-                if (this.supportLoggerComponent != null)
-                {
-                    if (supportLogger.GetInstanceID() != this.supportLoggerComponent.GetInstanceID())
-                    {
+
+                if (this.supportLoggerComponent != null) {
+                    if (supportLogger.GetInstanceID() != this.supportLoggerComponent.GetInstanceID()) {
                         Debug.LogWarningFormat("Cached SupportLogger component is different from the one attached to PhotonMono GameObject");
                     }
                 }
+
                 this.supportLoggerComponent = supportLogger;
                 this.supportLoggerComponent.Client = PhotonNetwork.NetworkingClient;
             }
@@ -115,56 +101,45 @@ namespace Photon.Pun
             this.UpdateIntervalOnSerialize = 1000 / PhotonNetwork.SerializationRate;
 
             PhotonNetwork.AddCallbackTarget(this);
-            this.StartFallbackSendAckThread();  // this is not done in the base class
+            this.StartFallbackSendAckThread(); // this is not done in the base class
         }
 
-        protected void Start()
-        {
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, loadingMode) =>
-            {
-                PhotonNetwork.NewSceneLoaded();
-            };
+        protected void Start() {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, loadingMode) => { PhotonNetwork.NewSceneLoaded(); };
         }
 
-        protected override void OnDisable()
-        {
+        protected override void OnDisable() {
             PhotonNetwork.RemoveCallbackTarget(this);
             base.OnDisable();
         }
 
 
         /// <summary>Called in intervals by UnityEngine. Affected by Time.timeScale.</summary>
-        protected void FixedUpdate()
-        {
+        protected void FixedUpdate() {
             this.Dispatch();
         }
 
         /// <summary>Called in intervals by UnityEngine, after running the normal game code and physics.</summary>
-        protected void LateUpdate()
-        {
+        protected void LateUpdate() {
             // see MinimalTimeScaleToDispatchInFixedUpdate and FixedUpdate for explanation:
-            if (Time.timeScale <= PhotonNetwork.MinimalTimeScaleToDispatchInFixedUpdate)
-            {
+            if (Time.timeScale <= PhotonNetwork.MinimalTimeScaleToDispatchInFixedUpdate) {
                 this.Dispatch();
             }
 
 
-            int currentMsSinceStart = (int)(Time.realtimeSinceStartup * 1000); // avoiding Environment.TickCount, which could be negative on long-running platforms
-            if (PhotonNetwork.IsMessageQueueRunning && currentMsSinceStart > this.nextSendTickCountOnSerialize)
-            {
+            int currentMsSinceStart = (int) (Time.realtimeSinceStartup * 1000); // avoiding Environment.TickCount, which could be negative on long-running platforms
+            if (PhotonNetwork.IsMessageQueueRunning && currentMsSinceStart > this.nextSendTickCountOnSerialize) {
                 PhotonNetwork.RunViewUpdate();
                 this.nextSendTickCountOnSerialize = currentMsSinceStart + this.UpdateIntervalOnSerialize - SerializeRateFrameCorrection;
                 this.nextSendTickCount = 0; // immediately send when synchronization code was running
             }
 
-            currentMsSinceStart = (int)(Time.realtimeSinceStartup * 1000);
-            if (SendAsap || currentMsSinceStart > this.nextSendTickCount)
-            {
+            currentMsSinceStart = (int) (Time.realtimeSinceStartup * 1000);
+            if (SendAsap || currentMsSinceStart > this.nextSendTickCount) {
                 SendAsap = false;
                 bool doSend = true;
                 int sendCounter = 0;
-                while (PhotonNetwork.IsMessageQueueRunning && doSend && sendCounter < MaxDatagrams)
-                {
+                while (PhotonNetwork.IsMessageQueueRunning && doSend && sendCounter < MaxDatagrams) {
                     // Send all outgoing commands
                     Profiler.BeginSample("SendOutgoingCommands");
                     doSend = PhotonNetwork.NetworkingClient.LoadBalancingPeer.SendOutgoingCommands();
@@ -183,10 +158,8 @@ namespace Photon.Pun
         ///
         /// Without dispatching messages, PUN won't change state and does not handle updates.
         /// </remarks>
-        protected void Dispatch()
-        {
-            if (PhotonNetwork.NetworkingClient == null)
-            {
+        protected void Dispatch() {
+            if (PhotonNetwork.NetworkingClient == null) {
                 Debug.LogError("NetworkPeer broke!");
                 return;
             }
@@ -198,8 +171,7 @@ namespace Photon.Pun
 
 
             bool doDispatch = true;
-            while (PhotonNetwork.IsMessageQueueRunning && doDispatch)
-            {
+            while (PhotonNetwork.IsMessageQueueRunning && doDispatch) {
                 // DispatchIncomingCommands() returns true of it found any command to dispatch (event, result or state change)
                 Profiler.BeginSample("DispatchIncomingCommands");
                 doDispatch = PhotonNetwork.NetworkingClient.LoadBalancingPeer.DispatchIncomingCommands();
@@ -208,34 +180,32 @@ namespace Photon.Pun
         }
 
 
-        public void OnCreatedRoom()
-        {
+        public void OnCreatedRoom() {
             PhotonNetwork.SetLevelInPropsIfSynced(SceneManagerHelper.ActiveSceneName);
         }
 
-        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
-        {
+        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {
             PhotonNetwork.LoadLevelIfSynced();
         }
 
-        public void OnJoinedRoom(){}
+        public void OnJoinedRoom() { }
 
-        public void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps){}
+        public void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps) { }
 
-        public void OnMasterClientSwitched(Player newMasterClient){}
+        public void OnMasterClientSwitched(Player newMasterClient) { }
 
-        public void OnFriendListUpdate(System.Collections.Generic.List<FriendInfo> friendList){}
+        public void OnFriendListUpdate(System.Collections.Generic.List<FriendInfo> friendList) { }
 
-        public void OnCreateRoomFailed(short returnCode, string message){}
+        public void OnCreateRoomFailed(short returnCode, string message) { }
 
-        public void OnJoinRoomFailed(short returnCode, string message){}
+        public void OnJoinRoomFailed(short returnCode, string message) { }
 
-        public void OnJoinRandomFailed(short returnCode, string message){}
+        public void OnJoinRandomFailed(short returnCode, string message) { }
 
-        public void OnLeftRoom(){}
+        public void OnLeftRoom() { }
 
-        public void OnPlayerEnteredRoom(Player newPlayer){}
+        public void OnPlayerEnteredRoom(Player newPlayer) { }
 
-        public void OnPlayerLeftRoom(Player otherPlayer){}
+        public void OnPlayerLeftRoom(Player otherPlayer) { }
     }
 }

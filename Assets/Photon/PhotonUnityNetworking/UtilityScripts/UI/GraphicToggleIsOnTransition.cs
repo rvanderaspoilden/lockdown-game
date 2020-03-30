@@ -11,14 +11,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Photon.Pun.UtilityScripts
-{
+namespace Photon.Pun.UtilityScripts {
     /// <summary>
     /// Use this on toggles texts to have some color transition on the text depending on the isOn State.
     /// </summary>
     [RequireComponent(typeof(Graphic))]
-    public class GraphicToggleIsOnTransition : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
-    {
+    public class GraphicToggleIsOnTransition : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
         public Toggle toggle;
 
         private Graphic _graphic;
@@ -30,20 +28,17 @@ namespace Photon.Pun.UtilityScripts
 
         private bool isHover;
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
+        public void OnPointerEnter(PointerEventData eventData) {
             this.isHover = true;
             this._graphic.color = this.toggle.isOn ? this.HoverOnColor : this.HoverOffColor;
         }
 
-        public void OnPointerExit(PointerEventData eventData)
-        {
+        public void OnPointerExit(PointerEventData eventData) {
             this.isHover = false;
             this._graphic.color = this.toggle.isOn ? this.NormalOnColor : this.NormalOffColor;
         }
 
-        public void OnEnable()
-        {
+        public void OnEnable() {
             this._graphic = this.GetComponent<Graphic>();
 
             this.OnValueChanged(this.toggle.isOn);
@@ -51,13 +46,11 @@ namespace Photon.Pun.UtilityScripts
             this.toggle.onValueChanged.AddListener(this.OnValueChanged);
         }
 
-        public void OnDisable()
-        {
+        public void OnDisable() {
             this.toggle.onValueChanged.RemoveListener(this.OnValueChanged);
         }
 
-        public void OnValueChanged(bool isOn)
-        {
+        public void OnValueChanged(bool isOn) {
             this._graphic.color = isOn ? (this.isHover ? this.HoverOnColor : this.HoverOnColor) : (this.isHover ? this.NormalOffColor : this.NormalOffColor);
         }
     }

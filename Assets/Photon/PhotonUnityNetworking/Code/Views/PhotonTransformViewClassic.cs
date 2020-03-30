@@ -9,8 +9,7 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using UnityEngine;
     using System.Collections.Generic;
 
@@ -25,8 +24,7 @@ namespace Photon.Pun
     /// </summary>
     [RequireComponent(typeof(PhotonView))]
     [AddComponentMenu("Photon Networking/Photon Transform View Classic")]
-    public class PhotonTransformViewClassic : MonoBehaviour, IPunObservable
-    {
+    public class PhotonTransformViewClassic : MonoBehaviour, IPunObservable {
         //As this component is very complex, we separated it into multiple classes.
         //The PositionModel, RotationModel and ScaleMode store the data you are able to
         //configure in the inspector while the "control" objects below are actually moving
@@ -54,8 +52,7 @@ namespace Photon.Pun
         /// </summary>
         bool m_firstTake = false;
 
-        void Awake()
-        {
+        void Awake() {
             this.m_PhotonView = GetComponent<PhotonView>();
 
             this.m_PositionControl = new PhotonTransformViewPositionControl(this.m_PositionModel);
@@ -63,15 +60,12 @@ namespace Photon.Pun
             this.m_ScaleControl = new PhotonTransformViewScaleControl(this.m_ScaleModel);
         }
 
-        void OnEnable()
-        {
+        void OnEnable() {
             m_firstTake = true;
         }
 
-        void Update()
-        {
-            if (this.m_PhotonView == null || this.m_PhotonView.IsMine == true || PhotonNetwork.IsConnectedAndReady == false)
-            {
+        void Update() {
+            if (this.m_PhotonView == null || this.m_PhotonView.IsMine == true || PhotonNetwork.IsConnectedAndReady == false) {
                 return;
             }
 
@@ -80,30 +74,24 @@ namespace Photon.Pun
             this.UpdateScale();
         }
 
-        void UpdatePosition()
-        {
-            if (this.m_PositionModel.SynchronizeEnabled == false || this.m_ReceivedNetworkUpdate == false)
-            {
+        void UpdatePosition() {
+            if (this.m_PositionModel.SynchronizeEnabled == false || this.m_ReceivedNetworkUpdate == false) {
                 return;
             }
 
             transform.localPosition = this.m_PositionControl.UpdatePosition(transform.localPosition);
         }
 
-        void UpdateRotation()
-        {
-            if (this.m_RotationModel.SynchronizeEnabled == false || this.m_ReceivedNetworkUpdate == false)
-            {
+        void UpdateRotation() {
+            if (this.m_RotationModel.SynchronizeEnabled == false || this.m_ReceivedNetworkUpdate == false) {
                 return;
             }
 
             transform.localRotation = this.m_RotationControl.GetRotation(transform.localRotation);
         }
 
-        void UpdateScale()
-        {
-            if (this.m_ScaleModel.SynchronizeEnabled == false || this.m_ReceivedNetworkUpdate == false)
-            {
+        void UpdateScale() {
+            if (this.m_ScaleModel.SynchronizeEnabled == false || this.m_ReceivedNetworkUpdate == false) {
                 return;
             }
 
@@ -118,39 +106,32 @@ namespace Photon.Pun
         /// </summary>
         /// <param name="speed">The current movement vector of the object in units/second.</param>
         /// <param name="turnSpeed">The current turn speed of the object in angles/second.</param>
-        public void SetSynchronizedValues(Vector3 speed, float turnSpeed)
-        {
+        public void SetSynchronizedValues(Vector3 speed, float turnSpeed) {
             this.m_PositionControl.SetSynchronizedValues(speed, turnSpeed);
         }
 
 
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
             this.m_PositionControl.OnPhotonSerializeView(transform.localPosition, stream, info);
             this.m_RotationControl.OnPhotonSerializeView(transform.localRotation, stream, info);
             this.m_ScaleControl.OnPhotonSerializeView(transform.localScale, stream, info);
 
-            if (stream.IsReading == true)
-            {
+            if (stream.IsReading == true) {
                 this.m_ReceivedNetworkUpdate = true;
 
                 // force latest data to avoid initial drifts when player is instantiated.
-                if (m_firstTake)
-                {
+                if (m_firstTake) {
                     m_firstTake = false;
 
-                    if (this.m_PositionModel.SynchronizeEnabled)
-                    {
+                    if (this.m_PositionModel.SynchronizeEnabled) {
                         this.transform.localPosition = this.m_PositionControl.GetNetworkPosition();
                     }
 
-                    if (this.m_RotationModel.SynchronizeEnabled)
-                    {
+                    if (this.m_RotationModel.SynchronizeEnabled) {
                         this.transform.localRotation = this.m_RotationControl.GetNetworkRotation();
                     }
 
-                    if (this.m_ScaleModel.SynchronizeEnabled)
-                    {
+                    if (this.m_ScaleModel.SynchronizeEnabled) {
                         this.transform.localScale = this.m_ScaleControl.GetNetworkScale();
                     }
                 }
@@ -160,10 +141,8 @@ namespace Photon.Pun
 
 
     [System.Serializable]
-    public class PhotonTransformViewPositionModel
-    {
-        public enum InterpolateOptions
-        {
+    public class PhotonTransformViewPositionModel {
+        public enum InterpolateOptions {
             Disabled,
             FixedSpeed,
             EstimatedSpeed,
@@ -172,8 +151,7 @@ namespace Photon.Pun
         }
 
 
-        public enum ExtrapolateOptions
-        {
+        public enum ExtrapolateOptions {
             Disabled,
             SynchronizeValues,
             EstimateSpeedAndTurn,
@@ -197,8 +175,7 @@ namespace Photon.Pun
         public int ExtrapolateNumberOfStoredPositions = 1;
     }
 
-    public class PhotonTransformViewPositionControl
-    {
+    public class PhotonTransformViewPositionControl {
         PhotonTransformViewPositionModel m_Model;
         float m_CurrentSpeed;
         double m_LastSerializeTime;
@@ -210,17 +187,14 @@ namespace Photon.Pun
 
         bool m_UpdatedPositionAfterOnSerialize = true;
 
-        public PhotonTransformViewPositionControl(PhotonTransformViewPositionModel model)
-        {
+        public PhotonTransformViewPositionControl(PhotonTransformViewPositionModel model) {
             m_Model = model;
         }
 
-        Vector3 GetOldestStoredNetworkPosition()
-        {
+        Vector3 GetOldestStoredNetworkPosition() {
             Vector3 oldPosition = m_NetworkPosition;
 
-            if (m_OldNetworkPositions.Count > 0)
-            {
+            if (m_OldNetworkPositions.Count > 0) {
                 oldPosition = m_OldNetworkPositions.Peek();
             }
 
@@ -235,8 +209,7 @@ namespace Photon.Pun
         /// </summary>
         /// <param name="speed">The current movement vector of the object in units/second.</param>
         /// <param name="turnSpeed">The current turn speed of the object in angles/second.</param>
-        public void SetSynchronizedValues(Vector3 speed, float turnSpeed)
-        {
+        public void SetSynchronizedValues(Vector3 speed, float turnSpeed) {
             m_SynchronizedSpeed = speed;
             m_SynchronizedTurnSpeed = turnSpeed;
         }
@@ -246,15 +219,12 @@ namespace Photon.Pun
         /// </summary>
         /// <param name="currentPosition">The current position.</param>
         /// <returns>The new position.</returns>
-        public Vector3 UpdatePosition(Vector3 currentPosition)
-        {
+        public Vector3 UpdatePosition(Vector3 currentPosition) {
             Vector3 targetPosition = GetNetworkPosition() + GetExtrapolatedPositionOffset();
 
-            switch (m_Model.InterpolateOption)
-            {
+            switch (m_Model.InterpolateOption) {
                 case PhotonTransformViewPositionModel.InterpolateOptions.Disabled:
-                    if (m_UpdatedPositionAfterOnSerialize == false)
-                    {
+                    if (m_UpdatedPositionAfterOnSerialize == false) {
                         currentPosition = targetPosition;
                         m_UpdatedPositionAfterOnSerialize = true;
                     }
@@ -266,8 +236,7 @@ namespace Photon.Pun
                     break;
 
                 case PhotonTransformViewPositionModel.InterpolateOptions.EstimatedSpeed:
-                    if (m_OldNetworkPositions.Count == 0)
-                    {
+                    if (m_OldNetworkPositions.Count == 0) {
                         // special case: we have no previous updates in memory, so we can't guess a speed!
                         break;
                     }
@@ -281,12 +250,9 @@ namespace Photon.Pun
                     break;
 
                 case PhotonTransformViewPositionModel.InterpolateOptions.SynchronizeValues:
-                    if (m_SynchronizedSpeed.magnitude == 0)
-                    {
+                    if (m_SynchronizedSpeed.magnitude == 0) {
                         currentPosition = targetPosition;
-                    }
-                    else
-                    {
+                    } else {
                         currentPosition = Vector3.MoveTowards(currentPosition, targetPosition, Time.deltaTime * m_SynchronizedSpeed.magnitude);
                     }
 
@@ -297,10 +263,8 @@ namespace Photon.Pun
                     break;
             }
 
-            if (m_Model.TeleportEnabled == true)
-            {
-                if (Vector3.Distance(currentPosition, GetNetworkPosition()) > m_Model.TeleportIfDistanceGreaterThan)
-                {
+            if (m_Model.TeleportEnabled == true) {
+                if (Vector3.Distance(currentPosition, GetNetworkPosition()) > m_Model.TeleportIfDistanceGreaterThan) {
                     currentPosition = GetNetworkPosition();
                 }
             }
@@ -312,8 +276,7 @@ namespace Photon.Pun
         /// Gets the last position that was received through the network
         /// </summary>
         /// <returns></returns>
-        public Vector3 GetNetworkPosition()
-        {
+        public Vector3 GetNetworkPosition() {
             return m_NetworkPosition;
         }
 
@@ -322,19 +285,16 @@ namespace Photon.Pun
         /// the time when the last position was received and the movement speed of the object
         /// </summary>
         /// <returns>Estimated position of the remote object</returns>
-        public Vector3 GetExtrapolatedPositionOffset()
-        {
-            float timePassed = (float)(PhotonNetwork.Time - m_LastSerializeTime);
+        public Vector3 GetExtrapolatedPositionOffset() {
+            float timePassed = (float) (PhotonNetwork.Time - m_LastSerializeTime);
 
-            if (m_Model.ExtrapolateIncludingRoundTripTime == true)
-            {
-                timePassed += (float)PhotonNetwork.GetPing() / 1000f;
+            if (m_Model.ExtrapolateIncludingRoundTripTime == true) {
+                timePassed += (float) PhotonNetwork.GetPing() / 1000f;
             }
 
             Vector3 extrapolatePosition = Vector3.zero;
 
-            switch (m_Model.ExtrapolateOption)
-            {
+            switch (m_Model.ExtrapolateOption) {
                 case PhotonTransformViewPositionModel.ExtrapolateOptions.SynchronizeValues:
                     Quaternion turnRotation = Quaternion.Euler(0, m_SynchronizedTurnSpeed * timePassed, 0);
                     extrapolatePosition = turnRotation * (m_SynchronizedSpeed * timePassed);
@@ -353,19 +313,14 @@ namespace Photon.Pun
             return extrapolatePosition;
         }
 
-        public void OnPhotonSerializeView(Vector3 currentPosition, PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (m_Model.SynchronizeEnabled == false)
-            {
+        public void OnPhotonSerializeView(Vector3 currentPosition, PhotonStream stream, PhotonMessageInfo info) {
+            if (m_Model.SynchronizeEnabled == false) {
                 return;
             }
 
-            if (stream.IsWriting == true)
-            {
+            if (stream.IsWriting == true) {
                 SerializeData(currentPosition, stream, info);
-            }
-            else
-            {
+            } else {
                 DeserializeData(stream, info);
             }
 
@@ -373,31 +328,24 @@ namespace Photon.Pun
             m_UpdatedPositionAfterOnSerialize = false;
         }
 
-        void SerializeData(Vector3 currentPosition, PhotonStream stream, PhotonMessageInfo info)
-        {
+        void SerializeData(Vector3 currentPosition, PhotonStream stream, PhotonMessageInfo info) {
             stream.SendNext(currentPosition);
             m_NetworkPosition = currentPosition;
 
-            if (m_Model.ExtrapolateOption == PhotonTransformViewPositionModel.ExtrapolateOptions.SynchronizeValues ||
-                m_Model.InterpolateOption == PhotonTransformViewPositionModel.InterpolateOptions.SynchronizeValues)
-            {
+            if (m_Model.ExtrapolateOption == PhotonTransformViewPositionModel.ExtrapolateOptions.SynchronizeValues || m_Model.InterpolateOption == PhotonTransformViewPositionModel.InterpolateOptions.SynchronizeValues) {
                 stream.SendNext(m_SynchronizedSpeed);
                 stream.SendNext(m_SynchronizedTurnSpeed);
             }
         }
 
-        void DeserializeData(PhotonStream stream, PhotonMessageInfo info)
-        {
-            Vector3 readPosition = (Vector3)stream.ReceiveNext();
-            if (m_Model.ExtrapolateOption == PhotonTransformViewPositionModel.ExtrapolateOptions.SynchronizeValues ||
-                m_Model.InterpolateOption == PhotonTransformViewPositionModel.InterpolateOptions.SynchronizeValues)
-            {
-                m_SynchronizedSpeed = (Vector3)stream.ReceiveNext();
-                m_SynchronizedTurnSpeed = (float)stream.ReceiveNext();
+        void DeserializeData(PhotonStream stream, PhotonMessageInfo info) {
+            Vector3 readPosition = (Vector3) stream.ReceiveNext();
+            if (m_Model.ExtrapolateOption == PhotonTransformViewPositionModel.ExtrapolateOptions.SynchronizeValues || m_Model.InterpolateOption == PhotonTransformViewPositionModel.InterpolateOptions.SynchronizeValues) {
+                m_SynchronizedSpeed = (Vector3) stream.ReceiveNext();
+                m_SynchronizedTurnSpeed = (float) stream.ReceiveNext();
             }
 
-            if (m_OldNetworkPositions.Count == 0)
-            {
+            if (m_OldNetworkPositions.Count == 0) {
                 // if we don't have old positions yet, this is the very first update this client reads. let's use this as current AND old position.
                 m_NetworkPosition = readPosition;
             }
@@ -407,8 +355,7 @@ namespace Photon.Pun
             m_NetworkPosition = readPosition;
 
             // reduce items in queue to defined number of stored positions.
-            while (m_OldNetworkPositions.Count > m_Model.ExtrapolateNumberOfStoredPositions)
-            {
+            while (m_OldNetworkPositions.Count > m_Model.ExtrapolateNumberOfStoredPositions) {
                 m_OldNetworkPositions.Dequeue();
             }
         }
@@ -416,10 +363,8 @@ namespace Photon.Pun
 
 
     [System.Serializable]
-    public class PhotonTransformViewRotationModel
-    {
-        public enum InterpolateOptions
-        {
+    public class PhotonTransformViewRotationModel {
+        public enum InterpolateOptions {
             Disabled,
             RotateTowards,
             Lerp,
@@ -433,13 +378,11 @@ namespace Photon.Pun
         public float InterpolateLerpSpeed = 5;
     }
 
-    public class PhotonTransformViewRotationControl
-    {
+    public class PhotonTransformViewRotationControl {
         PhotonTransformViewRotationModel m_Model;
         Quaternion m_NetworkRotation;
 
-        public PhotonTransformViewRotationControl(PhotonTransformViewRotationModel model)
-        {
+        public PhotonTransformViewRotationControl(PhotonTransformViewRotationModel model) {
             m_Model = model;
         }
 
@@ -447,15 +390,12 @@ namespace Photon.Pun
         /// Gets the last rotation that was received through the network
         /// </summary>
         /// <returns></returns>
-        public Quaternion GetNetworkRotation()
-        {
+        public Quaternion GetNetworkRotation() {
             return m_NetworkRotation;
         }
 
-        public Quaternion GetRotation(Quaternion currentRotation)
-        {
-            switch (m_Model.InterpolateOption)
-            {
+        public Quaternion GetRotation(Quaternion currentRotation) {
+            switch (m_Model.InterpolateOption) {
                 default:
                 case PhotonTransformViewRotationModel.InterpolateOptions.Disabled:
                     return m_NetworkRotation;
@@ -466,31 +406,24 @@ namespace Photon.Pun
             }
         }
 
-        public void OnPhotonSerializeView(Quaternion currentRotation, PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (m_Model.SynchronizeEnabled == false)
-            {
+        public void OnPhotonSerializeView(Quaternion currentRotation, PhotonStream stream, PhotonMessageInfo info) {
+            if (m_Model.SynchronizeEnabled == false) {
                 return;
             }
 
-            if (stream.IsWriting == true)
-            {
+            if (stream.IsWriting == true) {
                 stream.SendNext(currentRotation);
                 m_NetworkRotation = currentRotation;
-            }
-            else
-            {
-                m_NetworkRotation = (Quaternion)stream.ReceiveNext();
+            } else {
+                m_NetworkRotation = (Quaternion) stream.ReceiveNext();
             }
         }
     }
 
 
     [System.Serializable]
-    public class PhotonTransformViewScaleModel
-    {
-        public enum InterpolateOptions
-        {
+    public class PhotonTransformViewScaleModel {
+        public enum InterpolateOptions {
             Disabled,
             MoveTowards,
             Lerp,
@@ -504,13 +437,11 @@ namespace Photon.Pun
         public float InterpolateLerpSpeed;
     }
 
-    public class PhotonTransformViewScaleControl
-    {
+    public class PhotonTransformViewScaleControl {
         PhotonTransformViewScaleModel m_Model;
         Vector3 m_NetworkScale = Vector3.one;
 
-        public PhotonTransformViewScaleControl(PhotonTransformViewScaleModel model)
-        {
+        public PhotonTransformViewScaleControl(PhotonTransformViewScaleModel model) {
             m_Model = model;
         }
 
@@ -518,15 +449,12 @@ namespace Photon.Pun
         /// Gets the last scale that was received through the network
         /// </summary>
         /// <returns></returns>
-        public Vector3 GetNetworkScale()
-        {
+        public Vector3 GetNetworkScale() {
             return m_NetworkScale;
         }
 
-        public Vector3 GetScale(Vector3 currentScale)
-        {
-            switch (m_Model.InterpolateOption)
-            {
+        public Vector3 GetScale(Vector3 currentScale) {
+            switch (m_Model.InterpolateOption) {
                 default:
                 case PhotonTransformViewScaleModel.InterpolateOptions.Disabled:
                     return m_NetworkScale;
@@ -537,21 +465,16 @@ namespace Photon.Pun
             }
         }
 
-        public void OnPhotonSerializeView(Vector3 currentScale, PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (m_Model.SynchronizeEnabled == false)
-            {
+        public void OnPhotonSerializeView(Vector3 currentScale, PhotonStream stream, PhotonMessageInfo info) {
+            if (m_Model.SynchronizeEnabled == false) {
                 return;
             }
 
-            if (stream.IsWriting == true)
-            {
+            if (stream.IsWriting == true) {
                 stream.SendNext(currentScale);
                 m_NetworkScale = currentScale;
-            }
-            else
-            {
-                m_NetworkScale = (Vector3)stream.ReceiveNext();
+            } else {
+                m_NetworkScale = (Vector3) stream.ReceiveNext();
             }
         }
     }

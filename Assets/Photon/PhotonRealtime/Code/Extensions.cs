@@ -13,41 +13,36 @@
 #endif
 
 
-namespace Photon.Realtime
-{
+namespace Photon.Realtime {
     using System.Collections;
-	using System.Collections.Generic;
+    using System.Collections.Generic;
     using ExitGames.Client.Photon;
-
-    #if SUPPORTED_UNITY
+#if SUPPORTED_UNITY
     using UnityEngine;
     using Debug = UnityEngine.Debug;
-    #endif
-    #if SUPPORTED_UNITY || NETFX_CORE
+#endif
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+
+#endif
 
 
     /// <summary>
     /// This static class defines some useful extension methods for several existing classes (e.g. Vector3, float and others).
     /// </summary>
-    public static class Extensions
-    {
+    public static class Extensions {
         /// <summary>
         /// Merges all keys from addHash into the target. Adds new keys and updates the values of existing keys in target.
         /// </summary>
         /// <param name="target">The IDictionary to update.</param>
         /// <param name="addHash">The IDictionary containing data to merge into target.</param>
-        public static void Merge(this IDictionary target, IDictionary addHash)
-        {
-            if (addHash == null || target.Equals(addHash))
-            {
+        public static void Merge(this IDictionary target, IDictionary addHash) {
+            if (addHash == null || target.Equals(addHash)) {
                 return;
             }
 
-            foreach (object key in addHash.Keys)
-            {
+            foreach (object key in addHash.Keys) {
                 target[key] = addHash[key];
             }
         }
@@ -60,18 +55,14 @@ namespace Photon.Realtime
         /// </remarks>
         /// <param name="target">The target IDicitionary passed in plus all string-typed keys from the addHash.</param>
         /// <param name="addHash">A IDictionary that should be merged partly into target to update it.</param>
-        public static void MergeStringKeys(this IDictionary target, IDictionary addHash)
-        {
-            if (addHash == null || target.Equals(addHash))
-            {
+        public static void MergeStringKeys(this IDictionary target, IDictionary addHash) {
+            if (addHash == null || target.Equals(addHash)) {
                 return;
             }
 
-            foreach (object key in addHash.Keys)
-            {
+            foreach (object key in addHash.Keys) {
                 // only merge keys of type string
-                if (key is string)
-                {
+                if (key is string) {
                     target[key] = addHash[key];
                 }
             }
@@ -81,40 +72,35 @@ namespace Photon.Realtime
         /// <remarks>Should only be used for debugging as necessary.</remarks>
         /// <param name="origin">Some Dictionary or Hashtable.</param>
         /// <returns>String of the content of the IDictionary.</returns>
-        public static string ToStringFull(this IDictionary origin)
-        {
+        public static string ToStringFull(this IDictionary origin) {
             return SupportClass.DictionaryToString(origin, false);
         }
 
-		/// <summary>Helper method for debugging of List<T> content. Using this is not performant.</summary>
-		/// <remarks>Should only be used for debugging as necessary.</remarks>
-		/// <param name="data">Any List<T> where T implements .ToString().</param>
-		/// <returns>A comma-separated string containing each value's ToString().</returns>
-		public static string ToStringFull<T>(this List<T> data)
-		{
-			if (data == null) return "null";
+        /// <summary>Helper method for debugging of List<T> content. Using this is not performant.</summary>
+        /// <remarks>Should only be used for debugging as necessary.</remarks>
+        /// <param name="data">Any List<T> where T implements .ToString().</param>
+        /// <returns>A comma-separated string containing each value's ToString().</returns>
+        public static string ToStringFull<T>(this List<T> data) {
+            if (data == null) return "null";
 
-			string[] sb = new string[data.Count];
-			for (int i = 0; i < data.Count; i++)
-			{
-				object o = data[i];
-				sb[i] = (o != null) ? o.ToString() : "null";
-			}
+            string[] sb = new string[data.Count];
+            for (int i = 0; i < data.Count; i++) {
+                object o = data[i];
+                sb[i] = (o != null) ? o.ToString() : "null";
+            }
 
-			return string.Join(", ", sb);
-		}
+            return string.Join(", ", sb);
+        }
 
         /// <summary>Helper method for debugging of object[] content. Using this is not performant.</summary>
         /// <remarks>Should only be used for debugging as necessary.</remarks>
         /// <param name="data">Any object[].</param>
         /// <returns>A comma-separated string containing each value's ToString().</returns>
-        public static string ToStringFull(this object[] data)
-        {
+        public static string ToStringFull(this object[] data) {
             if (data == null) return "null";
 
             string[] sb = new string[data.Length];
-            for (int i = 0; i < data.Length; i++)
-            {
+            for (int i = 0; i < data.Length; i++) {
                 object o = data[i];
                 sb[i] = (o != null) ? o.ToString() : "null";
             }
@@ -132,15 +118,11 @@ namespace Photon.Realtime
         /// </remarks>
         /// <param name="original">The original IDictonary to get string-typed keys from.</param>
         /// <returns>New Hashtable containing only string-typed keys of the original.</returns>
-        public static Hashtable StripToStringKeys(this IDictionary original)
-        {
+        public static Hashtable StripToStringKeys(this IDictionary original) {
             Hashtable target = new Hashtable();
-            if (original != null)
-            {
-                foreach (object key in original.Keys)
-                {
-                    if (key is string)
-                    {
+            if (original != null) {
+                foreach (object key in original.Keys) {
+                    if (key is string) {
                         target[key] = original[key];
                     }
                 }
@@ -155,16 +137,13 @@ namespace Photon.Realtime
         /// Changes the original passed IDictionary!
         /// </summary>
         /// <param name="original">The IDictionary to strip of keys with null-values.</param>
-        public static void StripKeysWithNullValues(this IDictionary original)
-        {
+        public static void StripKeysWithNullValues(this IDictionary original) {
             object[] keys = new object[original.Count];
             original.Keys.CopyTo(keys, 0);
 
-            for (int index = 0; index < keys.Length; index++)
-            {
+            for (int index = 0; index < keys.Length; index++) {
                 var key = keys[index];
-                if (original[key] == null)
-                {
+                if (original[key] == null) {
                     original.Remove(key);
                 }
             }
@@ -177,17 +156,13 @@ namespace Photon.Realtime
         /// <param name="target">The array of ints to check.</param>
         /// <param name="nr">The number to lookup in target.</param>
         /// <returns>True if nr was found in target.</returns>
-        public static bool Contains(this int[] target, int nr)
-        {
-            if (target == null)
-            {
+        public static bool Contains(this int[] target, int nr) {
+            if (target == null) {
                 return false;
             }
 
-            for (int index = 0; index < target.Length; index++)
-            {
-                if (target[index] == nr)
-                {
+            for (int index = 0; index < target.Length; index++) {
+                if (target[index] == nr) {
                     return true;
                 }
             }
@@ -196,4 +171,3 @@ namespace Photon.Realtime
         }
     }
 }
-

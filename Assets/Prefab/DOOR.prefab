@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5060057359250415398}
   - component: {fileID: 6685955470488897384}
   - component: {fileID: 5897745140380365526}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Contouring
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -90,9 +90,10 @@ GameObject:
   - component: {fileID: 945421429914859366}
   - component: {fileID: 6964137267468362477}
   - component: {fileID: 8146312393759387694}
-  m_Layer: 0
+  - component: {fileID: 1234248656743169730}
+  m_Layer: 12
   m_Name: Wrist
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -158,6 +159,120 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!82 &1234248656743169730
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5196565953975110491}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.113
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 74
+  DopplerLevel: 1
+  MinDistance: 5.33947
+  MaxDistance: 33.6
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.15891281
+      value: 1
+      inSlope: -6.2952757
+      outSlope: -6.2952757
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.34513885
+      value: 0.39927673
+      inSlope: -1.5738189
+      outSlope: -1.5738189
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.68481505
+      value: 0.09689331
+      inSlope: -0.39345473
+      outSlope: -0.39345473
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.15897639
+      outSlope: -0.15897639
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6671225870338577755
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,8 +285,9 @@ GameObject:
   - component: {fileID: 1381959395696866865}
   - component: {fileID: 8637615602205911941}
   - component: {fileID: 7307565809164607134}
-  m_Layer: 0
-  m_Name: DOOR
+  - component: {fileID: 3553447900222110185}
+  m_Layer: 12
+  m_Name: Door
   m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -255,6 +371,23 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
+--- !u!114 &3553447900222110185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6671225870338577755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c608598e1936d10468744c8373c45ee0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  information: Open the door
+  wristSound: {fileID: 8300000, guid: f12c96b9fe79f4f47bb44b7f80f6c2a2, type: 3}
+  isOpen: 0
+  animator: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!1 &7971162829830777975
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,9 +400,9 @@ GameObject:
   - component: {fileID: 9159248642979240}
   - component: {fileID: 2412650158949179484}
   - component: {fileID: 8398039001507208105}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -344,7 +477,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7971162829830777975}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.001678491, z: 0.038525313}

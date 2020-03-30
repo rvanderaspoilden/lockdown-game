@@ -6,6 +6,7 @@ namespace Game.Player {
     public class PlayerScore : MonoBehaviour {
         [Header("Only for debug")]
         [SerializeField] private int contaminedAI;
+
         [SerializeField] private int contaminedPlayer;
         [SerializeField] private int contaminedKilled;
 

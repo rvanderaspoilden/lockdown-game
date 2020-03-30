@@ -7,8 +7,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace Photon.Pun.UtilityScripts
-{
+namespace Photon.Pun.UtilityScripts {
     using System.Collections;
     using UnityEngine;
     using UnityEngine.EventSystems;
@@ -35,36 +34,29 @@ namespace Photon.Pun.UtilityScripts
     /// Gets OnClick() calls by Unity's IPointerClickHandler. Needs a PhysicsRaycaster on the camera.
     /// See: https://docs.unity3d.com/ScriptReference/EventSystems.IPointerClickHandler.html
     /// </remarks>
-    public class OnClickDestroy : MonoBehaviourPun, IPointerClickHandler
-    {
+    public class OnClickDestroy : MonoBehaviourPun, IPointerClickHandler {
         public PointerEventData.InputButton Button;
         public KeyCode ModifierKey;
 
         public bool DestroyByRpc;
-        
 
-        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
-        {
-            if (!PhotonNetwork.InRoom || (this.ModifierKey != KeyCode.None && !Input.GetKey(this.ModifierKey)) || eventData.button != this.Button )
-            {
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData) {
+            if (!PhotonNetwork.InRoom || (this.ModifierKey != KeyCode.None && !Input.GetKey(this.ModifierKey)) || eventData.button != this.Button) {
                 return;
             }
 
 
-            if (this.DestroyByRpc)
-            {
+            if (this.DestroyByRpc) {
                 this.photonView.RPC("DestroyRpc", RpcTarget.AllBuffered);
-            }
-            else
-            {
+            } else {
                 PhotonNetwork.Destroy(this.gameObject);
             }
         }
 
 
         [PunRPC]
-        public IEnumerator DestroyRpc()
-        {
+        public IEnumerator DestroyRpc() {
             Destroy(this.gameObject);
             yield return 0; // if you allow 1 frame to pass, the object's OnDestroy() method gets called and cleans up references.
         }

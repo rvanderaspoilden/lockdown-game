@@ -9,8 +9,7 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using System;
     using System.Collections.Generic;
     using ExitGames.Client.Photon;
@@ -24,8 +23,7 @@ namespace Photon.Pun
     /// Includes the AppSettings class from the Realtime APIs plus some other, PUN-relevant, settings.</remarks>
     [Serializable]
     [HelpURL("https://doc.photonengine.com/en-us/pun/v2/getting-started/initial-setup")]
-    public class ServerSettings : ScriptableObject
-    {
+    public class ServerSettings : ScriptableObject {
         [Tooltip("Core Photon Server/Cloud settings.")]
         public AppSettings AppSettings;
 
@@ -46,17 +44,16 @@ namespace Photon.Pun
         public bool StartInOfflineMode;
 
         [Tooltip("RPC name list.\nUsed as shortcut when sending calls.")]
-        public List<string> RpcList = new List<string>();   // set by scripts and or via Inspector
+        public List<string> RpcList = new List<string>(); // set by scripts and or via Inspector
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public bool DisableAutoOpenWizard;
         public bool ShowSettings;
         public bool DevRegionSetOnce;
-        #endif
+#endif
 
         /// <summary>Sets appid and region code in the AppSettings. Used in Editor.</summary>
-        public void UseCloud(string cloudAppid, string code = "")
-        {
+        public void UseCloud(string cloudAppid, string code = "") {
             this.AppSettings.AppIdRealtime = cloudAppid;
             this.AppSettings.Server = null;
             this.AppSettings.FixedRegion = string.IsNullOrEmpty(code) ? null : code;
@@ -65,35 +62,29 @@ namespace Photon.Pun
         /// <summary>Checks if a string is a Guid by attempting to create one.</summary>
         /// <param name="val">The potential guid to check.</param>
         /// <returns>True if new Guid(val) did not fail.</returns>
-        public static bool IsAppId(string val)
-        {
-            try
-            {
+        public static bool IsAppId(string val) {
+            try {
                 new Guid(val);
-            }
-            catch
-            {
+            } catch {
                 return false;
             }
+
             return true;
         }
 
         /// <summary>Gets the "best region summary" from the preferences.</summary>
         /// <value>The best region code in preferences.</value>
-        public static string BestRegionSummaryInPreferences
-        {
+        public static string BestRegionSummaryInPreferences {
             get { return PhotonNetwork.BestRegionSummaryInPreferences; }
         }
 
         /// <summary>Sets the "best region summary" in the preferences to null. On next start, the client will ping all available.</summary>
-        public static void ResetBestRegionCodeInPreferences()
-        {
+        public static void ResetBestRegionCodeInPreferences() {
             PhotonNetwork.BestRegionSummaryInPreferences = null;
         }
 
         /// <summary>String summary of the AppSettings.</summary>
-        public override string ToString()
-        {
+        public override string ToString() {
             return "ServerSettings: " + this.AppSettings.ToStringFull();
         }
     }

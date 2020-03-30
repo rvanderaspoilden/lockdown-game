@@ -136,13 +136,13 @@ namespace Lobby {
         private IEnumerator LoadLevelForAll() {
             Debug.Log("Start in 3s");
             yield return new WaitForSeconds(1);
-            
+
             Debug.Log("Start in 2s");
             yield return new WaitForSeconds(1);
-            
+
             Debug.Log("Start in 1s");
             yield return new WaitForSeconds(1);
-            
+
             PhotonNetwork.LoadLevel("Game");
         }
 

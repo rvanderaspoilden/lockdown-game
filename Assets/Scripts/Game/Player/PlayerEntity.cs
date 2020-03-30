@@ -60,7 +60,7 @@ namespace Game.Player {
             foreach (SkinnedMeshRenderer renderer in this.skinObject.GetComponentsInChildren<SkinnedMeshRenderer>()) {
                 renderer.material = GameManager.instance.GetSkinMaterialAt(skinId);
             }
-            
+
             this.skinObject.SetActive(true);
 
             if (!this.photonView.IsMine) {
@@ -109,6 +109,7 @@ namespace Game.Player {
             if (photonView.IsMine) {
                 Debug.Log("I'm patient zero");
             }
+
             this.patientZero = true;
             this.SetAsContaminated();
         }
@@ -134,7 +135,7 @@ namespace Game.Player {
             if (!photonView.IsMine) {
                 return;
             }
-            
+
             Debug.Log("I took damages");
 
 
@@ -184,7 +185,7 @@ namespace Game.Player {
                 GameManager.instance.CheckContaminedNumber();
                 return;
             }
-            
+
             if (this.currentLife < 30f && !this.contaminated) {
                 this.SetAsContaminated();
             }

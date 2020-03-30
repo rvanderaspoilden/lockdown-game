@@ -9,37 +9,30 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Photon.Pun.UtilityScripts
-{
-	/// <summary>
+namespace Photon.Pun.UtilityScripts {
+    /// <summary>
     /// Set focus to a given photonView when pointed is over
-	/// </summary>
-	public class OnPointerOverTooltip : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
-	{
+    /// </summary>
+    public class OnPointerOverTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+        void OnDestroy() {
+            PointedAtGameObjectInfo.Instance.RemoveFocus(this.GetComponent<PhotonView>());
+        }
 
-	    void OnDestroy()
-	    {
-	        PointedAtGameObjectInfo.Instance.RemoveFocus(this.GetComponent<PhotonView>());
-	    }
-		
-		#region IPointerExitHandler implementation
+        #region IPointerExitHandler implementation
 
-		void IPointerExitHandler.OnPointerExit (PointerEventData eventData)
-		{
-			PointedAtGameObjectInfo.Instance.RemoveFocus (this.GetComponent<PhotonView>());
+        void IPointerExitHandler.OnPointerExit(PointerEventData eventData) {
+            PointedAtGameObjectInfo.Instance.RemoveFocus(this.GetComponent<PhotonView>());
 
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#region IPointerEnterHandler implementation
+        #region IPointerEnterHandler implementation
 
-		void IPointerEnterHandler.OnPointerEnter (PointerEventData eventData)
-		{
-			PointedAtGameObjectInfo.Instance.SetFocus (this.GetComponent<PhotonView>());
-		}
+        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData) {
+            PointedAtGameObjectInfo.Instance.SetFocus(this.GetComponent<PhotonView>());
+        }
 
-		#endregion
-
-	}
+        #endregion
+    }
 }

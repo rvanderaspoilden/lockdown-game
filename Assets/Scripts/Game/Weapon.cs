@@ -49,9 +49,8 @@ namespace Game {
         private void Update() {
             if (this.isFiring) {
                 if (this.shootTimer == 0) {
-                    RaycastHit hit;
+                    RaycastHit hit; // todo refacto
 
-                    Debug.DrawRay(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward) * range, Color.blue);
                     if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range, (1 << 9))) {
                         if (hit.collider.CompareTag("Player")) {
                             Debug.Log("Touched player : " + hit.collider.name);
@@ -59,7 +58,7 @@ namespace Game {
                         }
                     }
                 }
-                
+
                 this.shootTimer += Time.deltaTime;
 
                 if (this.shootTimer >= this.fireRate) {
