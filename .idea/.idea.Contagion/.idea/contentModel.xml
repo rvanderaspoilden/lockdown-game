@@ -188,6 +188,9 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Game" t="Include">
+            <e p="AI" t="Include">
+              <e p="AIController.cs" t="Include" />
+            </e>
             <e p="Furniture" t="Include">
               <e p="Door.cs" t="Include" />
               <e p="Interactable.cs" t="Include" />

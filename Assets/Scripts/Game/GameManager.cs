@@ -17,6 +17,7 @@ namespace Game {
         [SerializeField] private Transform[] weaponSpawns;
         [SerializeField] private Material[] skinMaterials;
         [SerializeField] private Weapon[] weaponPrefabs;
+        [SerializeField] private Transform[] destinationForAI;
         [SerializeField] private int warmupDuration;
         [SerializeField] private int escapeDuration;
 
@@ -107,6 +108,10 @@ namespace Game {
             if (counter == players.Length || counter == 0) {
                 this.EndGame();
             }
+        }
+        
+        public Transform GetRandomAIDestination() {
+            return this.destinationForAI[Random.Range(0, this.destinationForAI.Length)];
         }
 
         private void EndGame() {
