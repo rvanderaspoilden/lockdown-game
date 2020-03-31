@@ -148,8 +148,6 @@ namespace Game.Player {
                 this.Freeze();
             }
 
-            HUDManager.instance.RefreshLifeUI(this.currentLife);
-
             photonView.RPC("RPC_UpdateLife", RpcTarget.All, this.currentLife);
         }
 
@@ -168,8 +166,6 @@ namespace Game.Player {
             if (this.currentLife >= this.maxLife) {
                 this.currentLife = maxLife;
             }
-
-            HUDManager.instance.RefreshLifeUI(this.currentLife);
 
             photonView.RPC("RPC_UpdateLife", RpcTarget.Others, this.currentLife);
         }
@@ -197,7 +193,7 @@ namespace Game.Player {
             this.covidArea.SetActive(true);
 
             if (photonView.IsMine) {
-                HUDManager.instance.RefreshLifeUI(this.currentLife);
+                HUDManager.instance.SetContaminedStatus(true);
                 StartCoroutine(this.CoughRoutine());
             }
 

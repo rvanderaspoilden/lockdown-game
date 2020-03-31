@@ -49,6 +49,20 @@ namespace Game.AI {
             }
         }
 
+        public void SetSkinMaterial(int skinIdx) {
+            photonView.RPC("RPC_SetSkinMaterial", RpcTarget.All, skinIdx);
+        }
+
+        [PunRPC]
+        public void RPC_SetSkinMaterial(int skinIdx) {
+            SkinnedMeshRenderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+            Material skinMaterial = GameManager.instance.GetSkinMaterialAt(skinIdx);
+
+            foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers) {
+                skinnedMeshRenderer.material = skinMaterial;
+            }
+        }
+
         public void SetTarget(Transform target) {
             if (this.target) {
                 this.target = target;

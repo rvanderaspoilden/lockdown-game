@@ -1,118 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4713188143909664083
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b709909182ba0943abef2c49ed59205, type: 3}
-  m_Name: PaniniProjection
-  m_EditorClassIdentifier: 
-  active: 0
-  m_AdvancedMode: 0
-  distance:
-    m_OverrideState: 1
-    m_Value: 0
-    min: 0
-    max: 1
-  cropToFit:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-    max: 1
---- !u!114 &-4059363415578443367
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1bfcd0f0fa7b8468f281d6bbbaf320, type: 3}
-  m_Name: LensDistortion
-  m_EditorClassIdentifier: 
-  active: 0
-  m_AdvancedMode: 0
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0
-    min: -1
-    max: 1
-  xMultiplier:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-    max: 1
-  yMultiplier:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-    max: 1
-  center:
-    m_OverrideState: 0
-    m_Value: {x: 0.5, y: 0.5}
-  scale:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0.01
-    max: 5
---- !u!114 &-3163314013005828142
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c1be1b6c95cd2e41b27903b9270817f, type: 3}
-  m_Name: Vignette
-  m_EditorClassIdentifier: 
-  active: 0
-  m_AdvancedMode: 0
-  mode:
-    m_OverrideState: 1
-    m_Value: 0
-  color:
-    m_OverrideState: 1
-    m_Value: {r: 0.18177521, g: 1, b: 0, a: 1}
-    hdr: 0
-    showAlpha: 0
-    showEyeDropper: 1
-  center:
-    m_OverrideState: 1
-    m_Value: {x: 0.5, y: 0.5}
-  intensity:
-    m_OverrideState: 1
-    m_Value: 1
-    min: 0
-    max: 1
-  smoothness:
-    m_OverrideState: 1
-    m_Value: 1
-    min: 0.01
-    max: 1
-  roundness:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-    max: 1
-  rounded:
-    m_OverrideState: 0
-    m_Value: 0
-  mask:
-    m_OverrideState: 0
-    m_Value: {fileID: 0}
-  opacity:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-    max: 1
 --- !u!114 &-1016694868962581565
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -180,9 +67,6 @@ MonoBehaviour:
   - {fileID: 7542669330009093999}
   - {fileID: 1501199423866068322}
   - {fileID: 3050987248204314560}
-  - {fileID: -4059363415578443367}
-  - {fileID: -4713188143909664083}
-  - {fileID: -3163314013005828142}
 --- !u!114 &1501199423866068322
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -248,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf384b154398e341b6b29969c078198, type: 3}
   m_Name: MotionBlur
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   quality:
     m_OverrideState: 1

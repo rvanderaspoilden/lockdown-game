@@ -1751,8 +1751,9 @@ MonoBehaviour:
   - {fileID: 1018536038}
   - {fileID: 2075139703}
   - {fileID: 2126046400}
-  warmupDuration: 300
+  warmupDuration: 30
   escapeDuration: 300
+  navMeshSurface: {fileID: 0}
 --- !u!114 &1970199634
 MonoBehaviour:
   m_ObjectHideFlags: 0

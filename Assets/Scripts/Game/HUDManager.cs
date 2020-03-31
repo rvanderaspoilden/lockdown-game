@@ -8,7 +8,10 @@ using UnityEngine.UI;
 namespace Game {
     public class HUDManager : MonoBehaviour {
         [Header("Settings")]
-        [SerializeField] private TextMeshProUGUI lifeText;
+        [SerializeField] private Image statusImage;
+
+        [SerializeField] private Sprite contaminedSprite;
+        [SerializeField] private Sprite confinedSprite;
 
         [SerializeField] private Image aimImage;
 
@@ -18,10 +21,11 @@ namespace Game {
             instance = this;
 
             this.SetAimVisibility(false);
+            this.SetContaminedStatus(false);
         }
 
-        public void RefreshLifeUI(float life) {
-            this.lifeText.text = life.ToString();
+        public void SetContaminedStatus(bool isContamined) {
+            this.statusImage.sprite = isContamined ? this.contaminedSprite : this.confinedSprite;
         }
 
         public void SetAimVisibility(bool visible) {

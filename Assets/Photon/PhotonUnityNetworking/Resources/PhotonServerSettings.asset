@@ -46,6 +46,7 @@ MonoBehaviour:
   - RPC_FreezePlayer
   - RPC_UnFreezePlayer
   - RPC_Interact
+  - RPC_SetSkinMaterial
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Game.AI;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Animations;
 using UnityEngine.Rendering.HighDefinition;
 using Random = UnityEngine.Random;
 
@@ -68,6 +71,13 @@ namespace Game {
                 allPlayersReady = players.Length == PhotonNetwork.CurrentRoom.PlayerCount;
                 yield return new WaitForSeconds(1);
             } while (!allPlayersReady);
+            
+            // Change AI skins
+            AIController[] aiControllers = GameObject.FindObjectsOfType<AIController>();
+
+            foreach (AIController aiController in aiControllers) {
+                aiController.SetSkinMaterial(Random.Range(0, this.skinMaterials.Length));
+            }
 
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
 
@@ -109,7 +119,7 @@ namespace Game {
                 this.EndGame();
             }
         }
-        
+
         public Transform GetRandomAIDestination() {
             return this.destinationForAI[Random.Range(0, this.destinationForAI.Length)];
         }
