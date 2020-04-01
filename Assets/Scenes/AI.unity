@@ -445,6 +445,7 @@ MonoBehaviour:
   - {fileID: 1584846470}
   warmupDuration: 0
   escapeDuration: 0
+  covidDamage: 0
 --- !u!4 &239900438
 Transform:
   m_ObjectHideFlags: 0
@@ -982,6 +983,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2046433632, guid: 0ba011185c6ddf142acf327aa646a214, type: 3}
+      propertyPath: viewIdField
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5949140109968999855, guid: 0ba011185c6ddf142acf327aa646a214,
         type: 3}
       propertyPath: m_LocalPosition.x

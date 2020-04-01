@@ -24,7 +24,6 @@ namespace Game.Player {
         [SerializeField] private bool isFrozen = false;
         [SerializeField] private float maxLife = 100f;
         [SerializeField] private GameObject covidArea;
-        [SerializeField] private float covidDamages = 5f;
         [SerializeField] private bool patientZero;
 
         [Header("Only for debug")]
@@ -122,7 +121,7 @@ namespace Game.Player {
 
         public void TakeDamageFromCovid() {
             if (!this.contaminated) {
-                photonView.RPC("RPC_TakeDamage", RpcTarget.All, this.covidDamages);
+                photonView.RPC("RPC_TakeDamage", RpcTarget.All, GameManager.instance.GetCovidDamage());
             }
         }
 
@@ -135,9 +134,6 @@ namespace Game.Player {
             if (!photonView.IsMine) {
                 return;
             }
-
-            Debug.Log("I took damages");
-
 
             this.currentLife -= damage;
 
@@ -177,6 +173,7 @@ namespace Game.Player {
             if (this.currentLife == 0f) {
                 this.contaminated = false;
                 StopAllCoroutines();
+                this.characterController.enabled = false;
                 this.covidArea.SetActive(false);
                 GameManager.instance.CheckContaminedNumber();
                 return;

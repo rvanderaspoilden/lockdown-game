@@ -23,6 +23,7 @@ namespace Game {
         [SerializeField] private Transform[] destinationForAI;
         [SerializeField] private int warmupDuration;
         [SerializeField] private int escapeDuration;
+        [SerializeField] private float covidDamage;
 
         [Header("Only for debug")]
         public static new Camera camera;
@@ -80,7 +81,7 @@ namespace Game {
             }
 
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
-
+            
             // Start warmup
             Debug.Log("Start WARMUP");
             int counter = this.warmupDuration;
@@ -94,7 +95,7 @@ namespace Game {
             players[Random.Range(0, players.Length)].GetComponent<PlayerEntity>().SetAsPatientZero();
 
             // Instantiate all weapons
-            this.InstantiateWeapons();
+            //this.InstantiateWeapons();
 
             // Start Escape Timer
             yield return new WaitForSeconds(this.escapeDuration);
@@ -122,6 +123,10 @@ namespace Game {
 
         public Transform GetRandomAIDestination() {
             return this.destinationForAI[Random.Range(0, this.destinationForAI.Length)];
+        }
+
+        public float GetCovidDamage() {
+            return this.covidDamage;
         }
 
         private void EndGame() {

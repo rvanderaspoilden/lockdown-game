@@ -118,6 +118,9 @@ MonoBehaviour:
   animationInt: 4
   spawnPos: {fileID: 4011514286940851008}
   shootParticle: {fileID: 9092997842749537001}
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 8704
   collider: {fileID: 0}
   animator: {fileID: 0}
   isFiring: 0

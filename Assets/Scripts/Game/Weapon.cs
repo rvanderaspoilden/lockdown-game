@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.AI;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Game {
         [SerializeField] private WeaponAnimationInt animationInt;
         [SerializeField] private Transform spawnPos;
         [SerializeField] private ParticleSystem shootParticle;
+        [SerializeField] private LayerMask targetLayers;
 
         [Header("Only for debug")]
         [SerializeField] private Collider collider;
@@ -23,6 +25,8 @@ namespace Game {
         [SerializeField] private Animator animator;
         [SerializeField] private bool isFiring;
         [SerializeField] private float shootTimer;
+        
+        private RaycastHit hit;
 
         private void Awake() {
             this.collider = GetComponent<Collider>();
@@ -49,12 +53,15 @@ namespace Game {
         private void Update() {
             if (this.isFiring) {
                 if (this.shootTimer == 0) {
-                    RaycastHit hit; // todo refacto
-
-                    if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range, (1 << 9))) {
-                        if (hit.collider.CompareTag("Player")) {
-                            Debug.Log("Touched player : " + hit.collider.name);
-                            hit.collider.GetComponentInParent<PlayerEntity>().TakeDamage(this.damage);
+                    if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range, this.targetLayers)) {
+                        if (this.hit.collider.CompareTag("Player")) {
+                            Debug.Log("Touched player : " + this.hit.collider.name);
+                            this.hit.collider.GetComponentInParent<PlayerEntity>().TakeDamage(this.damage);
+                        }
+                        
+                        if (this.hit.collider.CompareTag("AI")) {
+                            Debug.Log("Touched AI : " + this.hit.collider.name);
+                            this.hit.collider.GetComponentInParent<AIController>().TakeDamage(this.damage);
                         }
                     }
                 }

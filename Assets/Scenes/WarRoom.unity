@@ -203,8 +203,10 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 497bbddce010fea4da3dcb5c5210ad16, type: 2}
   weaponPrefabs:
   - {fileID: 4011514285507303356, guid: d3ea1e143bf56524cb42ec0a6b2a7c1e, type: 3}
+  destinationForAI: []
   warmupDuration: 0
   escapeDuration: 0
+  covidDamage: 0
 --- !u!4 &84482150
 Transform:
   m_ObjectHideFlags: 0
@@ -217,7 +219,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &84482151
 MonoBehaviour:
@@ -907,7 +909,7 @@ Transform:
   - {fileID: 1726312853}
   - {fileID: 1053245329}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1053245328
 GameObject:
@@ -1339,7 +1341,7 @@ PrefabInstance:
     - target: {fileID: 8970144622737624449, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8970144622737624449, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
         type: 3}
