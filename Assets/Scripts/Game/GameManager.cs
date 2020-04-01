@@ -82,8 +82,6 @@ namespace Game {
 
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
             
-            this.InstantiateWeapons(); // todo remove
-
             // Start warmup
             Debug.Log("Start WARMUP");
             int counter = this.warmupDuration;
@@ -97,7 +95,7 @@ namespace Game {
             players[Random.Range(0, players.Length)].GetComponent<PlayerEntity>().SetAsPatientZero();
 
             // Instantiate all weapons
-            //this.InstantiateWeapons();
+            this.InstantiateWeapons();
 
             // Start Escape Timer
             yield return new WaitForSeconds(this.escapeDuration);
