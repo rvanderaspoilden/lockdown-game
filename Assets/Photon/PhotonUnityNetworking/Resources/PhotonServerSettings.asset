@@ -33,20 +33,18 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
+  - RPC_Cough
+  - RPC_FreezePlayer
   - RPC_Heal
+  - RPC_Interact
+  - RPC_SetAsPatientZero
   - RPC_SetShootParticleState
+  - RPC_SetSkinMaterial
   - RPC_SetVisible
   - RPC_TakeDamage
+  - RPC_UnFreezePlayer
   - RPC_UpdateLife
   - RPC_WeaponOwnerChanged
-  - UnFreezePlayer
-  - RPC_Cough
-  - RPC_SetAsPatientZero
-  - FreezePlayer
-  - RPC_FreezePlayer
-  - RPC_UnFreezePlayer
-  - RPC_Interact
-  - RPC_SetSkinMaterial
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
