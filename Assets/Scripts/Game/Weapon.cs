@@ -18,6 +18,8 @@ namespace Game {
         [SerializeField] private Transform spawnPos;
         [SerializeField] private ParticleSystem shootParticle;
         [SerializeField] private LayerMask targetLayers;
+        [SerializeField] private AudioClip shootSound;
+        [SerializeField] private bool playSoundLoop;
 
         [Header("Only for debug")]
         [SerializeField] private Collider collider;
@@ -25,12 +27,14 @@ namespace Game {
         [SerializeField] private Animator animator;
         [SerializeField] private bool isFiring;
         [SerializeField] private float shootTimer;
-        
+        [SerializeField] private AudioSource audioSource;
+
         private RaycastHit hit;
 
         private void Awake() {
             this.collider = GetComponent<Collider>();
             this.animator = GetComponent<Animator>();
+            this.audioSource = GetComponent<AudioSource>();
         }
 
         public float GetDamage() {
@@ -58,7 +62,7 @@ namespace Game {
                             Debug.Log("Touched player : " + this.hit.collider.name);
                             this.hit.collider.GetComponentInParent<PlayerEntity>().TakeDamage(this.damage);
                         }
-                        
+
                         if (this.hit.collider.CompareTag("AI")) {
                             Debug.Log("Touched AI : " + this.hit.collider.name);
                             this.hit.collider.GetComponentInParent<AIController>().TakeDamage(this.damage);
@@ -77,20 +81,38 @@ namespace Game {
         public void UseWeapon() {
             this.isFiring = true;
             this.shootTimer = 0f;
-            photonView.RPC("RPC_SetShootParticleState", RpcTarget.All, true);
+
+            photonView.RPC("RPC_SetShootState", RpcTarget.All, true);
         }
 
         public void StopUsingWeapon() {
             this.isFiring = false;
-            photonView.RPC("RPC_SetShootParticleState", RpcTarget.All, false);
+
+            photonView.RPC("RPC_SetShootState", RpcTarget.All, false);
         }
 
         [PunRPC]
-        public void RPC_SetShootParticleState(bool state) {
+        public void RPC_SetShootState(bool state) {
             if (state) {
                 this.shootParticle.Play();
+                
+                if (this.shootSound) {
+                    if (this.playSoundLoop) {
+                        this.audioSource.clip = this.shootSound;
+                        this.audioSource.loop = true;
+                        this.audioSource.Play();
+                    } else {
+                        this.audioSource.PlayOneShot(this.shootSound);
+                    }
+                }
             } else {
                 this.shootParticle.Stop();
+                
+                if (this.shootSound && this.playSoundLoop) {
+                    this.audioSource.clip = null;
+                    this.audioSource.loop = false;
+                    this.audioSource.Stop();
+                }
             }
         }
 

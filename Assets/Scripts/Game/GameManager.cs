@@ -82,6 +82,8 @@ namespace Game {
 
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
             
+            this.InstantiateWeapons(); // todo remove
+
             // Start warmup
             Debug.Log("Start WARMUP");
             int counter = this.warmupDuration;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
   AppSettings:
-    AppIdRealtime: '68664150-ab88-4739-b1cd-38688f71ab9f '
+    AppIdRealtime: 68664150-ab88-4739-b1cd-38688f71ab9f
     AppIdChat: 
     AppIdVoice: 
     AppVersion: 1.0.0
@@ -25,7 +25,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: eu
+  DevRegion: 
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -38,7 +38,11 @@ MonoBehaviour:
   - RPC_Heal
   - RPC_Interact
   - RPC_SetAsPatientZero
+<<<<<<< t
   - RPC_SetShootParticleState
+=======
+  - RPC_SetShootState
+>>>>>>> :sparkles: add weapon sound
   - RPC_SetSkinMaterial
   - RPC_SetVisible
   - RPC_TakeDamage
@@ -47,4 +51,4 @@ MonoBehaviour:
   - RPC_WeaponOwnerChanged
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 1
+  DevRegionSetOnce: 0
