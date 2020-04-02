@@ -47,6 +47,8 @@ MonoBehaviour:
   - RPC_UnFreezePlayer
   - RPC_UpdateLife
   - RPC_WeaponOwnerChanged
+  - RPC_StartClock
+  - RPC_StopClock
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

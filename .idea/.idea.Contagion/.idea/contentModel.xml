@@ -212,6 +212,7 @@
               <e p="AiSound.cs" t="Include" />
             </e>
             <e p="Furniture" t="Include">
+              <e p="Clock.cs" t="Include" />
               <e p="Door.cs" t="Include" />
               <e p="Interactable.cs" t="Include" />
             </e>

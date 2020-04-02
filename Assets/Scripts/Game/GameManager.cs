@@ -20,6 +20,8 @@ namespace Game {
         [SerializeField] private float covidDamage;
 
         [Header("Only for debug")]
+        [SerializeField] private Clock clock;
+        
         public static new Camera camera;
 
         public static PlayerEntity localPlayer;
@@ -37,6 +39,8 @@ namespace Game {
             }
 
             PhotonNetwork.AddCallbackTarget(this);
+
+            this.clock = GameObject.FindObjectOfType<Clock>();
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -83,10 +87,12 @@ namespace Game {
             Debug.Log("Start WARMUP");
             int counter = this.warmupDuration;
             while (counter > 0) {
-                Debug.Log(counter);
                 yield return new WaitForSeconds(1);
                 counter--;
             }
+            
+            // Start clock
+            photonView.RPC("RPC_StartClock", RpcTarget.All);
 
             // Choose patient zero
             players[Random.Range(0, players.Length)].GetComponent<PlayerEntity>().SetAsPatientZero();
@@ -96,6 +102,9 @@ namespace Game {
 
             // Start Escape Timer
             yield return new WaitForSeconds(this.escapeDuration);
+            
+            // Stop clock
+            photonView.RPC("RPC_StopClock", RpcTarget.All);
 
             // Time is up
             this.EndGame();
@@ -104,6 +113,16 @@ namespace Game {
         [PunRPC]
         public void RPC_HideLoader() {
             LoadingManager.instance.Hide();
+        }
+
+        [PunRPC]
+        public void RPC_StartClock() {
+            this.clock.StartClock();
+        }
+        
+        [PunRPC]
+        public void RPC_StopClock() {
+            this.clock.StopClock();
         }
 
         public void CheckContaminedNumber() {
