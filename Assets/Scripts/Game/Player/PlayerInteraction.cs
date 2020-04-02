@@ -43,7 +43,7 @@ namespace Game.Player {
                 return;
             }
 
-            if (other.CompareTag("Weapon") && !this.playerEntity.IsContaminated() && !this.hands.HasWeapon()) {
+            if (other.CompareTag("Weapon") && !this.hands.HasWeapon()) {
                 this.hands.SetWeapon(other.GetComponent<Weapon>());
             }
         }
