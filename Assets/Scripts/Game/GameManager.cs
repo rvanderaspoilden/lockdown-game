@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Game.AI;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Random = UnityEngine.Random;
 
 namespace Game {
     public class GameManager : MonoBehaviourPun {
@@ -21,6 +23,8 @@ namespace Game {
 
         [Header("Only for debug")]
         [SerializeField] private Clock clock;
+
+        [SerializeField] private AudioSource audioSource;
         
         public static new Camera camera;
 
@@ -41,12 +45,21 @@ namespace Game {
             PhotonNetwork.AddCallbackTarget(this);
 
             this.clock = GameObject.FindObjectOfType<Clock>();
+            this.audioSource = GetComponent<AudioSource>();
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 
         private void Start() {
+            // Manage preferences
+            if (!PlayerPrefs.HasKey("mute")) {
+                PlayerPrefs.SetInt("mute", 0);
+                this.SetMuteMusic(false);
+            } else {
+                this.SetMuteMusic(PlayerPrefs.GetInt("mute") == 1);
+            }
+            
             // Manage spawn            
             int spawnId = (int) PhotonNetwork.LocalPlayer.CustomProperties["spawnId"];
             Transform spawnToUse = this.playerSpawns[spawnId].transform;
@@ -56,6 +69,16 @@ namespace Game {
 
             if (PhotonNetwork.IsMasterClient) {
                 StartCoroutine(this.ManageTimer());
+            }
+        }
+
+        private void Update() {
+            if (Input.GetKeyDown(KeyCode.Escape)) {
+                if (HUDManager.isHudOpened) {
+                    HUDManager.instance.CloseOptions();
+                } else {
+                    HUDManager.instance.OpenOptions();
+                }
             }
         }
 
@@ -80,7 +103,11 @@ namespace Game {
             foreach (AIController aiController in aiControllers) {
                 aiController.SetSkinMaterial(Random.Range(0, this.skinMaterials.Length));
             }
+            
+            // Start Music
+            this.audioSource.Play();
 
+            // Unfreeze all players
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
 
             // Start warmup
@@ -125,6 +152,10 @@ namespace Game {
             this.clock.StopClock();
         }
 
+        public void SetMuteMusic(bool isMute) {
+            this.audioSource.mute = isMute;
+        }
+
         public void CheckContaminedNumber() {
             PlayerEntity[] players = FindObjectsOfType<PlayerEntity>();
 
@@ -140,6 +171,11 @@ namespace Game {
             if (counter == players.Length || counter == 0) {
                 this.EndGame();
             }
+        }
+
+        public void LeaveGame() {
+            PhotonNetwork.LeaveRoom();
+            Application.LoadLevel("Lobby");
         }
 
         public Transform GetRandomAIDestination() {
@@ -212,6 +248,8 @@ namespace Game {
 
         [PunRPC]
         private void RPC_FreezePlayer() {
+            HUDManager.instance.CloseOptions();
+            
             localPlayer.Freeze();
         }
 

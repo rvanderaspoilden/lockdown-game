@@ -86,17 +86,27 @@ namespace Game.Player {
             }
 
             // Manage horizontal rotation
-            this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
+            if (!HUDManager.isHudOpened) {
+                this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
+                
+                if (Input.GetMouseButtonDown(1) && this.canCough) {
+                    StartCoroutine(this.Cough());
+                }
+            }
 
             this.ManageMovement();
-
-            if (Input.GetMouseButtonDown(1) && this.canCough) {
-                StartCoroutine(this.Cough());
-            }
         }
 
         public PhotonView GetPhotonView() {
             return this.photonView;
+        }
+
+        public void LockCamera() {
+            this.fpsCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = 0f;
+        }
+
+        public void UnlockCamera() {
+            this.fpsCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = 300f;
         }
 
         public bool IsPatientZero() {
@@ -209,7 +219,6 @@ namespace Game.Player {
         public void Freeze() {
             this.isFrozen = true;
             RoomUtils.SetLayerRecursively(this.skinObject, LayerMask.NameToLayer("Player"));
-            Debug.Log(this.skinObject.layer);
             this.tpsCamera.enabled = true;
             this.fpsCamera.enabled = false;
             this.playerHands.UnHandleWeapon();
@@ -217,11 +226,15 @@ namespace Game.Player {
 
         public void UnFreeze() {
             this.isFrozen = false;
-            RoomUtils.SetLayerRecursively(this.skinObject, LayerMask.NameToLayer("MinePlayerSkin"));
-            Debug.Log(this.skinObject.layer);
+            this.StartCoroutine(this.HidePlayerSkin());
             this.tpsCamera.enabled = false;
             this.fpsCamera.enabled = true;
             this.playerHands.HandleWeapon();
+        }
+
+        private IEnumerator HidePlayerSkin() {
+            yield return new WaitForSeconds(1);
+            RoomUtils.SetLayerRecursively(this.skinObject, LayerMask.NameToLayer("MinePlayerSkin"));
         }
 
         private IEnumerator CoughRoutine() {
