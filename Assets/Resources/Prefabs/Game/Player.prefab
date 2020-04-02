@@ -581,6 +581,7 @@ MonoBehaviour:
   isFrozen: 0
   maxLife: 100
   covidArea: {fileID: 1846516454}
+  coughRadius: 3
   patientZero: 0
   photonView: {fileID: 0}
   playerHands: {fileID: 0}
@@ -590,6 +591,7 @@ MonoBehaviour:
   characterController: {fileID: 0}
   moveDirection: {x: 0, y: 0, z: 0}
   currentLife: 0
+  canCough: 0
 --- !u!95 &7776815199519275772
 Animator:
   serializedVersion: 3

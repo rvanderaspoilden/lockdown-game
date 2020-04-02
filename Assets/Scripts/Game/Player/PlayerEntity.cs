@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using Cinemachine;
+using Game.AI;
 using Photon.Pun;
 using UnityEngine;
 using Utils;
@@ -24,6 +25,7 @@ namespace Game.Player {
         [SerializeField] private bool isFrozen = false;
         [SerializeField] private float maxLife = 100f;
         [SerializeField] private GameObject covidArea;
+        [SerializeField] private float coughRadius = 2f;
         [SerializeField] private bool patientZero;
 
         [Header("Only for debug")]
@@ -38,6 +40,7 @@ namespace Game.Player {
         [SerializeField] private CharacterController characterController;
         [SerializeField] private Vector3 moveDirection = Vector3.zero;
         [SerializeField] private float currentLife;
+        [SerializeField] private bool canCough;
 
         private void Awake() {
             this.photonView = GetComponent<PhotonView>();
@@ -53,6 +56,7 @@ namespace Game.Player {
             this.currentLife = this.maxLife;
             this.contaminated = false;
             this.covidArea.SetActive(false);
+            this.canCough = true;
 
             // Manage skin
             int skinId = (int) this.photonView.Owner.CustomProperties["skinId"];
@@ -85,6 +89,10 @@ namespace Game.Player {
             this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
 
             this.ManageMovement();
+
+            if (Input.GetMouseButtonDown(1) && this.canCough) {
+                StartCoroutine(this.Cough());
+            }
         }
 
         public PhotonView GetPhotonView() {
@@ -105,10 +113,6 @@ namespace Game.Player {
 
         [PunRPC]
         public void RPC_SetAsPatientZero() {
-            if (photonView.IsMine) {
-                Debug.Log("I'm patient zero");
-            }
-
             this.patientZero = true;
             this.SetAsContaminated();
         }
@@ -219,9 +223,41 @@ namespace Game.Player {
 
         private IEnumerator CoughRoutine() {
             while (this.contaminated && !GameManager.gameEnded) {
-                yield return new WaitForSeconds(UnityEngine.Random.Range(3, 30));
-                this.playerSound.Cough();
+                yield return new WaitForSeconds(UnityEngine.Random.Range(this.IsPatientZero() ? 30 : 3, this.IsPatientZero() ? 90 : 30));
+
+                if (this.canCough) {
+                    StartCoroutine(this.Cough());
+                }
             }
+        }
+
+        private IEnumerator Cough() {
+            // In case of concurrent coroutines
+            if (!this.canCough) {
+                yield return null;
+            }
+            
+            this.canCough = false;
+
+            this.playerSound.Cough();
+
+            if (this.IsContaminated()) {
+                Collider[] hitColliders = Physics.OverlapSphere(this.transform.position + new Vector3(0, 2f, 0), this.coughRadius, (1 << 9 | 1 << 13));
+
+                foreach (Collider hit in hitColliders) {
+                    if (hit.CompareTag("Player")) {
+                        hit.GetComponent<PlayerEntity>().TakeDamageFromCovid();
+                    }
+
+                    if (hit.CompareTag("AI")) {
+                        hit.GetComponent<AIController>().TakeDamageFromCovid();
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(2f);
+
+            this.canCough = true;
         }
 
         private void ManageMovement() {

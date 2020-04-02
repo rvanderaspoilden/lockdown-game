@@ -1449,7 +1449,7 @@ MonoBehaviour:
   - {fileID: 7034829955076796781}
   - {fileID: 7034829955076796780}
   - {fileID: 7034829955076796779}
-  warmupDuration: 30
+  warmupDuration: 300
   escapeDuration: 300
   covidDamage: 20
 --- !u!114 &1970199634
