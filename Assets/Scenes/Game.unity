@@ -2442,11 +2442,6 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 1254720684080051568, guid: 2f0a7540c9eff724dae0a8a1db29914f,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1290739182124854496, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
       propertyPath: m_Name
@@ -2471,11 +2466,6 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3179131033316231848, guid: 2f0a7540c9eff724dae0a8a1db29914f,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3359051203494279017, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
@@ -2512,20 +2502,10 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 16
       objectReference: {fileID: 0}
-    - target: {fileID: 6451653448863763962, guid: 2f0a7540c9eff724dae0a8a1db29914f,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7216780773954694622, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
       propertyPath: viewIdField
       value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7510911403806989822, guid: 2f0a7540c9eff724dae0a8a1db29914f,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7783787365619690942, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
