@@ -29,12 +29,14 @@ namespace Game.Player {
             if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out forwardHit, 4, (1 << 12))) {
                 Interactable interactable = forwardHit.collider.GetComponentInParent<Interactable>();
 
-                // TODO UI
-                Debug.Log(interactable.GetInformation());
+                // Set HUD information
+                HUDManager.instance.SetInformation(interactable.GetInformation());
 
                 if (Input.GetKeyDown(KeyCode.E)) {
                     interactable.Interact();
                 }
+            } else {
+                HUDManager.instance.SetInformation(String.Empty);
             }
         }
 

@@ -1082,31 +1082,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8970144622565679752, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
-        type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8970144622565679752, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8970144622565679752, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8970144622565679752, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
-        type: 3}
-      propertyPath: m_textInfo.pageCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8970144622634271179, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.000022888184
-      objectReference: {fileID: 0}
     - target: {fileID: 8970144622737624449, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1216,11 +1191,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 8970144623528800572, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.00002193451
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7659dcb7b0c9a674cadf04bd38ebbb1a, type: 3}
@@ -1818,6 +1788,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 267429358609149352, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
     - target: {fileID: 533932576899912064, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
       propertyPath: viewIdField
@@ -1827,6 +1802,11 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 927858018060679345, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
       objectReference: {fileID: 0}
     - target: {fileID: 1345823339592623006, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
@@ -1863,6 +1843,11 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 2228464291832707212, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
     - target: {fileID: 2435267776587653744, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
       propertyPath: viewIdField
@@ -1872,6 +1857,11 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2672110604038053464, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
       objectReference: {fileID: 0}
     - target: {fileID: 2709024936123365920, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
@@ -1888,10 +1878,20 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 3517458111776943174, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
     - target: {fileID: 3935750167043342208, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
       propertyPath: viewIdField
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955163042956066071, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
       objectReference: {fileID: 0}
     - target: {fileID: 4364215368240756564, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
@@ -1903,10 +1903,20 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4511002278276417434, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
     - target: {fileID: 4636252411059267785, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
       propertyPath: viewIdField
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069629686044090886, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
       objectReference: {fileID: 0}
     - target: {fileID: 5169573048742596677, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
@@ -1922,6 +1932,21 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502864486188777714, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
+    - target: {fileID: 5701911899749484370, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
+    - target: {fileID: 5770433311885328830, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
       objectReference: {fileID: 0}
     - target: {fileID: 5935544340789560704, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
@@ -1993,6 +2018,21 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6693100283238672863, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
+    - target: {fileID: 6727430626393511249, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073626381315385105, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
     - target: {fileID: 7086283785952159110, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
       propertyPath: viewIdField
@@ -2007,6 +2047,16 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7332939888219824029, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
+    - target: {fileID: 7600417417988773318, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
       objectReference: {fileID: 0}
     - target: {fileID: 7660057620521842239, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}
@@ -2027,6 +2077,16 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080192854267873880, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164976278153218949, guid: 2f0a7540c9eff724dae0a8a1db29914f,
+        type: 3}
+      propertyPath: information
+      value: Press [E] to {0} the door
       objectReference: {fileID: 0}
     - target: {fileID: 8244230752298815078, guid: 2f0a7540c9eff724dae0a8a1db29914f,
         type: 3}

@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Door : Interactable {
     [Header("Settings")]
-    [SerializeField] private string information;
-
     [SerializeField] private AudioClip wristSound;
+
+    [SerializeField] private string information;
 
     [Header("Only for debug")]
     [SerializeField] private bool isOpen;
@@ -21,7 +21,7 @@ public class Door : Interactable {
     }
 
     public override string GetInformation() {
-        return this.information;
+        return String.Format(this.information, this.isOpen ? "close" : "open");
     }
 
     public override void Interact() {

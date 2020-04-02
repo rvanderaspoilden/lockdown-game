@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Management.Instrumentation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +11,8 @@ namespace Game {
         [SerializeField] private Sprite contaminedSprite;
         [SerializeField] private Sprite confinedSprite;
 
+        [SerializeField] private TextMeshProUGUI informationText;
+
         [SerializeField] private Image aimImage;
         [SerializeField] private Image contaminedCameraFilter;
         [SerializeField] private float contaminedCameraFilterMaxOpacity;
@@ -25,6 +24,7 @@ namespace Game {
 
             this.SetAimVisibility(false);
             this.SetContaminedStatus(false);
+            this.SetInformation(String.Empty);
         }
 
         public void SetContaminedStatus(bool isContamined) {
@@ -41,6 +41,10 @@ namespace Game {
          */
         public void SetContaminedCameraFilterOpacity(float opacity) {
             this.contaminedCameraFilter.color = new Color(1,1,1,opacity * this.contaminedCameraFilterMaxOpacity);
+        }
+
+        public void SetInformation(string value) {
+            this.informationText.text = value;
         }
     }
 }

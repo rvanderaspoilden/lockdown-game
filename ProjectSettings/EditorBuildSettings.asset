@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Lobby.unity
     guid: b0670e2b2c6b36445aa49e23e64f648e
   - enabled: 1
-    path: Assets/Scenes/WarRoom.unity
-    guid: 43a45cdeaafd1764f8b9d71ca6a9ffc6
-  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: d63c60226051d864f822abf7ad7d5db7
   m_configObjects: {}

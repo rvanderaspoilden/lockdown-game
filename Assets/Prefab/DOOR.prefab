@@ -383,8 +383,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c608598e1936d10468744c8373c45ee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  information: Open the door
   wristSound: {fileID: 8300000, guid: f12c96b9fe79f4f47bb44b7f80f6c2a2, type: 3}
+  information: Press [E] to {0} the door
   isOpen: 0
   animator: {fileID: 0}
   audioSource: {fileID: 0}
