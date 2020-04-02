@@ -533,7 +533,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: People are contaminated if social distance are not respected
+  m_text: People are contaminated if social distances are not respected
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19c35fc20c0c4dc4b920c9219dd49bef, type: 2}
   m_sharedMaterial: {fileID: -5003186606067968657, guid: 19c35fc20c0c4dc4b920c9219dd49bef,

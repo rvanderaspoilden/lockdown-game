@@ -105,7 +105,7 @@ namespace Game {
             }
             
             // Start Music
-            this.audioSource.Play();
+            photonView.RPC("RPC_StartMusic", RpcTarget.All);
 
             // Unfreeze all players
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
@@ -135,6 +135,11 @@ namespace Game {
 
             // Time is up
             this.EndGame();
+        }
+
+        [PunRPC]
+        public void RPC_StartMusic() {
+            this.audioSource.Play();
         }
 
         [PunRPC]
