@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Management.Instrumentation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ namespace Game {
         [SerializeField] private Sprite confinedSprite;
 
         [SerializeField] private Image aimImage;
+        [SerializeField] private Image contaminedCameraFilter;
+        [SerializeField] private float contaminedCameraFilterMaxOpacity;
 
         public static HUDManager instance;
 
@@ -26,10 +29,18 @@ namespace Game {
 
         public void SetContaminedStatus(bool isContamined) {
             this.statusImage.sprite = isContamined ? this.contaminedSprite : this.confinedSprite;
+            this.SetContaminedCameraFilterOpacity(isContamined ? 1 : 0);
         }
 
         public void SetAimVisibility(bool visible) {
             this.aimImage.enabled = visible;
+        }
+
+        /**
+         * Opacity need to be between 0 and 1
+         */
+        public void SetContaminedCameraFilterOpacity(float opacity) {
+            this.contaminedCameraFilter.color = new Color(1,1,1,opacity * this.contaminedCameraFilterMaxOpacity);
         }
     }
 }

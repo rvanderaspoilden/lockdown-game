@@ -147,6 +147,9 @@ namespace Game.Player {
                 this.playerHands.ResetAll();
                 this.Freeze();
             }
+            
+            // Adjust contamined camera filter in function of lost life
+            HUDManager.instance.SetContaminedCameraFilterOpacity((this.maxLife - this.currentLife) / this.maxLife);
 
             photonView.RPC("RPC_UpdateLife", RpcTarget.All, this.currentLife);
         }
