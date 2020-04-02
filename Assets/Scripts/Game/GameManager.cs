@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections;
 using Game.AI;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Animations;
-using UnityEngine.Rendering.HighDefinition;
-using Random = UnityEngine.Random;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Game {
     public class GameManager : MonoBehaviourPun {
@@ -65,23 +59,26 @@ namespace Game {
             bool allPlayersReady = false;
             GameObject[] players;
 
-            // Chec all players are instantiated
+            // Check all players are instantiated
             do {
                 Debug.Log("Check players....");
                 players = GameObject.FindGameObjectsWithTag("Player");
                 allPlayersReady = players.Length == PhotonNetwork.CurrentRoom.PlayerCount;
                 yield return new WaitForSeconds(1);
             } while (!allPlayersReady);
-            
+
+            // Hide loading canvas
+            photonView.RPC("RPC_HideLoader", RpcTarget.All);
+
             // Change AI skins
-            AIController[] aiControllers = GameObject.FindObjectsOfType<AIController>();
+            AIController[] aiControllers = FindObjectsOfType<AIController>();
 
             foreach (AIController aiController in aiControllers) {
                 aiController.SetSkinMaterial(Random.Range(0, this.skinMaterials.Length));
             }
 
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
-            
+
             // Start warmup
             Debug.Log("Start WARMUP");
             int counter = this.warmupDuration;
@@ -104,8 +101,13 @@ namespace Game {
             this.EndGame();
         }
 
+        [PunRPC]
+        public void RPC_HideLoader() {
+            LoadingManager.instance.Hide();
+        }
+
         public void CheckContaminedNumber() {
-            PlayerEntity[] players = GameObject.FindObjectsOfType<PlayerEntity>();
+            PlayerEntity[] players = FindObjectsOfType<PlayerEntity>();
 
             Debug.Log("Check contamined number");
             int counter = 0;
@@ -172,7 +174,7 @@ namespace Game {
                 sum += playerScore.GetContaminedKilled();
 
                 Photon.Realtime.Player photonPlayer = playerEntity.GetPhotonView().Owner;
-                ExitGames.Client.Photon.Hashtable data = photonPlayer.CustomProperties;
+                Hashtable data = photonPlayer.CustomProperties;
 
                 if (data.ContainsKey("score")) {
                     data["score"] = (float) data["score"] + sum;
@@ -186,12 +188,12 @@ namespace Game {
 
         [PunRPC]
         private void RPC_UnFreezePlayer() {
-            GameManager.localPlayer.UnFreeze();
+            localPlayer.UnFreeze();
         }
 
         [PunRPC]
         private void RPC_FreezePlayer() {
-            GameManager.localPlayer.Freeze();
+            localPlayer.Freeze();
         }
 
         private void InstantiateWeapons() {

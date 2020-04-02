@@ -226,6 +226,7 @@
             </e>
             <e p="Weapon.cs" t="Include" />
           </e>
+          <e p="LoadingManager.cs" t="Include" />
           <e p="Lobby" t="Include">
             <e p="Launcher.cs" t="Include" />
             <e p="LobbyPlayer.cs" t="Include" />

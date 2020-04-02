@@ -25,7 +25,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: eu
+  DevRegion: 
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -36,15 +36,17 @@ MonoBehaviour:
   - RPC_Cough
   - RPC_FreezePlayer
   - RPC_Heal
+  - RPC_HideLoader
   - RPC_Interact
   - RPC_SetAsPatientZero
   - RPC_SetShootState
   - RPC_SetSkinMaterial
   - RPC_SetVisible
+  - RPC_ShowLoader
   - RPC_TakeDamage
   - RPC_UnFreezePlayer
   - RPC_UpdateLife
   - RPC_WeaponOwnerChanged
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 1
+  DevRegionSetOnce: 0

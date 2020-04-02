@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Game;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -138,14 +139,10 @@ namespace Lobby {
         }
 
         private IEnumerator LoadLevelForAll() {
-            Debug.Log("Start in 3s");
-            yield return new WaitForSeconds(1);
-
-            Debug.Log("Start in 2s");
-            yield return new WaitForSeconds(1);
-
-            Debug.Log("Start in 1s");
-            yield return new WaitForSeconds(1);
+            // Notify all to show loader
+            this.photonView.RPC("RPC_ShowLoader", RpcTarget.All);
+            
+            yield return new WaitForSeconds(3);
 
             PhotonNetwork.LoadLevel("Game");
         }
@@ -153,6 +150,11 @@ namespace Lobby {
         private void DisplayAuthentificationPanel() {
             this.authentificationPanel.SetActive(true);
             this.roomPanel.SetActive(false);
+        }
+
+        [PunRPC]
+        private void RPC_ShowLoader() {
+            LoadingManager.instance.Show(true);
         }
 
         private void DisplayRoomPanel() {
