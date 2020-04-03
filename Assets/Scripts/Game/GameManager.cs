@@ -104,6 +104,9 @@ namespace Game {
                 aiController.SetSkinMaterial(Random.Range(0, this.skinMaterials.Length));
             }
             
+            // Open random doors
+            this.OpenRandomDoors();
+            
             // Start Music
             photonView.RPC("RPC_StartMusic", RpcTarget.All);
 
@@ -135,6 +138,14 @@ namespace Game {
 
             // Time is up
             this.EndGame();
+        }
+
+        private void OpenRandomDoors() {
+            Door[] doors = FindObjectsOfType<Door>();
+
+            for (int i = 0; i < 6; i++) {
+                doors[Random.Range(0, doors.Length)].Interact();
+            }
         }
 
         [PunRPC]

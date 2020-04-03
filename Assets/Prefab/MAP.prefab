@@ -46610,7 +46610,6 @@ GameObject:
   - component: {fileID: 3359051203494279017}
   - component: {fileID: 5363490675004500701}
   - component: {fileID: 6402354609881505734}
-  - component: {fileID: 927858018060679345}
   m_Layer: 0
   m_Name: Door (6)
   m_TagString: Door
@@ -46696,23 +46695,6 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
---- !u!114 &927858018060679345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7000000573146977283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c608598e1936d10468744c8373c45ee0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wristSound: {fileID: 8300000, guid: f12c96b9fe79f4f47bb44b7f80f6c2a2, type: 3}
-  information: Press [E] to {0} the door
-  isOpen: 0
-  animator: {fileID: 0}
-  audioSource: {fileID: 0}
 --- !u!1 &7013631834552537604
 GameObject:
   m_ObjectHideFlags: 0
@@ -55094,7 +55076,6 @@ GameObject:
   - component: {fileID: 2435267776587653744}
   - component: {fileID: 4987879782414483396}
   - component: {fileID: 6309485897351678687}
-  - component: {fileID: 267429358609149352}
   m_Layer: 0
   m_Name: Door (7)
   m_TagString: Door
@@ -55180,23 +55161,6 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
---- !u!114 &267429358609149352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7958580760990794010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c608598e1936d10468744c8373c45ee0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wristSound: {fileID: 8300000, guid: f12c96b9fe79f4f47bb44b7f80f6c2a2, type: 3}
-  information: Press [E] to {0} the door
-  isOpen: 0
-  animator: {fileID: 0}
-  audioSource: {fileID: 0}
 --- !u!1 &7966922849871742882
 GameObject:
   m_ObjectHideFlags: 0
