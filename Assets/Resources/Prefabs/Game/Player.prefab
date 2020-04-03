@@ -576,22 +576,26 @@ MonoBehaviour:
   skinObject: {fileID: 5660754073589859638}
   sensitivityX: 2
   moveSpeed: 5
-  gravity: 20
+  sprintMultiplier: 1.5
+  slowMultiplier: 0.5
   jumpSpeed: 8
-  isFrozen: 0
+  gravity: 20
   maxLife: 100
   covidArea: {fileID: 1846516454}
   coughRadius: 3
-  patientZero: 0
   photonView: {fileID: 0}
   playerHands: {fileID: 0}
   playerSound: {fileID: 0}
   animator: {fileID: 0}
+  patientZero: 0
+  isFrozen: 0
   contaminated: 0
   characterController: {fileID: 0}
   moveDirection: {x: 0, y: 0, z: 0}
   currentLife: 0
   canCough: 0
+  isSlowed: 0
+  slowTimer: 0
 --- !u!95 &7776815199519275772
 Animator:
   serializedVersion: 3

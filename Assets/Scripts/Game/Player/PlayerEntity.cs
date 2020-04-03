@@ -20,13 +20,13 @@ namespace Game.Player {
         [SerializeField] private GameObject skinObject;
         [SerializeField] private float sensitivityX;
         [SerializeField] private float moveSpeed;
-        [SerializeField] private float gravity = 20f;
+        [SerializeField] private float sprintMultiplier = 1.2f;
+        [SerializeField] private float slowMultiplier = 0.5f;
         [SerializeField] private float jumpSpeed = 10;
-        [SerializeField] private bool isFrozen = false;
+        [SerializeField] private float gravity = 20f;
         [SerializeField] private float maxLife = 100f;
         [SerializeField] private GameObject covidArea;
         [SerializeField] private float coughRadius = 2f;
-        [SerializeField] private bool patientZero;
 
         [Header("Only for debug")]
         [SerializeField] private PhotonView photonView;
@@ -34,6 +34,10 @@ namespace Game.Player {
         [SerializeField] private PlayerHands playerHands;
         [SerializeField] private PlayerSound playerSound;
         [SerializeField] private Animator animator;
+        
+        [SerializeField] private bool patientZero;
+        
+        [SerializeField] private bool isFrozen = false;
 
         [SerializeField] private bool contaminated;
 
@@ -42,6 +46,10 @@ namespace Game.Player {
         [SerializeField] private float currentLife;
         [SerializeField] private bool canCough;
 
+        [SerializeField] private bool isSlowed;
+        [SerializeField] private float slowTimer;
+        private Coroutine slowEffectCoroutine;
+
         private void Awake() {
             this.photonView = GetComponent<PhotonView>();
             this.animator = GetComponent<Animator>();
@@ -49,6 +57,10 @@ namespace Game.Player {
             this.playerSound = GetComponent<PlayerSound>();
             this.playerHands = GetComponent<PlayerHands>();
             this.characterController = GetComponent<CharacterController>();
+        }
+
+        private void OnDestroy() {
+            StopAllCoroutines();
         }
 
         private void Start() {
@@ -88,7 +100,7 @@ namespace Game.Player {
             // Manage horizontal rotation
             if (!HUDManager.isHudOpened) {
                 this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
-                
+
                 if (Input.GetMouseButtonDown(1) && this.canCough) {
                     StartCoroutine(this.Cough());
                 }
@@ -127,15 +139,17 @@ namespace Game.Player {
             this.SetAsContaminated();
         }
 
-        public void TakeDamage(float damage) {
+        public void TakeDamageFromWeapon(Weapon weapon) {
             if (this.contaminated) {
-                photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+                photonView.RPC("RPC_TakeDamage", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, weapon.GetDamage());
             }
+
+            photonView.RPC("RPC_ApplyDamageEffects", photonView.Owner, weapon.photonView.ViewID);
         }
 
-        public void TakeDamageFromCovid() {
+        public void TakeDamageFromCovid(Photon.Realtime.Player owner) {
             if (!this.contaminated) {
-                photonView.RPC("RPC_TakeDamage", RpcTarget.All, GameManager.instance.GetCovidDamage());
+                photonView.RPC("RPC_TakeDamage", RpcTarget.All, owner.ActorNumber, GameManager.instance.GetCovidDamage());
             }
         }
 
@@ -144,10 +158,45 @@ namespace Game.Player {
         }
 
         [PunRPC]
-        public void RPC_TakeDamage(float damage) {
+        public void RPC_ApplyDamageEffects(int weaponViewID) {
+            PhotonView weapongView = PhotonView.Find(weaponViewID);
+
+            if (weapongView == null) {
+                Debug.LogError("Weapon view not found");
+            }
+
+            foreach (WeaponDamageEffect effect in weapongView.GetComponent<Weapon>().GetDamageEffects()) {
+                if (effect == WeaponDamageEffect.BLIND) {
+                    HUDManager.instance.Blind();
+                } else if (effect == WeaponDamageEffect.SLOW) {
+                    this.slowTimer = 3;
+
+                    if (this.slowEffectCoroutine == null) {
+                        this.slowEffectCoroutine = StartCoroutine(this.SlowEffect());
+                    }
+                }
+            }
+        }
+
+        private IEnumerator SlowEffect() {
+            this.isSlowed = true;
+            while (this.slowTimer > 0) {
+                this.slowTimer -= Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+
+            this.isSlowed = false;
+
+            this.slowEffectCoroutine = null;
+        }
+
+        [PunRPC]
+        public void RPC_TakeDamage(int actorNbr, float damage) {
             if (!photonView.IsMine) {
                 return;
             }
+
+            Debug.Log("I took RPC damage from actor nbr: " + actorNbr);
 
             this.currentLife -= damage;
 
@@ -156,8 +205,10 @@ namespace Game.Player {
                 this.animator.SetBool("Death_b", true);
                 this.playerHands.ResetAll();
                 this.Freeze();
+
+                // Todo send message to killer
             }
-            
+
             // Adjust contamined camera filter in function of lost life
             HUDManager.instance.SetContaminedCameraFilterOpacity((this.maxLife - this.currentLife) / this.maxLife);
 
@@ -252,7 +303,7 @@ namespace Game.Player {
             if (!this.canCough) {
                 yield return null;
             }
-            
+
             this.canCough = false;
 
             this.playerSound.Cough();
@@ -262,11 +313,11 @@ namespace Game.Player {
 
                 foreach (Collider hit in hitColliders) {
                     if (hit.CompareTag("Player")) {
-                        hit.GetComponent<PlayerEntity>().TakeDamageFromCovid();
+                        hit.GetComponent<PlayerEntity>().TakeDamageFromCovid(PhotonNetwork.LocalPlayer);
                     }
 
                     if (hit.CompareTag("AI")) {
-                        hit.GetComponent<AIController>().TakeDamageFromCovid();
+                        hit.GetComponent<AIController>().TakeDamageFromCovid(); // todo manager owner
                     }
                 }
             }
@@ -278,12 +329,23 @@ namespace Game.Player {
 
         private void ManageMovement() {
             this.animator.SetBool("Jump_b", false); // todo
-
+            
             float moveDirectionY = this.moveDirection.y;
 
             this.moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             this.moveDirection = this.transform.TransformDirection(moveDirection);
-            this.moveDirection *= this.moveSpeed;
+
+            float speedMultiplier = this.moveSpeed;
+            
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                speedMultiplier *= this.sprintMultiplier;
+            }
+
+            if (this.isSlowed) {
+                speedMultiplier *= this.slowMultiplier;
+            }
+            
+            this.moveDirection *= speedMultiplier;
 
             if (this.characterController.isGrounded) {
                 if (Input.GetKeyDown(KeyCode.Space)) {

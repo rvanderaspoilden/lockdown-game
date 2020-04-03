@@ -20,6 +20,7 @@ namespace Game {
         [SerializeField] private LayerMask targetLayers;
         [SerializeField] private AudioClip shootSound;
         [SerializeField] private bool playSoundLoop;
+        [SerializeField] private WeaponDamageEffect[] damageEffects;
 
         [Header("Only for debug")]
         [SerializeField] private Collider collider;
@@ -54,17 +55,23 @@ namespace Game {
             photonView.RPC("RPC_WeaponOwnerChanged", RpcTarget.All, playerView.ViewID);
         }
 
+        public WeaponDamageEffect[] GetDamageEffects() {
+            return this.damageEffects;
+        }
+
         private void Update() {
+            if (!photonView.IsMine) {
+                return;
+            }
+            
             if (this.isFiring) {
                 if (this.shootTimer == 0) {
                     if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range, this.targetLayers)) {
                         if (this.hit.collider.CompareTag("Player")) {
-                            Debug.Log("Touched player : " + this.hit.collider.name);
-                            this.hit.collider.GetComponentInParent<PlayerEntity>().TakeDamage(this.damage);
+                            this.hit.collider.GetComponentInParent<PlayerEntity>().TakeDamageFromWeapon(this);
                         }
 
                         if (this.hit.collider.CompareTag("AI")) {
-                            Debug.Log("Touched AI : " + this.hit.collider.name);
                             this.hit.collider.GetComponentInParent<AIController>().TakeDamage(this.damage);
                         }
                     }
@@ -164,5 +171,10 @@ namespace Game {
         THERMOMETER = 1,
         GLOVES = 1,
         CHLOROQUINE = 4
+    }
+
+    public enum WeaponDamageEffect {
+        SLOW = 0,
+        BLIND = 1
     }
 }

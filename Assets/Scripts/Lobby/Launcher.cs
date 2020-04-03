@@ -250,7 +250,6 @@ namespace Lobby {
         }
 
         public override void OnLeftRoom() {
-            Debug.Log("I left the room");
             this.DisplayAuthentificationPanel();
             StopAllCoroutines();
         }

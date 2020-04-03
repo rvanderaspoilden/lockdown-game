@@ -56,7 +56,7 @@ namespace Game.Player {
             }
 
             if (other.CompareTag("CovidArea") && covidCoroutine == null && !this.playerEntity.IsContaminated()) {
-                this.covidCoroutine = StartCoroutine(this.TakeDamageFromCovid());
+                this.covidCoroutine = StartCoroutine(this.TakeDamageFromCovid(other.GetComponentInParent<PhotonView>().Owner));
             }
         }
 
@@ -71,10 +71,10 @@ namespace Game.Player {
             }
         }
 
-        private IEnumerator TakeDamageFromCovid() {
+        private IEnumerator TakeDamageFromCovid(Photon.Realtime.Player owner) {
             while (!this.playerEntity.IsContaminated()) {
-                yield return new WaitForSeconds(3f);
-                this.playerEntity.TakeDamageFromCovid();
+                yield return new WaitForSeconds(3f); // todo refactor this
+                this.playerEntity.TakeDamageFromCovid(owner);
             }
         }
     }

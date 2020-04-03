@@ -21,6 +21,7 @@ namespace Game {
         [SerializeField] private Image aimImage;
         [SerializeField] private Image contaminedCameraFilter;
         [SerializeField] private float contaminedCameraFilterMaxOpacity;
+        [SerializeField] private BlindHudManager blindHudManager;
 
         public static HUDManager instance;
 
@@ -33,6 +34,7 @@ namespace Game {
             this.SetContaminedStatus(false);
             this.SetInformation(String.Empty);
             this.CloseOptions();
+            this.blindHudManager.Hide(true);
         }
 
         public void SetContaminedStatus(bool isContamined) {
@@ -73,6 +75,10 @@ namespace Game {
             PlayerPrefs.SetInt("mute", PlayerPrefs.GetInt("mute") == 1 ? 0 : 1);
             GameManager.instance.SetMuteMusic(PlayerPrefs.GetInt("mute") == 1);
             this.soundImage.sprite = PlayerPrefs.GetInt("mute") == 1 ? this.muteSprite : this.unmuteSprite;
+        }
+
+        public void Blind() {
+            this.blindHudManager.NextStep();
         }
 
         /**

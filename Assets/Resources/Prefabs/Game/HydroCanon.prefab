@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6210e753775e8746a22d8a3270aad5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 3
   range: 9
   fireRate: 0.3
   weaponType: 0
@@ -124,6 +124,7 @@ MonoBehaviour:
     m_Bits: 8704
   shootSound: {fileID: 8300000, guid: 58af0eff8fb750e4095c913ed855ef9d, type: 3}
   playSoundLoop: 1
+  damageEffects: 0000000001000000
   collider: {fileID: 0}
   animator: {fileID: 0}
   isFiring: 0
