@@ -21,7 +21,7 @@ namespace Game.Player {
         }
 
         private void Update() {
-            if (!photonView.IsMine) {
+            if (!photonView.IsMine || HUDManager.isHudOpened) {
                 return;
             }
 

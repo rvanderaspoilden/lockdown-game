@@ -57,7 +57,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1142022891}
-  m_LocalRotation: {x: 0.17201434, y: -0.015751725, z: 0.0027508826, w: 0.9849647}
+  m_LocalRotation: {x: 0.17201439, y: -0.01575182, z: 0.0027508999, w: 0.9849647}
   m_LocalPosition: {x: 0.13454843, y: 2.9385328, z: -4.205608}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -574,7 +574,7 @@ MonoBehaviour:
   tpsCamera: {fileID: 6300269738469554463}
   camera: {fileID: 0}
   skinObject: {fileID: 5660754073589859638}
-  sensitivityX: 4
+  sensitivityX: 2
   moveSpeed: 5
   gravity: 20
   jumpSpeed: 8
@@ -845,9 +845,9 @@ MonoBehaviour:
   m_VerticalAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 300
-    m_AccelTime: 0.1
-    m_DecelTime: 0.1
+    m_MaxSpeed: 200
+    m_AccelTime: 0.05
+    m_DecelTime: 0.05
     m_InputAxisName: Mouse Y
     m_InputAxisValue: 0
     m_InvertInput: 1
@@ -2068,7 +2068,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6300269737047486725}
-  m_LocalRotation: {x: 0.36385477, y: -0.014893786, z: 0.00581882, w: 0.93131846}
+  m_LocalRotation: {x: 0.36385477, y: -0.014893898, z: 0.005818864, w: 0.93131846}
   m_LocalPosition: {x: 0, y: -0.0000009536743, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2464,7 +2464,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6300269738680819348}
-  m_LocalRotation: {x: 0.15041617, y: -0.015808176, z: 0.0024054844, w: 0.98849344}
+  m_LocalRotation: {x: 0.15041621, y: -0.01580824, z: 0.0024054945, w: 0.98849344}
   m_LocalPosition: {x: 0, y: -0.0000009536743, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2546,7 +2546,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6300269738771519036}
   m_LocalRotation: {x: 0.32442555, y: -0.015125123, z: 0.005188306, w: 0.9457761}
-  m_LocalPosition: {x: 0, y: -0.00000333786, z: 0}
+  m_LocalPosition: {x: 0, y: -0.0000047683716, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6300269737007658036}

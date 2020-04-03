@@ -25,7 +25,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: eu
+  DevRegion: 
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -43,13 +43,13 @@ MonoBehaviour:
   - RPC_SetSkinMaterial
   - RPC_SetVisible
   - RPC_ShowLoader
+  - RPC_StartClock
+  - RPC_StartMusic
+  - RPC_StopClock
   - RPC_TakeDamage
   - RPC_UnFreezePlayer
   - RPC_UpdateLife
   - RPC_WeaponOwnerChanged
-  - RPC_StartClock
-  - RPC_StopClock
-  - RPC_StartMusic
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 1
+  DevRegionSetOnce: 0

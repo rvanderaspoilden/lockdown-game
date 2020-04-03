@@ -4,11 +4,12 @@ using Game.AI;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
 
 namespace Game {
-    public class GameManager : MonoBehaviourPun {
+    public class GameManager : MonoBehaviourPunCallbacks {
         [Header("Fields to complete")]
         [SerializeField] private GameObject playerPrefab;
 
@@ -31,6 +32,8 @@ namespace Game {
         public static PlayerEntity localPlayer;
 
         public static bool gameEnded = false;
+
+        public static bool isWarmup = false;
 
         public static GameManager instance;
 
@@ -93,7 +96,7 @@ namespace Game {
                 allPlayersReady = players.Length == PhotonNetwork.CurrentRoom.PlayerCount;
                 yield return new WaitForSeconds(1);
             } while (!allPlayersReady);
-
+            
             // Hide loading canvas
             photonView.RPC("RPC_HideLoader", RpcTarget.All);
 
@@ -115,11 +118,16 @@ namespace Game {
 
             // Start warmup
             Debug.Log("Start WARMUP");
+            
+            isWarmup = true;
+
             int counter = this.warmupDuration;
             while (counter > 0) {
                 yield return new WaitForSeconds(1);
                 counter--;
             }
+
+            isWarmup = false;
             
             // Start clock
             photonView.RPC("RPC_StartClock", RpcTarget.All);
@@ -191,7 +199,6 @@ namespace Game {
 
         public void LeaveGame() {
             PhotonNetwork.LeaveRoom();
-            Application.LoadLevel("Lobby");
         }
 
         public Transform GetRandomAIDestination() {
@@ -282,6 +289,27 @@ namespace Game {
 
         public Material GetSkinMaterialAt(int idx) {
             return this.skinMaterials[idx];
+        }
+
+        public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer) {
+            if (PhotonNetwork.IsMasterClient) {
+                Debug.Log("Player left game");
+                if (isWarmup) { // if warmup and player left the game => go back to lobby
+                    PhotonNetwork.LoadLevel("Lobby");
+                } else { // else check contamined number and finish the game so
+                    StartCoroutine(this.CheckContaminedPlayerCoroutine());
+                }
+            }
+        }
+
+        private IEnumerator CheckContaminedPlayerCoroutine() {
+            yield return new WaitForSeconds(2);
+            CheckContaminedNumber();
+        }
+
+        public override void OnLeftRoom() {
+            Debug.Log("I leave game");
+            SceneManager.LoadScene("Lobby");
         }
     }
 }

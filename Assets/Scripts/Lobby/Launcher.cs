@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -51,12 +52,20 @@ namespace Lobby {
             // Listener on inputs
             this.usernameInputField.onValueChanged.AddListener((string value) => this.SetUsername(value));
             this.roomIdInputField.onValueChanged.AddListener((string value) => this.SetRoomId(value));
+            
+            this.PresetNickname();
 
             // Photon connection
             PhotonNetwork.AutomaticallySyncScene = true;
 
             if (PhotonNetwork.IsConnected) {
                 if (PhotonNetwork.CurrentRoom != null) {
+                    // Don't forget to enable room joining
+                    if (PhotonNetwork.IsMasterClient) {
+                        PhotonNetwork.CurrentRoom.IsVisible = true;
+                        PhotonNetwork.CurrentRoom.IsOpen = true;
+                    }
+                    
                     this.DisplayRoomPanel();
                 }
             } else {
@@ -105,6 +114,12 @@ namespace Lobby {
             }
 
             PhotonNetwork.JoinRandomRoom();
+        }
+
+        public void PresetNickname() {
+            if (PhotonNetwork.NickName != String.Empty) {
+                this.usernameInputField.text = PhotonNetwork.NickName;
+            }
         }
 
         public void JoinRoom() {
