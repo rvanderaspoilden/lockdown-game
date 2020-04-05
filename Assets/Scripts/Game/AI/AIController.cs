@@ -10,6 +10,8 @@ namespace Game.AI {
         [SerializeField] private float maxLife;
 
         [SerializeField] private GameObject covidArea;
+
+        [SerializeField] private GameObject contaminedParticle;
         
         [Header("Only for debug")]
         [SerializeField] private NavMeshAgent agent;
@@ -119,6 +121,10 @@ namespace Game.AI {
             this.contaminated = true;
             this.currentLife = this.maxLife;
             this.covidArea.SetActive(true);
+
+            if (GameManager.localPlayer.IsContaminated()) {
+                Instantiate(this.contaminedParticle, this.transform.position + new Vector3(0, 2.4f, 0), Quaternion.Euler(90f, 0, 0), this.transform);
+            }
 
             if (PhotonNetwork.IsMasterClient) {
                 StartCoroutine(this.CoughRoutine());

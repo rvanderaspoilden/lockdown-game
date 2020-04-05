@@ -34,9 +34,9 @@ namespace Game.Player {
         [SerializeField] private PlayerHands playerHands;
         [SerializeField] private PlayerSound playerSound;
         [SerializeField] private Animator animator;
-        
+
         [SerializeField] private bool patientZero;
-        
+
         [SerializeField] private bool isFrozen = false;
 
         [SerializeField] private bool contaminated;
@@ -279,7 +279,11 @@ namespace Game.Player {
 
             if (photonView.IsMine) {
                 HUDManager.instance.SetContaminedStatus(true);
-                AlertManager.instance.Alert("You are contaminated !", AlertType.CONTAMINED, RpcTarget.All);
+
+                if (!this.IsPatientZero()) {
+                    AlertManager.instance.Alert("You are contaminated !", AlertType.CONTAMINED, PhotonNetwork.LocalPlayer);
+                }
+
                 StartCoroutine(this.CoughRoutine());
             }
 
@@ -350,14 +354,14 @@ namespace Game.Player {
 
         private void ManageMovement() {
             this.animator.SetBool("Jump_b", false); // todo
-            
+
             float moveDirectionY = this.moveDirection.y;
 
             this.moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             this.moveDirection = this.transform.TransformDirection(moveDirection);
 
             float speedMultiplier = this.moveSpeed;
-            
+
             if (Input.GetKey(KeyCode.LeftShift)) {
                 speedMultiplier *= this.sprintMultiplier;
             }
@@ -365,7 +369,7 @@ namespace Game.Player {
             if (this.isSlowed) {
                 speedMultiplier *= this.slowMultiplier;
             }
-            
+
             this.moveDirection *= speedMultiplier;
 
             if (this.characterController.isGrounded) {
