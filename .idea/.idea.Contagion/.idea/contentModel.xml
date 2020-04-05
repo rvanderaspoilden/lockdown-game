@@ -211,6 +211,7 @@
               <e p="AIController.cs" t="Include" />
               <e p="AiSound.cs" t="Include" />
             </e>
+            <e p="AlertManager.cs" t="Include" />
             <e p="BlindHudManager.cs" t="Include" />
             <e p="Furniture" t="Include">
               <e p="Clock.cs" t="Include" />

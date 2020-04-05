@@ -25,7 +25,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: eu
+  DevRegion: 
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -33,6 +33,8 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
+  - RPC_Alert
+  - RPC_ApplyDamageEffects
   - RPC_Cough
   - RPC_FreezePlayer
   - RPC_Heal
@@ -40,6 +42,7 @@ MonoBehaviour:
   - RPC_Interact
   - RPC_SetAsPatientZero
   - RPC_SetShootState
+  - RPC_SetSkinId
   - RPC_SetSkinMaterial
   - RPC_SetVisible
   - RPC_ShowLoader
@@ -50,7 +53,6 @@ MonoBehaviour:
   - RPC_UnFreezePlayer
   - RPC_UpdateLife
   - RPC_WeaponOwnerChanged
-  - RPC_ApplyDamageEffects
-  DisableAutoOpenWizard: 1
+  DisableAutoOpenWizard: 0
   ShowSettings: 1
-  DevRegionSetOnce: 1
+  DevRegionSetOnce: 0

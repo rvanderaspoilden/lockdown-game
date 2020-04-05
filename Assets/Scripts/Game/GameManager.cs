@@ -116,17 +116,19 @@ namespace Game {
             // Unfreeze all players
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
 
-            // Start warmup
-            Debug.Log("Start WARMUP");
+            // Instantiate all weapons
+            this.InstantiateWeapons();
             
+            // Start Warm-up
             isWarmup = true;
-
             int counter = this.warmupDuration;
+            
+            AlertManager.instance.Alert("Warm-up", AlertType.GENERAL, RpcTarget.All);
+            
             while (counter > 0) {
                 yield return new WaitForSeconds(1);
                 counter--;
             }
-
             isWarmup = false;
             
             // Start clock
@@ -134,9 +136,6 @@ namespace Game {
 
             // Choose patient zero
             players[Random.Range(0, players.Length)].GetComponent<PlayerEntity>().SetAsPatientZero();
-
-            // Instantiate all weapons
-            this.InstantiateWeapons();
 
             // Start Escape Timer
             yield return new WaitForSeconds(this.escapeDuration);
@@ -192,7 +191,11 @@ namespace Game {
             }
 
             // If all players are contaminated or there is no one
-            if (counter == players.Length || counter == 0) {
+            if (counter == players.Length) {
+                AlertManager.instance.Alert("Covid19 won this game", AlertType.CONTAMINED, RpcTarget.All);
+                this.EndGame();
+            } else if (counter == 0) {
+                AlertManager.instance.Alert("Confined won this game", AlertType.CONFINED, RpcTarget.All);
                 this.EndGame();
             }
         }
@@ -210,7 +213,6 @@ namespace Game {
         }
 
         private void EndGame() {
-            Debug.Log("Game finished");
             photonView.RPC("RPC_FreezePlayer", RpcTarget.All);
 
             gameEnded = true;

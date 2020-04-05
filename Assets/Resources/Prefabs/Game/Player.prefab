@@ -590,6 +590,7 @@ MonoBehaviour:
   patientZero: 0
   isFrozen: 0
   contaminated: 0
+  skinId: 0
   characterController: {fileID: 0}
   moveDirection: {x: 0, y: 0, z: 0}
   currentLife: 0

@@ -41,6 +41,8 @@ namespace Game.Player {
 
         [SerializeField] private bool contaminated;
 
+        [SerializeField] private int skinId;
+
         [SerializeField] private CharacterController characterController;
         [SerializeField] private Vector3 moveDirection = Vector3.zero;
         [SerializeField] private float currentLife;
@@ -70,12 +72,6 @@ namespace Game.Player {
             this.covidArea.SetActive(false);
             this.canCough = true;
 
-            // Manage skin
-            int skinId = (int) this.photonView.Owner.CustomProperties["skinId"];
-            foreach (SkinnedMeshRenderer renderer in this.skinObject.GetComponentsInChildren<SkinnedMeshRenderer>()) {
-                renderer.material = GameManager.instance.GetSkinMaterialAt(skinId);
-            }
-
             this.skinObject.SetActive(true);
 
             if (!this.photonView.IsMine) {
@@ -83,6 +79,7 @@ namespace Game.Player {
                 this.fpsCamera.enabled = false;
                 this.camera.gameObject.SetActive(false);
             } else {
+                this.SetSkinId((int) this.photonView.Owner.CustomProperties["skinId"]);
                 this.camera.gameObject.SetActive(true);
                 this.Freeze();
             }
@@ -113,6 +110,23 @@ namespace Game.Player {
             return this.photonView;
         }
 
+        public void SetSkinId(int skinId) {
+            photonView.RPC("RPC_SetSkinId", RpcTarget.All, skinId);
+        }
+
+        [PunRPC]
+        public void RPC_SetSkinId(int skinId) {
+            this.skinId = skinId;
+
+            foreach (SkinnedMeshRenderer renderer in this.skinObject.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                renderer.material = GameManager.instance.GetSkinMaterialAt(skinId);
+            }
+        }
+
+        public int GetSkinId() {
+            return this.skinId;
+        }
+
         public void LockCamera() {
             this.fpsCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = 0f;
         }
@@ -137,6 +151,12 @@ namespace Game.Player {
         public void RPC_SetAsPatientZero() {
             this.patientZero = true;
             this.SetAsContaminated();
+
+            if (photonView.IsMine) {
+                AlertManager.instance.Alert("You are patient zero", AlertType.CONTAMINED, PhotonNetwork.LocalPlayer);
+            } else {
+                AlertManager.instance.Alert("You are a confined", AlertType.CONFINED, PhotonNetwork.LocalPlayer);
+            }
         }
 
         public void TakeDamageFromWeapon(Weapon weapon) {
@@ -259,6 +279,7 @@ namespace Game.Player {
 
             if (photonView.IsMine) {
                 HUDManager.instance.SetContaminedStatus(true);
+                AlertManager.instance.Alert("You are contaminated !", AlertType.CONTAMINED, RpcTarget.All);
                 StartCoroutine(this.CoughRoutine());
             }
 

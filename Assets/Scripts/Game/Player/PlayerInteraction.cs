@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.AI;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace Game.Player {
     public class PlayerInteraction : MonoBehaviourPun {
@@ -24,19 +26,47 @@ namespace Game.Player {
             if (!photonView.IsMine || HUDManager.isHudOpened) {
                 return;
             }
+            
+            HUDManager.instance.SetInformation(String.Empty);
 
             // Manage interaction with environment
-            if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out forwardHit, 4, (1 << 12))) {
-                Interactable interactable = forwardHit.collider.GetComponentInParent<Interactable>();
+            if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out forwardHit, 4, (1 << 12 | 1 << 9 | 1 << 13))) {
+                if (forwardHit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable")) {
+                    Interactable interactable = forwardHit.collider.GetComponentInParent<Interactable>();
 
-                // Set HUD information
-                HUDManager.instance.SetInformation(interactable.GetInformation());
+                    // Set HUD information
+                    HUDManager.instance.SetInformation(interactable.GetInformation());
 
-                if (Input.GetKeyDown(KeyCode.E)) {
-                    interactable.Interact();
-                }
-            } else {
-                HUDManager.instance.SetInformation(String.Empty);
+                    if (Input.GetKeyDown(KeyCode.E)) {
+                        interactable.Interact();
+                    }
+                } else if (this.playerEntity.IsPatientZero() && forwardHit.collider.gameObject.layer == LayerMask.NameToLayer("Player")) {
+                    PlayerEntity targetPlayerEntity = forwardHit.collider.GetComponentInParent<PlayerEntity>();
+
+                    if (targetPlayerEntity.IsContaminated()) {
+                        HUDManager.instance.SetInformation("Press [E] to exchange skin with " + targetPlayerEntity.GetPhotonView().Owner.NickName);
+
+                        if (Input.GetKeyDown(KeyCode.E)) {
+                            int playerSkinId = this.playerEntity.GetSkinId();
+                            
+                            this.playerEntity.SetSkinId(targetPlayerEntity.GetSkinId());
+                            targetPlayerEntity.SetSkinId(playerSkinId);
+                        }
+                    }
+                } else if (this.playerEntity.IsPatientZero() && forwardHit.collider.gameObject.layer == LayerMask.NameToLayer("AI")) {
+                    AIController aiController = forwardHit.collider.GetComponentInParent<AIController>();
+
+                    if (aiController.IsContaminated()) {
+                        HUDManager.instance.SetInformation("Press [E] to exchange skin");
+
+                        if (Input.GetKeyDown(KeyCode.E)) {
+                            int playerSkinId = this.playerEntity.GetSkinId();
+                            
+                            this.playerEntity.SetSkinId(aiController.GetSkinId());
+                            aiController.SetSkinMaterial(playerSkinId);
+                        }
+                    }
+                } 
             }
         }
 

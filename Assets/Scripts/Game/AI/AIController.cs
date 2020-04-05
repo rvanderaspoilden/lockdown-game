@@ -18,6 +18,8 @@ namespace Game.AI {
 
         [SerializeField] private Transform target;
 
+        [SerializeField] private int skinId;
+
         [SerializeField] private Animator animator;
         [SerializeField] private AIState state;
         [SerializeField] private bool contaminated;
@@ -166,8 +168,14 @@ namespace Game.AI {
             photonView.RPC("RPC_SetSkinMaterial", RpcTarget.All, skinIdx);
         }
 
+        public int GetSkinId() {
+            return this.skinId;
+        }
+
         [PunRPC]
         public void RPC_SetSkinMaterial(int skinIdx) {
+            this.skinId = skinIdx;
+            
             SkinnedMeshRenderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
             Material skinMaterial = GameManager.instance.GetSkinMaterialAt(skinIdx);
 
