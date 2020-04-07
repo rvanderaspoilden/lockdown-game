@@ -227,7 +227,10 @@
               <e p="PlayerScore.cs" t="Include" />
               <e p="PlayerSound.cs" t="Include" />
             </e>
-            <e p="Weapon.cs" t="Include" />
+            <e p="Weapons" t="Include">
+              <e p="HydroGun.cs" t="Include" />
+              <e p="Weapon.cs" t="Include" />
+            </e>
           </e>
           <e p="LoadingManager.cs" t="Include" />
           <e p="Lobby" t="Include">

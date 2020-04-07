@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.AI;
+using Game.Weapons;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -86,7 +87,7 @@ namespace Game.Player {
             }
 
             if (other.CompareTag("CovidArea") && covidCoroutine == null && !this.playerEntity.IsContaminated()) {
-                this.covidCoroutine = StartCoroutine(this.TakeDamageFromCovid(other.GetComponentInParent<PhotonView>().Owner));
+                this.covidCoroutine = StartCoroutine(this.TakeDamageFromCovid(other.GetComponentInParent<PhotonView>().Controller));
             }
         }
 

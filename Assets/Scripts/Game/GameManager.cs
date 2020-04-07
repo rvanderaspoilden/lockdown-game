@@ -2,6 +2,7 @@
 using System.Collections;
 using Game.AI;
 using Game.Player;
+using Game.Weapons;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;

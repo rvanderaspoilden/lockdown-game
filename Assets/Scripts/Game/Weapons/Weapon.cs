@@ -7,46 +7,41 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-namespace Game {
+namespace Game.Weapons {
     public class Weapon : MonoBehaviourPun {
         [Header("Settings")]
-        [SerializeField] private float damage;
+        [SerializeField] protected float damage;
 
-        [SerializeField] private float range = 5f;
-        [SerializeField] private float fireRate = 0.1f;
-        [SerializeField] private WeaponType weaponType;
-        [SerializeField] private WeaponAnimationInt animationInt;
-        [SerializeField] private Transform spawnPos;
-        [SerializeField] private ParticleSystem shootParticle;
-        [SerializeField] private LayerMask targetLayers;
-        [SerializeField] private AudioClip shootSound;
-        [SerializeField] private bool playSoundLoop;
-        [SerializeField] private WeaponDamageEffect[] damageEffects;
-        [SerializeField] private TextMeshPro displayScreenAmmoText;
-        [SerializeField] private int maxAmmo = 100;
+        [SerializeField] protected float range = 5f;
+        [SerializeField] protected float fireRate = 0.1f;
+        [SerializeField] protected WeaponType weaponType;
+        [SerializeField] protected WeaponAnimationInt animationInt;
+        [SerializeField] protected Transform spawnPos;
+        [SerializeField] protected ParticleSystem shootParticle;
+        [SerializeField] protected LayerMask targetLayers;
+        [SerializeField] protected AudioClip shootSound;
+        [SerializeField] protected bool playSoundLoop;
+        [SerializeField] protected WeaponDamageEffect[] damageEffects;
+        [SerializeField] protected TextMeshPro displayScreenAmmoText;
+        [SerializeField] protected int maxAmmo = 100;
+        [SerializeField] protected int ammoPerShoot = 4;
 
         [Header("Only for debug")]
-        [SerializeField] private Collider collider;
+        [SerializeField] protected Collider collider;
 
-        [SerializeField] private int currentAmmo;
+        [SerializeField] protected int currentAmmo;
 
-        [SerializeField] private Animator animator;
-        [SerializeField] private bool isFiring;
-        [SerializeField] private float shootTimer;
-        [SerializeField] private AudioSource audioSource;
+        [SerializeField] protected Animator animator;
+        [SerializeField] protected bool isFiring;
+        [SerializeField] protected float shootTimer;
+        [SerializeField] protected AudioSource audioSource;
 
-        private RaycastHit hit;
+        protected RaycastHit hit;
 
         private void Awake() {
             this.collider = GetComponent<Collider>();
             this.animator = GetComponent<Animator>();
             this.audioSource = GetComponent<AudioSource>();
-
-            this.currentAmmo = this.maxAmmo;
-        }
-
-        private void Start() {
-            this.UpdateAmmoText();
         }
 
         public float GetDamage() {
@@ -74,12 +69,6 @@ namespace Game {
             return this.currentAmmo;
         }
 
-        private void UpdateAmmoText() {
-            float percent = (((float) this.currentAmmo / (float) this.maxAmmo) * 100f);
-            this.displayScreenAmmoText.text = percent + "%";
-            this.displayScreenAmmoText.color = percent > 0 ? Color.green : Color.red;
-        }
-
         private void Update() {
             if (!photonView.IsMine) {
                 return;
@@ -87,23 +76,9 @@ namespace Game {
 
             if (this.isFiring && this.currentAmmo > 0) {
                 if (this.shootTimer == 0) {
-                    if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range, this.targetLayers)) {
-                        if (this.hit.collider.CompareTag("Player")) {
-                            this.hit.collider.GetComponentInParent<PlayerEntity>().TakeDamageFromWeapon(this);
-                        }
+                    this.Shoot();
 
-                        if (this.hit.collider.CompareTag("AI")) {
-                            this.hit.collider.GetComponentInParent<AIController>().TakeDamage(this.damage);
-                        }
-                    }
-
-                    this.currentAmmo -= 4;
-
-                    if (this.currentAmmo < 0) {
-                        this.currentAmmo = 0;
-                    }
-
-                    this.UpdateAmmoText();
+                    this.ConsumeAmmo();
                 }
 
                 this.shootTimer += Time.deltaTime;
@@ -111,6 +86,26 @@ namespace Game {
                 if (this.shootTimer >= this.fireRate) {
                     this.shootTimer = 0f;
                 }
+            }
+        }
+
+        protected virtual void Shoot() {
+            if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range, this.targetLayers)) {
+                if (this.hit.collider.CompareTag("Player")) {
+                    this.hit.collider.GetComponentInParent<PlayerEntity>().TakeDamageFromWeapon(this);
+                }
+
+                if (this.hit.collider.CompareTag("AI")) {
+                    this.hit.collider.GetComponentInParent<AIController>().TakeDamage(this.damage);
+                }
+            }
+        }
+
+        protected virtual void ConsumeAmmo() {
+            this.currentAmmo -= this.ammoPerShoot;
+
+            if (this.currentAmmo < 0) {
+                this.currentAmmo = 0;
             }
         }
 
@@ -130,7 +125,9 @@ namespace Game {
         [PunRPC]
         public void RPC_SetShootState(bool state) {
             if (state) {
-                this.shootParticle.Play();
+                if (this.shootParticle) {
+                    this.shootParticle.Play();
+                }
 
                 if (this.shootSound) {
                     if (this.playSoundLoop) {
@@ -142,7 +139,9 @@ namespace Game {
                     }
                 }
             } else {
-                this.shootParticle.Stop();
+                if (this.shootParticle) {
+                    this.shootParticle.Stop();
+                }
 
                 if (this.shootSound && this.playSoundLoop) {
                     this.audioSource.clip = null;

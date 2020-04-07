@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using Cinemachine;
 using Game.AI;
+using Game.Weapons;
 using Photon.Pun;
 using UnityEngine;
 using Utils;
@@ -27,6 +28,7 @@ namespace Game.Player {
         [SerializeField] private float maxLife = 100f;
         [SerializeField] private GameObject covidArea;
         [SerializeField] private float coughRadius = 2f;
+        [SerializeField] private GameObject contaminedParticle;
 
         [Header("Only for debug")]
         [SerializeField] private PhotonView photonView;
@@ -283,13 +285,32 @@ namespace Game.Player {
                 if (!this.IsPatientZero()) {
                     AlertManager.instance.Alert("You are contaminated !", AlertType.CONTAMINED, PhotonNetwork.LocalPlayer);
                 }
+                
+                // Instantiate contamined particle for all other contamined before me
+                foreach (AIController aiController in FindObjectsOfType<AIController>()) { // for AI
+                    if (aiController.IsContaminated()) {
+                        aiController.InstantiateContaminedParticle();
+                    }
+                }
+                
+                foreach (PlayerEntity playerEntity in FindObjectsOfType<PlayerEntity>()) { // for Player except current
+                    if (playerEntity.IsContaminated() && playerEntity != this) {
+                        playerEntity.InstantiateContaminedParticle();
+                    }
+                }
 
                 StartCoroutine(this.CoughRoutine());
+            } else if(GameManager.localPlayer.IsContaminated()){ // Show contaminated particle if we are already contaminated
+                this.InstantiateContaminedParticle();
             }
 
             if (PhotonNetwork.IsMasterClient) {
                 GameManager.instance.CheckContaminedNumber();
             }
+        }
+        
+        public void InstantiateContaminedParticle() {
+            Instantiate(this.contaminedParticle, this.transform.position, UnityEngine.Quaternion.identity, this.transform);
         }
 
         public void Freeze() {

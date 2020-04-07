@@ -123,12 +123,16 @@ namespace Game.AI {
             this.covidArea.SetActive(true);
 
             if (GameManager.localPlayer.IsContaminated()) {
-                Instantiate(this.contaminedParticle, this.transform.position + new Vector3(0, 2.4f, 0), Quaternion.Euler(90f, 0, 0), this.transform);
+                this.InstantiateContaminedParticle();
             }
 
             if (PhotonNetwork.IsMasterClient) {
                 StartCoroutine(this.CoughRoutine());
             }
+        }
+
+        public void InstantiateContaminedParticle() {
+            Instantiate(this.contaminedParticle, this.transform.position, Quaternion.identity, this.transform);
         }
         
         private IEnumerator CoughRoutine() {
