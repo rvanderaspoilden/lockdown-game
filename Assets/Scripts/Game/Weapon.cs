@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game.AI;
 using Game.Player;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 
 namespace Game {
@@ -21,9 +22,13 @@ namespace Game {
         [SerializeField] private AudioClip shootSound;
         [SerializeField] private bool playSoundLoop;
         [SerializeField] private WeaponDamageEffect[] damageEffects;
+        [SerializeField] private TextMeshPro displayScreenAmmoText;
+        [SerializeField] private int maxAmmo = 100;
 
         [Header("Only for debug")]
         [SerializeField] private Collider collider;
+
+        [SerializeField] private int currentAmmo;
 
         [SerializeField] private Animator animator;
         [SerializeField] private bool isFiring;
@@ -36,6 +41,12 @@ namespace Game {
             this.collider = GetComponent<Collider>();
             this.animator = GetComponent<Animator>();
             this.audioSource = GetComponent<AudioSource>();
+
+            this.currentAmmo = this.maxAmmo;
+        }
+
+        private void Start() {
+            this.UpdateAmmoText();
         }
 
         public float GetDamage() {
@@ -59,12 +70,22 @@ namespace Game {
             return this.damageEffects;
         }
 
+        public int GetCurrentAmmo() {
+            return this.currentAmmo;
+        }
+
+        private void UpdateAmmoText() {
+            float percent = (((float) this.currentAmmo / (float) this.maxAmmo) * 100f);
+            this.displayScreenAmmoText.text = percent + "%";
+            this.displayScreenAmmoText.color = percent > 0 ? Color.green : Color.red;
+        }
+
         private void Update() {
             if (!photonView.IsMine) {
                 return;
             }
-            
-            if (this.isFiring) {
+
+            if (this.isFiring && this.currentAmmo > 0) {
                 if (this.shootTimer == 0) {
                     if (Physics.Raycast(GameManager.camera.transform.position, GameManager.camera.transform.TransformDirection(Vector3.forward), out hit, range, this.targetLayers)) {
                         if (this.hit.collider.CompareTag("Player")) {
@@ -75,6 +96,14 @@ namespace Game {
                             this.hit.collider.GetComponentInParent<AIController>().TakeDamage(this.damage);
                         }
                     }
+
+                    this.currentAmmo -= 4;
+
+                    if (this.currentAmmo < 0) {
+                        this.currentAmmo = 0;
+                    }
+
+                    this.UpdateAmmoText();
                 }
 
                 this.shootTimer += Time.deltaTime;
@@ -102,7 +131,7 @@ namespace Game {
         public void RPC_SetShootState(bool state) {
             if (state) {
                 this.shootParticle.Play();
-                
+
                 if (this.shootSound) {
                     if (this.playSoundLoop) {
                         this.audioSource.clip = this.shootSound;
@@ -114,7 +143,7 @@ namespace Game {
                 }
             } else {
                 this.shootParticle.Stop();
-                
+
                 if (this.shootSound && this.playSoundLoop) {
                     this.audioSource.clip = null;
                     this.audioSource.loop = false;

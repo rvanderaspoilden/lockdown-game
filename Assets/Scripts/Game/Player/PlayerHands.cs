@@ -55,7 +55,7 @@ namespace Game.Player {
                 }
             }
 
-            if (this.currentWeapon && this.currentWeapon.gameObject.activeSelf) {
+            if (this.currentWeapon && this.currentWeapon.gameObject.activeSelf && this.currentWeapon.GetCurrentAmmo() > 0) {
                 // Used to reset reload animation
                 if (this.animator.GetBool("Reload_b")) {
                     this.animator.SetBool("Reload_b", false);
@@ -74,6 +74,9 @@ namespace Game.Player {
                     this.currentWeapon.StopUsingWeapon();
                     this.animator.SetBool("Shoot_b", false);
                 }
+            } else if (this.animator.GetBool("Shoot_b")){
+                this.currentWeapon.StopUsingWeapon();
+                this.animator.SetBool("Shoot_b", false);
             }
         }
 

@@ -446,6 +446,8 @@ MonoBehaviour:
   warmupDuration: 0
   escapeDuration: 0
   covidDamage: 0
+  clock: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!4 &239900438
 Transform:
   m_ObjectHideFlags: 0
