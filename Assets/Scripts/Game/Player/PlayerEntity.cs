@@ -8,6 +8,7 @@ using Game.Weapons;
 using Photon.Pun;
 using UnityEngine;
 using Utils;
+using Quaternion = UnityEngine.Quaternion;
 using Random = System.Random;
 using Vector3 = UnityEngine.Vector3;
 
@@ -99,6 +100,7 @@ namespace Game.Player {
             // Manage horizontal rotation
             if (!HUDManager.isHudOpened) {
                 this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
+                //this.transform.eulerAngles = new Vector3(0, this.camera.transform.rotation.eulerAngles.y, 0);
 
                 if (Input.GetMouseButtonDown(1) && this.canCough) {
                     StartCoroutine(this.Cough());
