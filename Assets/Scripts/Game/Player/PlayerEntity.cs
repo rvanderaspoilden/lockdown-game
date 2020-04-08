@@ -265,7 +265,10 @@ namespace Game.Player {
                 StopAllCoroutines();
                 this.characterController.enabled = false;
                 this.covidArea.SetActive(false);
-                GameManager.instance.CheckContaminedNumber();
+
+                if (PhotonNetwork.IsMasterClient) {
+                    GameManager.instance.CheckContaminedNumber();
+                }
                 return;
             }
 

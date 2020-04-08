@@ -18,6 +18,7 @@ namespace Game {
         [SerializeField] private Transform[] weaponSpawns;
         [SerializeField] private Material[] skinMaterials;
         [SerializeField] private Weapon[] weaponPrefabs;
+        [SerializeField] private Weapon chloroGunPrefab;
         [SerializeField] private Transform[] destinationForAI;
         [SerializeField] private int warmupDuration;
         [SerializeField] private int escapeDuration;
@@ -117,9 +118,6 @@ namespace Game {
             // Unfreeze all players
             photonView.RPC("RPC_UnFreezePlayer", RpcTarget.All);
 
-            // Instantiate all weapons
-            this.InstantiateWeapons();
-            
             // Start Warm-up
             isWarmup = true;
             int counter = this.warmupDuration;
@@ -137,6 +135,9 @@ namespace Game {
 
             // Choose patient zero
             players[Random.Range(0, players.Length)].GetComponent<PlayerEntity>().SetAsPatientZero();
+            
+            // Instantiate all weapons
+            this.InstantiateWeapons();
 
             // Start Escape Timer
             yield return new WaitForSeconds(this.escapeDuration);
@@ -184,18 +185,21 @@ namespace Game {
             PlayerEntity[] players = FindObjectsOfType<PlayerEntity>();
 
             Debug.Log("Check contamined number");
-            int counter = 0;
+            int contaminedCounter = 0;
+            int confinedCounter = 0;
             foreach (PlayerEntity player in players) {
-                if (player.IsContaminated() || player.IsDied()) {
-                    counter++;
+                if (player.IsContaminated()) {
+                    contaminedCounter++;
+                } else if(!player.IsDied()) {
+                    confinedCounter++;
                 }
             }
-
+            
             // If all players are contaminated or there is no one
-            if (counter == players.Length) {
+            if (confinedCounter == 0) {
                 AlertManager.instance.Alert("Covid19 won this game", AlertType.CONTAMINED, RpcTarget.All);
                 this.EndGame();
-            } else if (counter == 0) {
+            } else if (contaminedCounter == 0) {
                 AlertManager.instance.Alert("Confined won this game", AlertType.CONFINED, RpcTarget.All);
                 this.EndGame();
             }
@@ -280,8 +284,14 @@ namespace Game {
         }
 
         private void InstantiateWeapons() {
-            foreach (Transform spawn in this.weaponSpawns) {
-                PhotonNetwork.Instantiate("Prefabs/Game/" + this.weaponPrefabs[Random.Range(0, this.weaponPrefabs.Length)].name, spawn.position, Quaternion.identity);
+            int chloroGunSpawnIdx = Random.Range(0, this.weaponSpawns.Length);
+            
+            for (int i = 0; i < this.weaponSpawns.Length; i++) {
+                if (i == chloroGunSpawnIdx) {
+                    PhotonNetwork.Instantiate("Prefabs/Game/" + this.chloroGunPrefab.name, this.weaponSpawns[i].position, Quaternion.identity);
+                } else {
+                    PhotonNetwork.Instantiate("Prefabs/Game/" + this.weaponPrefabs[Random.Range(0, this.weaponPrefabs.Length)].name, this.weaponSpawns[i].position, Quaternion.identity);
+                }
             }
         }
 

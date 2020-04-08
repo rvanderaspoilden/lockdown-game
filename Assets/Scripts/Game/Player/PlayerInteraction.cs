@@ -76,7 +76,7 @@ namespace Game.Player {
                 return;
             }
 
-            if (other.CompareTag("Weapon") && !this.hands.HasWeapon()) {
+            if (other.CompareTag("Weapon") && !this.hands.HasWeapon() && (!this.playerEntity.IsContaminated() || (this.playerEntity.IsContaminated() && other.GetComponent<Weapon>().GetWeaponType() != WeaponType.CHLOROQUINE))) {
                 this.hands.SetWeapon(other.GetComponent<Weapon>());
             }
         }

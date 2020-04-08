@@ -42,7 +42,7 @@ namespace Game.Weapons {
             this.collider = GetComponent<Collider>();
             this.animator = GetComponent<Animator>();
             this.audioSource = GetComponent<AudioSource>();
-            
+
             this.currentAmmo = this.maxAmmo;
         }
 
@@ -76,18 +76,19 @@ namespace Game.Weapons {
                 return;
             }
 
-            if (this.isFiring && this.currentAmmo > 0) {
-                if (this.shootTimer == 0) {
-                    this.Shoot();
+            // Fire rate system
+            if (this.shootTimer > 0 && this.shootTimer < this.fireRate) {
+                this.shootTimer += Time.deltaTime;
+            } else if (this.shootTimer >= this.fireRate) {
+                this.shootTimer = 0f;
+            }
 
-                    this.ConsumeAmmo();
-                }
-
+            if (this.isFiring && this.shootTimer == 0 && this.currentAmmo > 0) {
                 this.shootTimer += Time.deltaTime;
 
-                if (this.shootTimer >= this.fireRate) {
-                    this.shootTimer = 0f;
-                }
+                this.Shoot();
+
+                this.ConsumeAmmo();
             }
         }
 
@@ -111,17 +112,12 @@ namespace Game.Weapons {
             }
         }
 
-        public void UseWeapon() {
+        public virtual void UseWeapon() {
             this.isFiring = true;
-            this.shootTimer = 0f;
-
-            photonView.RPC("RPC_SetShootState", RpcTarget.All, true);
         }
 
-        public void StopUsingWeapon() {
+        public virtual void StopUsingWeapon() {
             this.isFiring = false;
-
-            photonView.RPC("RPC_SetShootState", RpcTarget.All, false);
         }
 
         [PunRPC]
@@ -157,7 +153,6 @@ namespace Game.Weapons {
         public void RPC_WeaponOwnerChanged(int playerViewID) {
             Debug.Log("Weapon owner changed");
             this.collider.enabled = false;
-            this.animator.enabled = false;
 
             if (photonView.IsMine) {
                 this.animator.SetBool("hasOwner", true);
