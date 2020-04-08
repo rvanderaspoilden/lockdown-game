@@ -1694,6 +1694,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 497bbddce010fea4da3dcb5c5210ad16, type: 2}
   weaponPrefabs:
   - {fileID: -773630355679621124, guid: d3ea1e143bf56524cb42ec0a6b2a7c1e, type: 3}
+  - {fileID: 5166889461132004906, guid: 6b675114d4e5c3b4185ae35ba269fc62, type: 3}
   destinationForAI:
   - {fileID: 7034829955076796807}
   - {fileID: 7034829955076796806}

@@ -42,6 +42,8 @@ namespace Game.Weapons {
             this.collider = GetComponent<Collider>();
             this.animator = GetComponent<Animator>();
             this.audioSource = GetComponent<AudioSource>();
+            
+            this.currentAmmo = this.maxAmmo;
         }
 
         public float GetDamage() {
@@ -96,7 +98,7 @@ namespace Game.Weapons {
                 }
 
                 if (this.hit.collider.CompareTag("AI")) {
-                    this.hit.collider.GetComponentInParent<AIController>().TakeDamage(this.damage);
+                    this.hit.collider.GetComponentInParent<AIController>().TakeDamageFromWeapon(this);
                 }
             }
         }
@@ -175,7 +177,7 @@ namespace Game.Weapons {
 
         private void MoveWeapon(int playerViewID) {
             PlayerHands playerHands = PhotonView.Find(playerViewID).GetComponent<PlayerHands>();
-            Transform handPosToUse = playerHands.GetHandPos();
+            Transform handPosToUse = playerHands.GetHandPos(this.animationInt);
 
             this.transform.parent = handPosToUse;
             this.transform.rotation = handPosToUse.rotation;
@@ -195,10 +197,8 @@ namespace Game.Weapons {
     }
 
     public enum WeaponAnimationInt {
-        HAND_SANITIZER = 4,
-        THERMOMETER = 1,
-        GLOVES = 1,
-        CHLOROQUINE = 4
+        TWO_HAND = 4,
+        ONE_HAND = 1
     }
 
     public enum WeaponDamageEffect {

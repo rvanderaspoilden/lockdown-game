@@ -186,7 +186,7 @@ namespace Game {
             Debug.Log("Check contamined number");
             int counter = 0;
             foreach (PlayerEntity player in players) {
-                if (player.IsContaminated()) {
+                if (player.IsContaminated() || player.IsDied()) {
                     counter++;
                 }
             }

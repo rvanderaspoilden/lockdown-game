@@ -228,6 +228,7 @@
               <e p="PlayerSound.cs" t="Include" />
             </e>
             <e p="Weapons" t="Include">
+              <e p="ChloroGun.cs" t="Include" />
               <e p="HydroGun.cs" t="Include" />
               <e p="Weapon.cs" t="Include" />
             </e>

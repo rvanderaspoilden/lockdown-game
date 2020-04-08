@@ -44,7 +44,7 @@ namespace Game.Player {
         [SerializeField] private bool contaminated;
 
         [SerializeField] private int skinId;
-
+        
         [SerializeField] private CharacterController characterController;
         [SerializeField] private Vector3 moveDirection = Vector3.zero;
         [SerializeField] private float currentLife;
@@ -162,7 +162,7 @@ namespace Game.Player {
         }
 
         public void TakeDamageFromWeapon(Weapon weapon) {
-            if (this.contaminated) {
+            if ((weapon.GetWeaponType() == WeaponType.HAND_SANITIZER && this.contaminated) ||weapon.GetWeaponType() == WeaponType.CHLOROQUINE) {
                 photonView.RPC("RPC_TakeDamage", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, weapon.GetDamage());
             }
 

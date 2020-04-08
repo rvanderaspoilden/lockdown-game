@@ -6,9 +6,11 @@ using UnityEngine;
 namespace Game.Player {
     public class PlayerHands : MonoBehaviourPun {
         [Header("Settings")]
-        [SerializeField] private Transform skinHandPos;
+        [SerializeField] private Transform tpsTwoHandPos;
+        [SerializeField] private Transform tpsOneHandPos;
 
-        [SerializeField] private Transform cameraHandPos;
+        [SerializeField] private Transform fpsTwoHandPos;
+        [SerializeField] private Transform fpsOneHandPos;
 
         [Header("Only for debug")]
         [SerializeField] private Weapon currentWeapon;
@@ -97,8 +99,12 @@ namespace Game.Player {
             }
         }
 
-        public Transform GetHandPos() {
-            return photonView.IsMine ? this.cameraHandPos : this.skinHandPos;
+        public Transform GetHandPos(WeaponAnimationInt weaponAnimationInt) {
+            if (!photonView.IsMine) {
+                return weaponAnimationInt == WeaponAnimationInt.ONE_HAND ? this.tpsOneHandPos : this.tpsTwoHandPos;
+            }
+            
+            return weaponAnimationInt == WeaponAnimationInt.ONE_HAND ? this.fpsOneHandPos : this.fpsTwoHandPos;
         }
     }
 }

@@ -6,8 +6,6 @@ namespace Game.Weapons {
     public class HydroGun : Weapon
     {
         private void Start() {
-            this.currentAmmo = this.maxAmmo;
-
             this.UpdateAmmoText();
         }
         

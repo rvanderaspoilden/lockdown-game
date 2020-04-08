@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Player;
+using Game.Weapons;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
@@ -67,9 +68,9 @@ namespace Game.AI {
             }
         }
 
-        public void TakeDamage(float damage) {
-            if (this.contaminated) {
-                photonView.RPC("RPC_TakeDamage", RpcTarget.MasterClient, damage);
+        public void TakeDamageFromWeapon(Weapon weapon) {
+            if ((weapon.GetWeaponType() == WeaponType.HAND_SANITIZER && this.contaminated) ||weapon.GetWeaponType() == WeaponType.CHLOROQUINE) {
+                photonView.RPC("RPC_TakeDamage", RpcTarget.MasterClient, weapon.GetDamage());
             }
         }
 
