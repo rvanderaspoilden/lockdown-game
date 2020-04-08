@@ -23,6 +23,7 @@ namespace Game {
         [SerializeField] private int warmupDuration;
         [SerializeField] private int escapeDuration;
         [SerializeField] private float covidDamage;
+        [SerializeField] private float coughDamage;
 
         [Header("Only for debug")]
         [SerializeField] private Clock clock;
@@ -215,6 +216,10 @@ namespace Game {
 
         public float GetCovidDamage() {
             return this.covidDamage;
+        }
+
+        public float GetCoughDamage() {
+            return this.coughDamage;
         }
 
         private void EndGame() {

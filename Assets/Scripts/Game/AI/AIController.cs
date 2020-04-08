@@ -63,7 +63,7 @@ namespace Game.AI {
 
         private IEnumerator CovidDamageCoroutine() {
             while (!this.IsContaminated()) {
-                yield return new WaitForSeconds(3f);
+                yield return new WaitForSeconds(0.1f);
                 this.TakeDamageFromCovid();
             }
         }
@@ -74,9 +74,9 @@ namespace Game.AI {
             }
         }
 
-        public void TakeDamageFromCovid() {
+        public void TakeDamageFromCovid(bool fromCough = false) {
             if (!this.contaminated) {
-                photonView.RPC("RPC_TakeDamage", RpcTarget.MasterClient, GameManager.instance.GetCovidDamage());
+                photonView.RPC("RPC_TakeDamage", RpcTarget.All, fromCough ? GameManager.instance.GetCoughDamage() : GameManager.instance.GetCovidDamage());
             }
         }
         

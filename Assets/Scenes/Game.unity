@@ -1733,7 +1733,7 @@ MonoBehaviour:
   - {fileID: 7034829955076796779}
   warmupDuration: 30
   escapeDuration: 300
-  covidDamage: 20
+  covidDamage: 0.6
   clock: {fileID: 0}
   audioSource: {fileID: 0}
 --- !u!114 &1970199634

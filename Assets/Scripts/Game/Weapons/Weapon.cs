@@ -46,6 +46,12 @@ namespace Game.Weapons {
             this.currentAmmo = this.maxAmmo;
         }
 
+        private void OnEnable() {
+            if (photonView.OwnershipWasTransfered) {
+                this.animator.enabled = false;
+            }
+        }
+
         public float GetDamage() {
             return this.damage;
         }

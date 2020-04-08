@@ -169,9 +169,9 @@ namespace Game.Player {
             photonView.RPC("RPC_ApplyDamageEffects", photonView.Owner, weapon.photonView.ViewID);
         }
 
-        public void TakeDamageFromCovid(Photon.Realtime.Player owner) {
+        public void TakeDamageFromCovid(Photon.Realtime.Player owner, bool fromCough = false) {
             if (!this.contaminated) {
-                photonView.RPC("RPC_TakeDamage", RpcTarget.All, owner.ActorNumber, GameManager.instance.GetCovidDamage());
+                photonView.RPC("RPC_TakeDamage", RpcTarget.All, owner.ActorNumber, fromCough ? GameManager.instance.GetCoughDamage() : GameManager.instance.GetCovidDamage());
             }
         }
 
@@ -362,11 +362,11 @@ namespace Game.Player {
 
                 foreach (Collider hit in hitColliders) {
                     if (hit.CompareTag("Player")) {
-                        hit.GetComponent<PlayerEntity>().TakeDamageFromCovid(PhotonNetwork.LocalPlayer);
+                        hit.GetComponent<PlayerEntity>().TakeDamageFromCovid(PhotonNetwork.LocalPlayer, true);
                     }
 
                     if (hit.CompareTag("AI")) {
-                        hit.GetComponent<AIController>().TakeDamageFromCovid(); // todo manager owner
+                        hit.GetComponent<AIController>().TakeDamageFromCovid(true); // todo manager owner
                     }
                 }
             }

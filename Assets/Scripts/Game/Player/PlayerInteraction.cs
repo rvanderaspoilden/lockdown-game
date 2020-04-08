@@ -104,7 +104,7 @@ namespace Game.Player {
 
         private IEnumerator TakeDamageFromCovid(Photon.Realtime.Player owner) {
             while (!this.playerEntity.IsContaminated()) {
-                yield return new WaitForSeconds(3f); // todo refactor this
+                yield return new WaitForSeconds(0.1f);
                 this.playerEntity.TakeDamageFromCovid(owner);
             }
         }
