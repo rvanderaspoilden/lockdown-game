@@ -1,6 +1,7 @@
 ﻿using System;
 using Game;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class Door : Interactable {
@@ -24,7 +25,7 @@ public class Door : Interactable {
         return String.Format(this.information, this.isOpen ? "close" : "open");
     }
 
-    public override void Interact() {
+    public override void Interact(Player player) {
         photonView.RPC("RPC_Interact", RpcTarget.AllViaServer);
     }
 

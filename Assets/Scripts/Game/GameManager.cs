@@ -113,6 +113,8 @@ namespace Game {
             // Open random doors
             this.OpenRandomDoors();
             
+            this.InstantiateWeapons();
+            
             // Start Music
             photonView.RPC("RPC_StartMusic", RpcTarget.All);
 
@@ -138,7 +140,7 @@ namespace Game {
             players[Random.Range(0, players.Length)].GetComponent<PlayerEntity>().SetAsPatientZero();
             
             // Instantiate all weapons
-            this.InstantiateWeapons();
+            //this.InstantiateWeapons();
 
             // Start Escape Timer
             yield return new WaitForSeconds(this.escapeDuration);
@@ -154,7 +156,7 @@ namespace Game {
             Door[] doors = FindObjectsOfType<Door>();
 
             for (int i = 0; i < 6; i++) {
-                doors[Random.Range(0, doors.Length)].Interact();
+                doors[Random.Range(0, doors.Length)].Interact(PhotonNetwork.LocalPlayer);
             }
         }
 

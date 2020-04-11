@@ -39,7 +39,7 @@ namespace Game.Player {
                     HUDManager.instance.SetInformation(interactable.GetInformation());
 
                     if (Input.GetKeyDown(KeyCode.E)) {
-                        interactable.Interact();
+                        interactable.Interact(PhotonNetwork.LocalPlayer);
                     }
                 } else if (this.playerEntity.IsPatientZero() && forwardHit.collider.gameObject.layer == LayerMask.NameToLayer("Player")) {
                     PlayerEntity targetPlayerEntity = forwardHit.collider.GetComponentInParent<PlayerEntity>();

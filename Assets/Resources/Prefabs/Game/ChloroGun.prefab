@@ -711,6 +711,7 @@ MonoBehaviour:
   isFiring: 0
   shootTimer: 0
   audioSource: {fileID: 0}
+  renderer: {fileID: 0}
 --- !u!1 &8667727558604836614
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ namespace Game.AI {
         [SerializeField] private GameObject covidArea;
 
         [SerializeField] private GameObject contaminedParticle;
-        
+
         [Header("Only for debug")]
         [SerializeField] private NavMeshAgent agent;
 
@@ -28,8 +28,10 @@ namespace Game.AI {
         [SerializeField] private bool contaminated;
         [SerializeField] private AISound aiSound;
         [SerializeField] private CharacterController controller;
-        
+
         private Coroutine covidCoroutine;
+        private Coroutine idleCoroutine;
+        private Coroutine moveToTargetCoroutine;
 
         private void Awake() {
             this.agent = GetComponent<NavMeshAgent>();
@@ -44,13 +46,13 @@ namespace Game.AI {
                 return;
             }
 
-            StartCoroutine(this.Idle());
+            this.idleCoroutine = StartCoroutine(this.Idle());
         }
 
         private void OnDestroy() {
             StopAllCoroutines();
         }
-        
+
         private void OnTriggerStay(Collider other) {
             if (!PhotonNetwork.IsMasterClient) {
                 return;
@@ -69,7 +71,7 @@ namespace Game.AI {
         }
 
         public void TakeDamageFromWeapon(Weapon weapon) {
-            if ((weapon.GetWeaponType() == WeaponType.HAND_SANITIZER && this.contaminated) ||weapon.GetWeaponType() == WeaponType.CHLOROQUINE) {
+            if ((weapon.GetWeaponType() == WeaponType.HAND_SANITIZER && this.contaminated) || weapon.GetWeaponType() == WeaponType.CHLOROQUINE) {
                 photonView.RPC("RPC_TakeDamage", RpcTarget.MasterClient, weapon.GetDamage());
             }
         }
@@ -79,13 +81,13 @@ namespace Game.AI {
                 photonView.RPC("RPC_TakeDamage", RpcTarget.All, fromCough ? GameManager.instance.GetCoughDamage() : GameManager.instance.GetCovidDamage());
             }
         }
-        
+
         [PunRPC]
         public void RPC_TakeDamage(float damage) {
             if (!PhotonNetwork.IsMasterClient) {
                 return;
             }
-            
+
             this.currentLife -= damage;
 
             if (this.currentLife <= 0) {
@@ -100,7 +102,7 @@ namespace Game.AI {
 
             photonView.RPC("RPC_UpdateLife", RpcTarget.All, this.currentLife);
         }
-        
+
         [PunRPC]
         public void RPC_UpdateLife(float currentLife) {
             this.currentLife = currentLife;
@@ -117,7 +119,7 @@ namespace Game.AI {
                 this.SetAsContaminated();
             }
         }
-        
+
         public void SetAsContaminated() {
             this.contaminated = true;
             this.currentLife = this.maxLife;
@@ -135,7 +137,7 @@ namespace Game.AI {
         public void InstantiateContaminedParticle() {
             Instantiate(this.contaminedParticle, this.transform.position, Quaternion.identity, this.transform);
         }
-        
+
         private IEnumerator CoughRoutine() {
             while (this.contaminated) {
                 yield return new WaitForSeconds(Random.Range(3, 30));
@@ -161,14 +163,14 @@ namespace Game.AI {
         private IEnumerator Idle() {
             this.state = AIState.IDLE;
 
-            while (this.state == AIState.IDLE) {
+            while (this.state == AIState.IDLE && !this.target) {
                 yield return new WaitForSeconds(1);
 
                 // 1/3 to patrol
                 if (Random.Range(0, 3) == 0) {
                     Transform destination = GameManager.instance.GetRandomAIDestination();
 
-                    if (Mathf.Abs(Vector3.Distance(this.transform.position, destination.transform.position)) > 2f) {
+                    if (!this.target && Mathf.Abs(Vector3.Distance(this.transform.position, destination.transform.position)) > 2f) {
                         this.SetTarget(destination);
                     }
                 }
@@ -186,7 +188,7 @@ namespace Game.AI {
         [PunRPC]
         public void RPC_SetSkinMaterial(int skinIdx) {
             this.skinId = skinIdx;
-            
+
             SkinnedMeshRenderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
             Material skinMaterial = GameManager.instance.GetSkinMaterialAt(skinIdx);
 
@@ -196,13 +198,16 @@ namespace Game.AI {
         }
 
         public void SetTarget(Transform target) {
-            if (this.target) {
-                this.target = target;
-                this.agent.SetDestination(this.target.position);
-            } else {
-                this.target = target;
-                this.agent.SetDestination(this.target.position);
-                StartCoroutine(this.MoveToTarget());
+            if (this.idleCoroutine != null) {
+                StopCoroutine(this.idleCoroutine);
+                this.idleCoroutine = null;
+            }
+
+            this.target = target;
+            this.agent.SetDestination(this.target.position);
+
+            if (this.moveToTargetCoroutine == null) {
+                this.moveToTargetCoroutine = StartCoroutine(this.MoveToTarget());
             }
         }
 
@@ -219,7 +224,13 @@ namespace Game.AI {
                 if (this.agent.remainingDistance <= this.agent.stoppingDistance) {
                     this.target = null;
                     this.agent.ResetPath();
-                    StartCoroutine(this.Idle());
+                    this.moveToTargetCoroutine = null;
+
+                    if (this.idleCoroutine != null) {
+                        StopCoroutine(this.idleCoroutine);
+                    }
+
+                    this.idleCoroutine = StartCoroutine(this.Idle());
                 }
 
                 yield return null;

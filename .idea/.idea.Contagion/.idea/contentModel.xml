@@ -217,6 +217,7 @@
               <e p="Clock.cs" t="Include" />
               <e p="Door.cs" t="Include" />
               <e p="Interactable.cs" t="Include" />
+              <e p="Sink.cs" t="Include" />
             </e>
             <e p="GameManager.cs" t="Include" />
             <e p="HUDManager.cs" t="Include" />
@@ -230,6 +231,8 @@
             <e p="Weapons" t="Include">
               <e p="ChloroGun.cs" t="Include" />
               <e p="HydroGun.cs" t="Include" />
+              <e p="PQ.cs" t="Include" />
+              <e p="PQGun.cs" t="Include" />
               <e p="Weapon.cs" t="Include" />
             </e>
           </e>

@@ -9,6 +9,7 @@ TagManager:
   - CovidArea
   - Door
   - AI
+  - Sink
   layers:
   - Default
   - TransparentFX

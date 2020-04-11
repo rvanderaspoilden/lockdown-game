@@ -4,6 +4,6 @@ namespace Game {
     public abstract class Interactable : MonoBehaviourPun {
         public abstract string GetInformation();
 
-        public abstract void Interact();
+        public abstract void Interact(Photon.Realtime.Player player);
     }
 }

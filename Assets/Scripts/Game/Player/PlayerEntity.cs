@@ -100,7 +100,6 @@ namespace Game.Player {
             // Manage horizontal rotation
             if (!HUDManager.isHudOpened) {
                 this.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * this.sensitivityX);
-                //this.transform.eulerAngles = new Vector3(0, this.camera.transform.rotation.eulerAngles.y, 0);
 
                 if (Input.GetMouseButtonDown(1) && this.canCough) {
                     StartCoroutine(this.Cough());
@@ -136,7 +135,7 @@ namespace Game.Player {
         }
 
         public void UnlockCamera() {
-            this.fpsCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = 300f;
+            this.fpsCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = 2f;
         }
 
         public bool IsPatientZero() {
@@ -240,20 +239,14 @@ namespace Game.Player {
         }
 
         public void Heal(float value) {
-            photonView.RPC("RPC_Heal", RpcTarget.All, value);
-        }
-
-        [PunRPC]
-        public void RPC_Heal(float value) {
-            if (!photonView.IsMine) {
-                return;
-            }
-
             this.currentLife += value;
 
             if (this.currentLife >= this.maxLife) {
                 this.currentLife = maxLife;
             }
+            
+            // Adjust contamined camera filter in function of lost life
+            HUDManager.instance.SetContaminedCameraFilterOpacity((this.maxLife - this.currentLife) / this.maxLife);
 
             photonView.RPC("RPC_UpdateLife", RpcTarget.Others, this.currentLife);
         }

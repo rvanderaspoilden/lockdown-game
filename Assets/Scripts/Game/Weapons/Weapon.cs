@@ -35,6 +35,7 @@ namespace Game.Weapons {
         [SerializeField] protected bool isFiring;
         [SerializeField] protected float shootTimer;
         [SerializeField] protected AudioSource audioSource;
+        [SerializeField] protected new Renderer renderer;
 
         protected RaycastHit hit;
 
@@ -42,6 +43,7 @@ namespace Game.Weapons {
             this.collider = GetComponent<Collider>();
             this.animator = GetComponent<Animator>();
             this.audioSource = GetComponent<AudioSource>();
+            this.renderer = GetComponent<Renderer>();
 
             this.currentAmmo = this.maxAmmo;
         }
