@@ -2276,6 +2276,7 @@ MonoBehaviour:
   weaponPrefabs:
   - {fileID: -773630355679621124, guid: d3ea1e143bf56524cb42ec0a6b2a7c1e, type: 3}
   - {fileID: 1351195950050220093, guid: a9f5bf247dffdcd40b1aa70b4a2e4830, type: 3}
+  - {fileID: 7012885542317619570, guid: 227dc0a27cbf2b940a82edee7b7f83f3, type: 3}
   chloroGunPrefab: {fileID: 5166889461132004906, guid: 6b675114d4e5c3b4185ae35ba269fc62,
     type: 3}
   destinationForAI:

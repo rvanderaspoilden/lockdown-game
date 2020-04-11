@@ -233,6 +233,7 @@
               <e p="HydroGun.cs" t="Include" />
               <e p="PQ.cs" t="Include" />
               <e p="PQGun.cs" t="Include" />
+              <e p="Thermometer.cs" t="Include" />
               <e p="Weapon.cs" t="Include" />
             </e>
           </e>
