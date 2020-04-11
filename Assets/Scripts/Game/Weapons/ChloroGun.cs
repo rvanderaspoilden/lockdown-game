@@ -5,6 +5,11 @@ namespace Game.Weapons {
     public class ChloroGun : Weapon {
         private void Start() {
             this.maxAmmo = PhotonNetwork.CurrentRoom.PlayerCount - 1;
+
+            if (this.maxAmmo > 3) {
+                this.maxAmmo = 3;
+            }
+            
             this.currentAmmo = this.maxAmmo;
 
             this.UpdateAmmoText();
